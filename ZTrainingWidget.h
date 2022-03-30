@@ -6,7 +6,7 @@
 //===================================================
 class QPushButton;
 
-class ZTaskManager;
+class ZTrainingManager;
 //===================================================
 class ZTrainingWidget : public QWidget
 {
@@ -14,10 +14,11 @@ class ZTrainingWidget : public QWidget
 public:
     explicit ZTrainingWidget(QWidget *parent = nullptr);
 
-    void zp_connectToTaskManager(ZTaskManager* taskManager);
+    void zp_connectToTrainingManager(ZTrainingManager* taskManager);
 
 signals:
-    void zs_stop();
+
+    void zg_requestTaskStop();
 
 private:
 

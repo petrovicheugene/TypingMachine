@@ -5,10 +5,12 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 //===================================================
-class ZTaskManager;
+class ZDataSourceManager;
 class ZTaskWidget;
-class ZTrainingWidget;
 
+class ZTrainingManager;
+class ZTrainingWidget;
+class ZWorkController;
 //===================================================
 class MainWindow : public QMainWindow
 {
@@ -25,11 +27,14 @@ private slots:
 private:
 
     // VARS
+    ZWorkController* zv_workController;
     QStackedWidget* zv_stackedWidget;
     ZTrainingWidget* zv_trainingWidget;
     ZTaskWidget* zv_taskWidget;
 
-    ZTaskManager* zv_taskManager;
+    ZTrainingManager* zv_trainingManager;
+    ZDataSourceManager* zv_dataSourceManager;
+
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();

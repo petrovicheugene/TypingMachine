@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>add-256.png</file>
+        <file>remove-256.png</file>
+        <file>run-256.png</file>
+    </qresource>
+</RCC>

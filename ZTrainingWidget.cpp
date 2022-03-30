@@ -1,6 +1,7 @@
 //===================================================
 #include "ZTrainingWidget.h"
 
+#include <QDebug>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -20,7 +21,8 @@ void ZTrainingWidget::zh_createComponents()
 
     // basement
     QDialogButtonBox* buttonBox = new QDialogButtonBox;
-    QPushButton* zv_stopBtn = new QPushButton(tr("Stop"));
+
+    zv_stopBtn = new QPushButton(tr("Stop"));
     buttonBox->addButton(zv_stopBtn, QDialogButtonBox::ActionRole);
     mainLayout->addWidget(buttonBox);
 
@@ -28,10 +30,11 @@ void ZTrainingWidget::zh_createComponents()
 //===================================================
 void ZTrainingWidget::zh_createConnections()
 {
-
+    connect(zv_stopBtn, &QPushButton::clicked,
+            this, &ZTrainingWidget::zg_requestTaskStop);
 }
 //===================================================
-void ZTrainingWidget::zp_connectToTaskManager(ZTaskManager* taskManager)
+void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* taskManager)
 {
 
 }

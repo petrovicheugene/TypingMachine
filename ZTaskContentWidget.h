@@ -4,25 +4,45 @@
 //===================================================
 #include <QWidget>
 //===================================================
+class QAbstractItemModel;
+class QDataWidgetMapper;
+class QLabel;
 class QPushButton;
-class QTextEdit;
+class QSlider;
+class QSplitter;
+class QPlainTextEdit;
 
-class ZTaskManager;
+class ZTrainingManager;
 //===================================================
 class ZTaskContentWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ZTaskContentWidget(QWidget *parent = nullptr);
-    void zp_setContentManagment(ZTaskManager* taskManager);
+    void zp_setContentManagment(ZTrainingManager* taskManager);
+
+    void zp_setTaskModel(QAbstractItemModel* model);
+
 
 signals:
+
+    void zg_currentIndexChanged(int index);
+    void zg_requestTrainingStart();
+
+private slots:
+
+    void zh_setFontPointSize(int val);
 
 private:
 
     // VARS
-    QTextEdit* zv_taskTextEdit;
-    QPushButton* zv_saveTaskButton;
+    QDataWidgetMapper* zv_mapper;
+
+    QLabel* zv_taskNameLabel;
+    QPlainTextEdit* zv_taskTextEdit;
+    QSlider* zv_fontSizeSlider;
+    QPushButton* zv_runTaskButton;
+
 
     // FUNCS
     void zh_createComponents();

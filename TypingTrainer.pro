@@ -73,25 +73,40 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
 SOURCES += \
     MainWindow.cpp \
+    ZDataSourceManager.cpp \
+    ZTask.cpp \
     ZTaskContentWidget.cpp \
     ZTaskListWidget.cpp \
-    ZTaskManager.cpp \
+    ZTaskSource.cpp \
     ZTaskWidget.cpp \
+    ZTrainingManager.cpp \
     ZTrainingWidget.cpp \
     ZTranslatorManager.cpp \
+    ZWorkController.cpp \
         main.cpp
 
 
 HEADERS += \
-    ZTaskManager.h \
+    ZDataSourceManager.h \
+    ZSqlTableStatements.h \
+    ZTask.h \
+    ZTaskSource.h \
+    ZTrainingManager.h \
     ZTranslatorManager.h \
     MainWindow.h \
     ZTaskContentWidget.h \
     ZTaskListWidget.h \
     ZTaskWidget.h \
-    ZTrainingWidget.h
+    ZTrainingWidget.h \
+    ZWorkController.h
 
 # Default rules for deployment.
 #qnx: target.path = /tmp/$${TARGET}/bin
 #else: unix:!android: target.path = /opt/$${TARGET}/bin
 #!isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    typing_trainer-01.sql
+
+RESOURCES += \
+    resources.qrc

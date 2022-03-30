@@ -8,9 +8,11 @@
 #include <QSettings>
 #include <QStyleFactory>
 
-#include "ZTaskManager.h"
+#include "ZDataSourceManager.h"
 #include "ZTaskWidget.h"
+#include "ZTrainingManager.h"
 #include "ZTrainingWidget.h"
+#include "ZWorkController.h"
 //===================================================
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,26 +43,54 @@ MainWindow::~MainWindow()
 //===================================================
 void MainWindow::zh_createComponents()
 {
+    // Menu
     QAction* action = new QAction("Action");
     menuBar()->addAction(action);
 
-    zv_stackedWidget = new QStackedWidget();
+    // Central widget
+    zv_stackedWidget = new QStackedWidget;
     setCentralWidget(zv_stackedWidget);
 
+    // create widgets and add  to stacked widget
     zv_taskWidget = new ZTaskWidget;
     zv_trainingWidget = new ZTrainingWidget;
 
     zv_stackedWidget->addWidget(zv_taskWidget);
     zv_stackedWidget->addWidget(zv_trainingWidget);
 
-    zv_taskManager = new ZTaskManager;
+    // task model
+    zv_dataSourceManager = new ZDataSourceManager(this);
+    zv_taskWidget->zp_setTaskModel(zv_dataSourceManager->zp_taskModel());
 
-    zv_taskWidget->zp_connectToTaskManager(zv_taskManager);
-    zv_trainingWidget->zp_connectToTaskManager(zv_taskManager);
+    // training manager
+    zv_trainingManager = new ZTrainingManager(this);
+    zv_trainingWidget->zp_connectToTrainingManager(zv_trainingManager);
+
+    zv_workController = new ZWorkController(this);
+    zv_workController->zp_setTaskSource(zv_dataSourceManager);
 }
 //===================================================
 void MainWindow::zh_createConnections()
 {
+    connect(zv_taskWidget, &ZTaskWidget::zg_requestNewTaskCreation,
+            zv_dataSourceManager, &ZDataSourceManager::zp_createNewTask);
+    connect(zv_taskWidget, &ZTaskWidget::zg_requestTasksRemoving,
+            zv_dataSourceManager, &ZDataSourceManager::zp_deleteTasks);
+
+    // work controller connections
+    connect(zv_taskWidget, &ZTaskWidget::zg_requestTaskRun,
+            zv_workController, &ZWorkController::zp_initTaskStart);
+    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskStop,
+            zv_workController, &ZWorkController::zp_initTaskStop);
+
+    connect(zv_workController, &ZWorkController::zg_setStackedWidgetIndex,
+            zv_stackedWidget, &QStackedWidget::setCurrentIndex);
+
+    connect(zv_workController, &ZWorkController::zg_requestTaskStart,
+            zv_trainingManager, &ZTrainingManager::zp_startTask);
+    connect(zv_workController, &ZWorkController::zg_requestTaskStop,
+            zv_trainingManager, &ZTrainingManager::zp_stopTask);
+
 
 }
 //===================================================

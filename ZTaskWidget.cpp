@@ -8,7 +8,7 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 
-#include "ZTaskManager.h"
+#include "ZTrainingManager.h"
 #include "ZTaskListWidget.h"
 #include "ZTaskContentWidget.h"
 //===================================================
@@ -42,11 +42,19 @@ void ZTaskWidget::zh_createComponents()
     zv_taskContentWidget = new ZTaskContentWidget;
     zv_splitter->addWidget(zv_taskContentWidget);
 
-
 }
 //===================================================
 void ZTaskWidget::zh_createConnections()
 {
+    connect(zv_taskListWidget, &ZTaskListWidget::zg_requestNewTaskCreation,
+            this, &ZTaskWidget::zg_requestNewTaskCreation);
+    connect(zv_taskListWidget, &ZTaskListWidget::zg_requestTasksRemoving,
+            this, &ZTaskWidget::zg_requestTasksRemoving);
+
+    connect(zv_taskListWidget, &ZTaskListWidget::zg_currentTaskChanged,
+            zv_taskContentWidget, &ZTaskContentWidget::zg_currentIndexChanged);
+    connect(zv_taskContentWidget, &ZTaskContentWidget::zg_requestTrainingStart,
+            this, &ZTaskWidget::zh_initTaskRun);
 
 }
 //===================================================
@@ -63,12 +71,20 @@ void ZTaskWidget::zh_restoreSettings()
     zv_splitter->restoreState(settings.value("TaskWidgetSplitter").toByteArray());
 }
 //===================================================
-void ZTaskWidget::zp_connectToTaskManager(ZTaskManager* taskManager)
+void ZTaskWidget::zp_setTaskModel(QAbstractItemModel* model)
 {
-    zv_taskListWidget->zp_setModelToView(taskManager->zp_taskModel());
-    zv_taskContentWidget->zp_setContentManagment(taskManager);
+    zv_taskListWidget->zp_setTaskModel(model);
+    zv_taskContentWidget->zp_setTaskModel(model);
 }
 //===================================================
+void ZTaskWidget::zh_initTaskRun()
+{
+    int taskRow =  zv_taskListWidget->zp_currentTaskRow();
+    emit zg_requestTaskRun(taskRow);
+}
+//===================================================
+
+
 
 
 

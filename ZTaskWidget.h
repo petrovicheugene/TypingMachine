@@ -4,9 +4,10 @@
 //===================================================
 #include <QWidget>
 //===================================================
+class QAbstractItemModel;
 class QSplitter;
 
-class ZTaskManager;
+class ZTrainingManager;
 class ZTaskListWidget;
 class ZTaskContentWidget;
 //===================================================
@@ -17,10 +18,17 @@ public:
     explicit ZTaskWidget(QWidget *parent = nullptr);
     ~ZTaskWidget();
 
-    void zp_connectToTaskManager(ZTaskManager* taskManager);
+    void zp_setTaskModel(QAbstractItemModel* model);
 
 signals:
 
+    void zg_requestNewTaskCreation();
+    void zg_requestTasksRemoving(QVector<int> rows);
+    void zg_requestTaskRun(int row);
+
+private slots:
+
+    void zh_initTaskRun();
 
 private:
 
