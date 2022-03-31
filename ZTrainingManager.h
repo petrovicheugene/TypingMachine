@@ -37,9 +37,14 @@ private:
                                          Qt::Key_Menu
                                         };
 
+    QStringList zv_chunkList;
+
+
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+
+    void zh_prepareTask(ZTask task);
 
 };
 //===================================================

@@ -106,7 +106,7 @@ HEADERS += \
 #!isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    typing_trainer-01.sql
+    typing_trainer.sql
 
 RESOURCES += \
     resources.qrc

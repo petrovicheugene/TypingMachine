@@ -10,7 +10,10 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlTableModel>
+
+//===================================================
 //===================================================
 ZDataSourceManager::ZDataSourceManager(QObject *parent)
     : ZTaskSource{parent}
@@ -160,6 +163,11 @@ void ZDataSourceManager::zp_createNewTask()
     zv_taskModel->insertRows(row, 1);
     zv_taskModel->setData(zv_taskModel->index(row, 1),  tr("Task %1").arg(QString::number(taskNum)));
     zv_taskModel->setData(zv_taskModel->index(row, 2),  "");
+    zv_taskModel->setData(zv_taskModel->index(row, 3),  outputChunkStringMap.value(OUTPUT_CHUNK::WORD));
+    zv_taskModel->setData(zv_taskModel->index(row, 4),  true);
+    zv_taskModel->setData(zv_taskModel->index(row, 5),  true);
+    zv_taskModel->setData(zv_taskModel->index(row, 6),  chunkEndKeyStringMap.value(CHUNK_END_KEY::AUTO));
+
     zv_taskModel->submitAll();
 
 }
@@ -207,7 +215,22 @@ void ZDataSourceManager::zp_deleteTasks(QVector<int> rows)
 //===================================================
 ZTask ZDataSourceManager::zp_taskForRow(int row) const
 {
-    return ZTask();
+    QSqlRecord record = zv_taskModel->record(row);
+
+    if(record.isEmpty())
+    {
+        return ZTask();
+    }
+
+    ZTask task;
+    std::get<0>(task) = record.value(1).toString().toStdString();
+    std::get<1>(task) = record.value(2).toString().toStdString();
+    std::get<2>(task) = outputChunkStringMap.key(record.value(3).toString());
+    std::get<3>(task) = record.value(4).toBool();
+    std::get<4>(task) = record.value(5).toBool();
+    std::get<5>(task) = chunkEndKeyStringMap.key(record.value(6).toString());
+
+    return task;
 }
 //===================================================
 

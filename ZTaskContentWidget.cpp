@@ -1,13 +1,21 @@
 //===================================================
 #include "ZTaskContentWidget.h"
+#include "ZTask.h"
 
+#include <QCheckBox>
+#include <QComboBox>
 #include <QDataWidgetMapper>
 #include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QGroupBox>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QSlider>
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
+//===================================================
+
 //===================================================
 
 ZTaskContentWidget::ZTaskContentWidget(QWidget *parent)
@@ -22,11 +30,11 @@ void ZTaskContentWidget::zh_createComponents()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
-    QHBoxLayout* labelLayout = new QHBoxLayout;
-    mainLayout->addLayout(labelLayout);
+//    QHBoxLayout* labelLayout = new QHBoxLayout;
+//    mainLayout->addLayout(labelLayout);
 
-    zv_taskNameLabel = new QLabel;
-    labelLayout->addWidget(zv_taskNameLabel, 999999);
+//    zv_taskNameLabel = new QLabel;
+//    labelLayout->addWidget(zv_taskNameLabel, 999999);
 
     // WIdget layout
     QHBoxLayout* widgetLayout = new QHBoxLayout;
@@ -34,7 +42,13 @@ void ZTaskContentWidget::zh_createComponents()
 
     // Task Edit layout
     QVBoxLayout* taskMainLayout = new QVBoxLayout;
-    widgetLayout->addLayout(taskMainLayout);
+    widgetLayout->addLayout(taskMainLayout, 999999);
+
+    QHBoxLayout* labelLayout = new QHBoxLayout;
+    taskMainLayout->addLayout(labelLayout);
+
+    zv_taskNameLabel = new QLabel;
+    labelLayout->addWidget(zv_taskNameLabel, 999999);
 
     zv_taskTextEdit = new QPlainTextEdit;
     taskMainLayout->addWidget(zv_taskTextEdit);
@@ -53,7 +67,12 @@ void ZTaskContentWidget::zh_createComponents()
     QVBoxLayout* taskSettingsLayout = new QVBoxLayout;
     widgetLayout->addLayout(taskSettingsLayout);
 
-    taskSettingsLayout->addWidget(new QWidget);
+//    labelLayout = new QHBoxLayout;
+//    taskSettingsLayout->addLayout(labelLayout);
+
+//    labelLayout->addWidget(new QLabel(tr("Task settings")), 999999);
+
+    taskSettingsLayout->addWidget(zh_createTaskSettingsWidget());
 
     QHBoxLayout* taskSettingsBasementLayout = new QHBoxLayout;
     taskSettingsBasementLayout->addStretch(999999);
@@ -64,6 +83,49 @@ void ZTaskContentWidget::zh_createComponents()
     zv_runTaskButton->setToolTip(tr("Run task"));
     taskSettingsBasementLayout->addWidget(zv_runTaskButton);
 
+}
+//===================================================
+QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
+{
+    QWidget* w = new QGroupBox(tr("Task settings"));
+
+    QFormLayout* layout = new QFormLayout;
+    w->setLayout(layout);
+
+    zv_outputChunkComboBox = new QComboBox;
+    foreach(auto key, outputChunkStringMap.keys())
+    {
+        zv_outputChunkComboBox->insertItem(zv_outputChunkComboBox->count(),
+                                           outputChunkStringMap.value(key), key);
+    }
+
+//     zv_outputChunkComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
+
+    layout->addRow(tr("Output by:"), zv_outputChunkComboBox);
+
+    zv_outputOrderCheckBox = new QCheckBox;
+    layout->addRow(tr("Random output:"), zv_outputOrderCheckBox);
+
+    zv_repeatTaskCheckBox = new QCheckBox;
+    layout->addRow(tr("Repeat task:"), zv_repeatTaskCheckBox);
+
+    zv_chunkEndKeyComboBox = new QComboBox;
+    foreach(auto key, chunkEndKeyStringMap.keys())
+    {
+        zv_chunkEndKeyComboBox->insertItem(zv_chunkEndKeyComboBox->count(),
+                                           chunkEndKeyStringMap.value(key), key);
+    }
+
+    for(int i = 0; i <  zv_chunkEndKeyComboBox->count(); i++)
+    {
+        qDebug() << i << zv_chunkEndKeyComboBox->itemData(i);
+    }
+
+    qDebug() << zv_chunkEndKeyComboBox->dynamicPropertyNames();
+//     zv_chunkEndKeyComboBox->insertItems(-1, QStringList({tr("Auto"), tr("Enter"), tr("Space")}));
+    layout->addRow(tr("Finish chunk by:"), zv_chunkEndKeyComboBox);
+
+    return w;
 }
 //===================================================
 void ZTaskContentWidget::zh_createConnections()
@@ -85,8 +147,13 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper = new QDataWidgetMapper(this);
     zv_mapper->setModel(model);
     zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
-    zv_mapper->addMapping(zv_taskTextEdit, 2);
     zv_mapper->addMapping(zv_taskNameLabel, 1, "text");
+    zv_mapper->addMapping(zv_taskTextEdit, 2);
+    zv_mapper->addMapping(zv_outputChunkComboBox, 3);
+    zv_mapper->addMapping(zv_outputOrderCheckBox, 4);
+    zv_mapper->addMapping(zv_repeatTaskCheckBox, 5);
+    zv_mapper->addMapping(zv_chunkEndKeyComboBox, 6);
+
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
 

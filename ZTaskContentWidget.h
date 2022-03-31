@@ -5,8 +5,11 @@
 #include <QWidget>
 //===================================================
 class QAbstractItemModel;
+class QCheckBox;
+class QComboBox;
 class QDataWidgetMapper;
 class QLabel;
+class QLineEdit;
 class QPushButton;
 class QSlider;
 class QSplitter;
@@ -41,12 +44,20 @@ private:
     QLabel* zv_taskNameLabel;
     QPlainTextEdit* zv_taskTextEdit;
     QSlider* zv_fontSizeSlider;
+
+    QComboBox* zv_outputChunkComboBox;
+    QCheckBox* zv_outputOrderCheckBox;
+    QCheckBox* zv_repeatTaskCheckBox;
+    QComboBox* zv_chunkEndKeyComboBox;
+
     QPushButton* zv_runTaskButton;
+
 
 
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+    QWidget* zh_createTaskSettingsWidget();
 
 };
 //===================================================

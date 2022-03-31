@@ -52,13 +52,17 @@ void ZTaskListWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_taskListView->setModel(model);
     zv_taskListView->setColumnHidden(0, true);
     zv_taskListView->setColumnHidden(2, true);
+    zv_taskListView->setColumnHidden(3, true);
+    zv_taskListView->setColumnHidden(4, true);
+    zv_taskListView->setColumnHidden(5, true);
+    zv_taskListView->setColumnHidden(6, true);
+
     zv_taskListView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
     connect(model, &QAbstractItemModel::rowsInserted,
             this, &ZTaskListWidget::zh_onNewTaskInserting);
     connect(zv_taskListView->selectionModel(), &QItemSelectionModel::currentRowChanged,
             this, &ZTaskListWidget::zh_onCurrentRowChange);
-
 }
 //===================================================
 void ZTaskListWidget::zh_initNewTaskCreation()

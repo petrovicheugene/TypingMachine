@@ -3,7 +3,6 @@
 #define ZDATASOURCEMANAGER_H
 //===================================================
 #include "ZTaskSource.h"
-
 //===================================================
 class QAbstractItemModel;
 class QSqlTableModel;

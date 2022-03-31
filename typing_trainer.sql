@@ -6,7 +6,11 @@ BEGIN;
 CREATE TABLE "tasks"(
   "id" INTEGER PRIMARY KEY NOT NULL,
   "name" VARCHAR(80),
-  "content" TEXT
+  "content" TEXT,
+  "output_chunk" VARCHAR(16),
+  "random_output" INTEGER,
+  "repeat_task" INTEGER,
+  "chunk_end_key" VARCHAR(16)
 );
 
 --CREATE TABLE "measuring_conditions"(
