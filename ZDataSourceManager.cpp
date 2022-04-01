@@ -206,7 +206,6 @@ void ZDataSourceManager::zp_deleteTasks(QVector<int> rows)
     for(int i = rows.count() - 1;  i >= 0; --i)
     {
         zv_taskModel->removeRows(rows.at(i), 1);
-
     }
 
     zv_taskModel->submitAll();

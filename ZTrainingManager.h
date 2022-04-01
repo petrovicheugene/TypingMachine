@@ -38,6 +38,9 @@ private:
                                         };
 
     QStringList zv_chunkList;
+    bool zv_random;
+    bool zv_repeat;
+    CHUNK_END_KEY zv_chunkEndKey;
 
 
     // FUNCS
