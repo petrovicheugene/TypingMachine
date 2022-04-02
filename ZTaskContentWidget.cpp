@@ -103,11 +103,13 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
 
     layout->addRow(tr("Output by:"), zv_outputChunkComboBox);
 
-    zv_outputOrderCheckBox = new QCheckBox;
-    layout->addRow(tr("Random output:"), zv_outputOrderCheckBox);
-
-    zv_repeatTaskCheckBox = new QCheckBox;
-    layout->addRow(tr("Repeat task:"), zv_repeatTaskCheckBox);
+    zv_outputOrderComboBox = new QComboBox;
+    foreach(auto key, outputOrderStringMap.keys())
+    {
+        zv_outputOrderComboBox->insertItem(zv_outputOrderComboBox->count(),
+                                           outputOrderStringMap.value(key), key);
+    }
+    layout->addRow(tr("Output order:"), zv_outputOrderComboBox);
 
     zv_chunkEndKeyComboBox = new QComboBox;
     foreach(auto key, chunkEndKeyStringMap.keys())
@@ -115,15 +117,10 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
         zv_chunkEndKeyComboBox->insertItem(zv_chunkEndKeyComboBox->count(),
                                            chunkEndKeyStringMap.value(key), key);
     }
-
-    for(int i = 0; i <  zv_chunkEndKeyComboBox->count(); i++)
-    {
-        qDebug() << i << zv_chunkEndKeyComboBox->itemData(i);
-    }
-
-    qDebug() << zv_chunkEndKeyComboBox->dynamicPropertyNames();
-//     zv_chunkEndKeyComboBox->insertItems(-1, QStringList({tr("Auto"), tr("Enter"), tr("Space")}));
     layout->addRow(tr("Finish chunk by:"), zv_chunkEndKeyComboBox);
+
+    zv_repeatTaskCheckBox = new QCheckBox;
+    layout->addRow(tr("Repeat task:"), zv_repeatTaskCheckBox);
 
     return w;
 }
@@ -150,9 +147,9 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper->addMapping(zv_taskNameLabel, 1, "text");
     zv_mapper->addMapping(zv_taskTextEdit, 2);
     zv_mapper->addMapping(zv_outputChunkComboBox, 3);
-    zv_mapper->addMapping(zv_outputOrderCheckBox, 4);
-    zv_mapper->addMapping(zv_repeatTaskCheckBox, 5);
-    zv_mapper->addMapping(zv_chunkEndKeyComboBox, 6);
+    zv_mapper->addMapping(zv_outputOrderComboBox, 4);
+    zv_mapper->addMapping(zv_chunkEndKeyComboBox, 5);
+    zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);

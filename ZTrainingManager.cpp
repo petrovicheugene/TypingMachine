@@ -46,7 +46,7 @@ void ZTrainingManager::zh_createConnections()
 void ZTrainingManager::zp_startTask(ZTask task)
 {
     zh_prepareTask(task);
-
+    zv_chunkCounter = 0;
     qApp->installEventFilter(this);
 }
 //===================================================
@@ -61,9 +61,9 @@ void ZTrainingManager::zh_prepareTask(ZTask task)
     QString taskName =  std::get<0>(task).c_str();
     QString taskText = std::get<1>(task).c_str();
     OUTPUT_CHUNK outputChunk = std::get<2>(task);
-    zv_random = std::get<3>(task);
-    zv_repeat = std::get<4>(task);
-    zv_chunkEndKey = std::get<5>(task);
+    zv_outputOrder = std::get<3>(task);
+    zv_chunkEndKey = std::get<4>(task);
+    zv_repeat = std::get<5>(task);
 
     switch(outputChunk)
     {
@@ -76,5 +76,14 @@ void ZTrainingManager::zh_prepareTask(ZTask task)
     }
 }
 //===================================================
+QString ZTrainingManager::zh_nextChunk()
+{
+
+
+    //zv_chunkCounter;
+}
+//===================================================
+
+
 
 

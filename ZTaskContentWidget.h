@@ -46,9 +46,9 @@ private:
     QSlider* zv_fontSizeSlider;
 
     QComboBox* zv_outputChunkComboBox;
-    QCheckBox* zv_outputOrderCheckBox;
-    QCheckBox* zv_repeatTaskCheckBox;
+    QComboBox* zv_outputOrderComboBox;
     QComboBox* zv_chunkEndKeyComboBox;
+    QCheckBox* zv_repeatTaskCheckBox;
 
     QPushButton* zv_runTaskButton;
 

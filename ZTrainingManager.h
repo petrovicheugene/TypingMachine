@@ -38,16 +38,17 @@ private:
                                         };
 
     QStringList zv_chunkList;
-    bool zv_random;
-    bool zv_repeat;
+    OUTPUT_ORDER zv_outputOrder;
     CHUNK_END_KEY zv_chunkEndKey;
-
+    bool zv_repeat;
+    int zv_chunkCounter;
 
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
 
     void zh_prepareTask(ZTask task);
+    QString zh_nextChunk();
 
 };
 //===================================================

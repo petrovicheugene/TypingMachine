@@ -7,10 +7,10 @@ CREATE TABLE "tasks"(
   "id" INTEGER PRIMARY KEY NOT NULL,
   "name" VARCHAR(80),
   "content" TEXT,
-  "output_chunk" VARCHAR(16),
-  "random_output" INTEGER,
-  "repeat_task" INTEGER,
-  "chunk_end_key" VARCHAR(16)
+  "output_chunk" VARCHAR(20),
+  "output_order" VARCHAR(20),
+  "chunk_end_key" VARCHAR(20),
+  "repeat_task" INTEGER
 );
 
 --CREATE TABLE "measuring_conditions"(

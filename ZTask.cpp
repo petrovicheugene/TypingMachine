@@ -9,6 +9,14 @@ QMap<OUTPUT_CHUNK, QString> initOutputChunkStringMap()
     return map;
 }
 //===================================================
+QMap<OUTPUT_ORDER, QString> initOutputOrderStringMap()
+{
+    QMap<OUTPUT_ORDER, QString> map;
+    map.insert(RANDOM, QObject::tr("Random"));
+    map.insert(SUCCESSIVELY, QObject::tr("Successively"));
+    return map;
+}
+//===================================================
 QMap<CHUNK_END_KEY, QString> initChunkEndKeyStringMap()
 {
     QMap<CHUNK_END_KEY, QString> map;
@@ -19,5 +27,6 @@ QMap<CHUNK_END_KEY, QString> initChunkEndKeyStringMap()
 }
 //===================================================
 QMap<OUTPUT_CHUNK, QString> outputChunkStringMap = initOutputChunkStringMap();
+QMap<OUTPUT_ORDER, QString> outputOrderStringMap = initOutputOrderStringMap();
 QMap<CHUNK_END_KEY, QString> chunkEndKeyStringMap = initChunkEndKeyStringMap();
 //===================================================

@@ -13,16 +13,23 @@ enum OUTPUT_CHUNK {WORD,
 enum CHUNK_END_KEY {AUTO = 0,
                     ENTER = Qt::Key_Enter,
                     SPACE = Qt::Key_Space};
+
+enum OUTPUT_ORDER {RANDOM = 0,
+                    SUCCESSIVELY = 1,
+                    };
+
 //===================================================
 extern QMap<OUTPUT_CHUNK, QString> outputChunkStringMap;
+extern QMap<OUTPUT_ORDER, QString> outputOrderStringMap;
 extern QMap<CHUNK_END_KEY, QString> chunkEndKeyStringMap;
 
+//===================================================
 typedef std::tuple<std::string,
 std::string,
 OUTPUT_CHUNK,
-bool,
-bool,
-CHUNK_END_KEY> ZTask;
+OUTPUT_ORDER,
+CHUNK_END_KEY,
+bool> ZTask;
 
 //===================================================
 #endif // ZTASK_H

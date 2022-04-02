@@ -164,9 +164,9 @@ void ZDataSourceManager::zp_createNewTask()
     zv_taskModel->setData(zv_taskModel->index(row, 1),  tr("Task %1").arg(QString::number(taskNum)));
     zv_taskModel->setData(zv_taskModel->index(row, 2),  "");
     zv_taskModel->setData(zv_taskModel->index(row, 3),  outputChunkStringMap.value(OUTPUT_CHUNK::WORD));
-    zv_taskModel->setData(zv_taskModel->index(row, 4),  true);
-    zv_taskModel->setData(zv_taskModel->index(row, 5),  true);
-    zv_taskModel->setData(zv_taskModel->index(row, 6),  chunkEndKeyStringMap.value(CHUNK_END_KEY::AUTO));
+    zv_taskModel->setData(zv_taskModel->index(row, 4),  outputOrderStringMap.value(OUTPUT_ORDER::RANDOM));
+    zv_taskModel->setData(zv_taskModel->index(row, 5),  chunkEndKeyStringMap.value(CHUNK_END_KEY::AUTO));
+    zv_taskModel->setData(zv_taskModel->index(row, 6),  true);
 
     zv_taskModel->submitAll();
 
@@ -225,9 +225,9 @@ ZTask ZDataSourceManager::zp_taskForRow(int row) const
     std::get<0>(task) = record.value(1).toString().toStdString();
     std::get<1>(task) = record.value(2).toString().toStdString();
     std::get<2>(task) = outputChunkStringMap.key(record.value(3).toString());
-    std::get<3>(task) = record.value(4).toBool();
-    std::get<4>(task) = record.value(5).toBool();
-    std::get<5>(task) = chunkEndKeyStringMap.key(record.value(6).toString());
+    std::get<3>(task) = outputOrderStringMap.key(record.value(4).toString());
+    std::get<4>(task) = chunkEndKeyStringMap.key(record.value(5).toString());
+    std::get<5>(task) = record.value(6).toBool();
 
     return task;
 }
