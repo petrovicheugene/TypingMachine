@@ -117,7 +117,7 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
         zv_chunkEndKeyComboBox->insertItem(zv_chunkEndKeyComboBox->count(),
                                            chunkEndKeyStringMap.value(key), key);
     }
-    layout->addRow(tr("Finish chunk by:"), zv_chunkEndKeyComboBox);
+    layout->addRow(tr("Next chunk by:"), zv_chunkEndKeyComboBox);
 
     zv_repeatTaskCheckBox = new QCheckBox;
     layout->addRow(tr("Repeat task:"), zv_repeatTaskCheckBox);

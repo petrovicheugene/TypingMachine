@@ -17,7 +17,7 @@ public:
 
 public slots:
 
-    void zp_startTask(ZTask task);
+    void zp_initTaskStart(ZTask task);
     void zp_stopTask();
 
 protected:
@@ -41,14 +41,24 @@ private:
     OUTPUT_ORDER zv_outputOrder;
     CHUNK_END_KEY zv_chunkEndKey;
     bool zv_repeat;
-    int zv_chunkCounter;
+
+    bool zv_chunkCompleted;
+    // int zv_chunkCounter;
+    int zv_currentSymbolIndex;
+    int zv_currentChunkIndex;
+    bool zv_wrongSymbol;
 
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+    void zh_startTask();
 
     void zh_prepareTask(ZTask task);
-    QString zh_nextChunk();
+    void zh_handleKeyPress(QString key);
+
+
+    bool zh_nextChunk();
+    int zh_nextChunkIndex();
 
 };
 //===================================================

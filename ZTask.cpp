@@ -21,7 +21,7 @@ QMap<CHUNK_END_KEY, QString> initChunkEndKeyStringMap()
 {
     QMap<CHUNK_END_KEY, QString> map;
     map.insert(AUTO, QObject::tr("Auto"));
-    map.insert(ENTER, QObject::tr("Enter"));
+    map.insert(RETURN, QObject::tr("Enter"));
     map.insert(SPACE, QObject::tr("Space"));
     return map;
 }

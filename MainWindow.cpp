@@ -87,7 +87,7 @@ void MainWindow::zh_createConnections()
             zv_stackedWidget, &QStackedWidget::setCurrentIndex);
 
     connect(zv_workController, &ZWorkController::zg_requestTaskStart,
-            zv_trainingManager, &ZTrainingManager::zp_startTask);
+            zv_trainingManager, &ZTrainingManager::zp_initTaskStart);
     connect(zv_workController, &ZWorkController::zg_requestTaskStop,
             zv_trainingManager, &ZTrainingManager::zp_stopTask);
 

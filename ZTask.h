@@ -11,7 +11,7 @@ enum OUTPUT_CHUNK {WORD,
                    STRING};
 
 enum CHUNK_END_KEY {AUTO = 0,
-                    ENTER = Qt::Key_Enter,
+                    RETURN = Qt::Key_Return,
                     SPACE = Qt::Key_Space};
 
 enum OUTPUT_ORDER {RANDOM = 0,
