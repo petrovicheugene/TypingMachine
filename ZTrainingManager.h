@@ -3,8 +3,8 @@
 #define ZTRAININGMANAGER_H
 //===================================================
 #include <QObject>
+#include <QMap>
 #include <QSet>
-
 #include "ZTask.h"
 //===================================================
 //===================================================
@@ -37,7 +37,9 @@ private:
                                          Qt::Key_Menu
                                         };
 
-    QStringList zv_chunkList;
+    // QStringList zv_chunkList;
+
+    QMap<int, QString> zv_chunkMap;
     OUTPUT_ORDER zv_outputOrder;
     CHUNK_END_KEY zv_chunkEndKey;
     bool zv_repeat;
@@ -51,6 +53,7 @@ private:
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+    void zh_createChunkMap(QStringList chunkList);
     void zh_startTask();
 
     void zh_prepareTask(ZTask task);

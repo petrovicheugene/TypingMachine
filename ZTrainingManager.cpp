@@ -4,7 +4,11 @@
 #include <QApplication>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QRandomGenerator64>
 #include <QRegularExpression>
+
+//===================================================
+int myrandom (int i) { return std::rand()%i;}
 //===================================================
 ZTrainingManager::ZTrainingManager(QObject *parent)
     : QObject{parent}
@@ -84,15 +88,56 @@ void ZTrainingManager::zh_prepareTask(ZTask task)
     zv_chunkEndKey = std::get<4>(task);
     zv_repeat = std::get<5>(task);
 
+    QStringList chunkList;
     switch(outputChunk)
     {
     case OUTPUT_CHUNK::WORD:
-        zv_chunkList = taskText.split(QRegularExpression ("[\\s\\n]"), Qt::SkipEmptyParts);
+        chunkList = taskText.split(QRegularExpression ("[\\s\\n]"), Qt::SkipEmptyParts);
         break;
     case OUTPUT_CHUNK::STRING:
-        zv_chunkList = taskText.split(QRegularExpression ("[\\n]"));
+        chunkList = taskText.split(QRegularExpression ("[\\n]"));
         break;
     }
+
+    // create map
+    if()
+    zh_createChunkMap(chunkList)
+
+    // shuffle if random
+
+    // zv_chunkMap.insert(keys(i), chunkList.at(i));
+
+
+
+}
+//===================================================
+void ZTrainingManager::zh_createChunkMap(QStringList chunkList)
+{
+
+}
+//===================================================
+std::vector<int> ZTrainingManager::zh_createKeyVector() const
+{
+    std::vector<int> keyVector = zh_createKeyVector();
+
+    if(zv_outputOrder == SUCCESSIVELY)
+    {
+        for (int i = 0; i < chunkList.count(); ++i)
+        {
+            keyVector.push_back(i);
+        }
+    }
+    else if (zv_outputOrder == RANDOM)
+    {
+        for (int i = 0; i < chunkList.count(); ++i)
+        {
+            keyVector.push_back(i);
+        }
+
+        std::srand(unsigned(std::time(0)));
+        std::random_shuffle(keyVector.begin(), keyVector.end(), myrandom);
+    }
+
 }
 //===================================================
 bool ZTrainingManager::zh_nextChunk()
@@ -110,10 +155,7 @@ bool ZTrainingManager::zh_nextChunk()
 
     qDebug() << "NEXT CHUNK" << zv_chunkList.at(zv_currentChunkIndex);
 
-
     return true;
-
-    //zv_chunkCounter;
 }
 //===================================================
 int ZTrainingManager::zh_nextChunkIndex()

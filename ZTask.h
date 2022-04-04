@@ -15,8 +15,9 @@ enum CHUNK_END_KEY {AUTO = 0,
                     SPACE = Qt::Key_Space};
 
 enum OUTPUT_ORDER {RANDOM = 0,
-                    SUCCESSIVELY = 1,
-                    };
+                   SUCCESSIVELY = 1,
+                   TYPING_SPEED = 2
+                  };
 
 //===================================================
 extern QMap<OUTPUT_CHUNK, QString> outputChunkStringMap;

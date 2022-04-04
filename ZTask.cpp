@@ -14,6 +14,7 @@ QMap<OUTPUT_ORDER, QString> initOutputOrderStringMap()
     QMap<OUTPUT_ORDER, QString> map;
     map.insert(RANDOM, QObject::tr("Random"));
     map.insert(SUCCESSIVELY, QObject::tr("Successively"));
+    map.insert(SUCCESSIVELY, QObject::tr("Typing speed"));
     return map;
 }
 //===================================================

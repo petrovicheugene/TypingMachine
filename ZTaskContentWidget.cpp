@@ -143,13 +143,14 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 {
     zv_mapper = new QDataWidgetMapper(this);
     zv_mapper->setModel(model);
-    zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
     zv_mapper->addMapping(zv_taskNameLabel, 1, "text");
     zv_mapper->addMapping(zv_taskTextEdit, 2);
     zv_mapper->addMapping(zv_outputChunkComboBox, 3);
     zv_mapper->addMapping(zv_outputOrderComboBox, 4);
     zv_mapper->addMapping(zv_chunkEndKeyComboBox, 5);
     zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);
+
+    zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
