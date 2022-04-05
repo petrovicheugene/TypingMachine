@@ -92,16 +92,16 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
     QFormLayout* layout = new QFormLayout;
     w->setLayout(layout);
 
-    zv_outputChunkComboBox = new QComboBox;
-    foreach(auto key, outputChunkStringMap.keys())
+    zv_outputLineComboBox = new QComboBox;
+    foreach(auto key, outputLineStringMap.keys())
     {
-        zv_outputChunkComboBox->insertItem(zv_outputChunkComboBox->count(),
-                                           outputChunkStringMap.value(key), key);
+        zv_outputLineComboBox->insertItem(zv_outputLineComboBox->count(),
+                                           outputLineStringMap.value(key), key);
     }
 
-//     zv_outputChunkComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
+//     zv_outputLineComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
 
-    layout->addRow(tr("Output by:"), zv_outputChunkComboBox);
+    layout->addRow(tr("Output by:"), zv_outputLineComboBox);
 
     zv_outputOrderComboBox = new QComboBox;
     foreach(auto key, outputOrderStringMap.keys())
@@ -111,13 +111,13 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
     }
     layout->addRow(tr("Output order:"), zv_outputOrderComboBox);
 
-    zv_chunkEndKeyComboBox = new QComboBox;
-    foreach(auto key, chunkEndKeyStringMap.keys())
+    zv_lineEndKeyComboBox = new QComboBox;
+    foreach(auto key, lineEndKeyStringMap.keys())
     {
-        zv_chunkEndKeyComboBox->insertItem(zv_chunkEndKeyComboBox->count(),
-                                           chunkEndKeyStringMap.value(key), key);
+        zv_lineEndKeyComboBox->insertItem(zv_lineEndKeyComboBox->count(),
+                                           lineEndKeyStringMap.value(key), key);
     }
-    layout->addRow(tr("Next chunk by:"), zv_chunkEndKeyComboBox);
+    layout->addRow(tr("Next line by:"), zv_lineEndKeyComboBox);
 
     zv_repeatTaskCheckBox = new QCheckBox;
     layout->addRow(tr("Repeat task:"), zv_repeatTaskCheckBox);
@@ -145,9 +145,9 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper->setModel(model);
     zv_mapper->addMapping(zv_taskNameLabel, 1, "text");
     zv_mapper->addMapping(zv_taskTextEdit, 2);
-    zv_mapper->addMapping(zv_outputChunkComboBox, 3);
+    zv_mapper->addMapping(zv_outputLineComboBox, 3);
     zv_mapper->addMapping(zv_outputOrderComboBox, 4);
-    zv_mapper->addMapping(zv_chunkEndKeyComboBox, 5);
+    zv_mapper->addMapping(zv_lineEndKeyComboBox, 5);
     zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);
 
     zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);

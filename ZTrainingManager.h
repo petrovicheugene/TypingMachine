@@ -3,9 +3,11 @@
 #define ZTRAININGMANAGER_H
 //===================================================
 #include <QObject>
-#include <QMap>
 #include <QSet>
+
+#include "ZAbstractLineController.h"
 #include "ZTask.h"
+
 //===================================================
 //===================================================
 class ZTrainingManager : public QObject
@@ -26,6 +28,10 @@ protected:
 
 signals:
 
+private slots:
+
+    void zh_onTaskFinish();
+
 private:
 
     // VARS
@@ -37,31 +43,23 @@ private:
                                          Qt::Key_Menu
                                         };
 
-    // QStringList zv_chunkList;
+    QString zv_taskName;
+    QString zv_line;
+    ZAbstractLineController* zv_LineController;
+    LINE_END_KEY zv_lineEndKey;
 
-    QMap<int, QString> zv_chunkMap;
-    OUTPUT_ORDER zv_outputOrder;
-    CHUNK_END_KEY zv_chunkEndKey;
-    bool zv_repeat;
-
-    bool zv_chunkCompleted;
-    // int zv_chunkCounter;
+    bool zv_lineCompleted;
     int zv_currentSymbolIndex;
-    int zv_currentChunkIndex;
     bool zv_wrongSymbol;
 
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
-    void zh_createChunkMap(QStringList chunkList);
     void zh_startTask();
 
     void zh_prepareTask(ZTask task);
     void zh_handleKeyPress(QString key);
-
-
-    bool zh_nextChunk();
-    int zh_nextChunkIndex();
+    void zh_nextLine();
 
 };
 //===================================================

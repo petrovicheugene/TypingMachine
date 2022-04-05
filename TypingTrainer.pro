@@ -73,7 +73,11 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
 SOURCES += \
     MainWindow.cpp \
+    ZAbstractLineController.cpp \
     ZDataSourceManager.cpp \
+    ZLineControllerCreator.cpp \
+    ZRandomLineController.cpp \
+    ZSuccessivelyLineController.cpp \
     ZTask.cpp \
     ZTaskContentWidget.cpp \
     ZTaskListWidget.cpp \
@@ -82,13 +86,18 @@ SOURCES += \
     ZTrainingManager.cpp \
     ZTrainingWidget.cpp \
     ZTranslatorManager.cpp \
+    ZTypingSpeedLineController.cpp \
     ZWorkController.cpp \
         main.cpp
 
 
 HEADERS += \
+    ZAbstractLineController.h \
     ZDataSourceManager.h \
+    ZLineControllerCreator.h \
+    ZRandomLineController.h \
     ZSqlTableStatements.h \
+    ZSuccessivelyLineController.h \
     ZTask.h \
     ZTaskSource.h \
     ZTrainingManager.h \
@@ -98,6 +107,7 @@ HEADERS += \
     ZTaskListWidget.h \
     ZTaskWidget.h \
     ZTrainingWidget.h \
+    ZTypingSpeedLineController.h \
     ZWorkController.h
 
 # Default rules for deployment.

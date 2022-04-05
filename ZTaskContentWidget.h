@@ -45,9 +45,9 @@ private:
     QPlainTextEdit* zv_taskTextEdit;
     QSlider* zv_fontSizeSlider;
 
-    QComboBox* zv_outputChunkComboBox;
+    QComboBox* zv_outputLineComboBox;
     QComboBox* zv_outputOrderComboBox;
-    QComboBox* zv_chunkEndKeyComboBox;
+    QComboBox* zv_lineEndKeyComboBox;
     QCheckBox* zv_repeatTaskCheckBox;
 
     QPushButton* zv_runTaskButton;

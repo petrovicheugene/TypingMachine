@@ -7,9 +7,9 @@ CREATE TABLE "tasks"(
   "id" INTEGER PRIMARY KEY NOT NULL,
   "name" VARCHAR(80),
   "content" TEXT,
-  "output_chunk" VARCHAR(20),
+  "output_line" VARCHAR(20),
   "output_order" VARCHAR(20),
-  "chunk_end_key" VARCHAR(20),
+  "line_end_key" VARCHAR(20),
   "repeat_task" INTEGER
 );
 
