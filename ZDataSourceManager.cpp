@@ -28,6 +28,8 @@ ZDataSourceManager::ZDataSourceManager(QObject *parent)
         throw;
     }
 
+    zh_reviseDefaultUser();
+
     zh_createComponents();
     zh_createConnections();
 
@@ -102,7 +104,7 @@ bool ZDataSourceManager::zh_reviseDatabaseTables()
     if(!file.open(QIODevice::ReadOnly))
     {
         QString msg = tr("Cannot open file with error: \"%1\".").arg(file.errorString());
-        QMessageBox::warning(nullptr, tr(""), msg, QMessageBox::Ok);
+        QMessageBox::warning(nullptr, tr("Error"), msg, QMessageBox::Ok);
 
         return false;
     }
@@ -140,7 +142,7 @@ bool ZDataSourceManager::zh_reviseDatabaseTables()
                 if(!query.exec(sqlStatement))
                 {
                     QString msg = tr("The SQL statement \"%1\" has been executed with error: \"%2\"!").arg(sqlStatement, query.lastError().text());
-                    QMessageBox::warning(nullptr, tr(""), msg, QMessageBox::Ok);
+                    QMessageBox::warning(nullptr, tr("SQL Error"), msg, QMessageBox::Ok);
                     file.close();
                     return false;
                 }
@@ -153,6 +155,43 @@ bool ZDataSourceManager::zh_reviseDatabaseTables()
     file.close();
     return true;
 
+}
+//===================================================
+void ZDataSourceManager::zh_reviseDefaultUser()
+{
+    QString statement = QString("SELECT * FROM users WHERE name = \"%1\"").arg(zv_default_user_name);
+    QSqlQuery query;
+
+    if(!query.exec(statement))
+    {
+        QString msg = tr("The SQL statement \"%1\" has been executed with error: \"%2\"!").arg(statement, query.lastError().text());
+        QMessageBox::warning(nullptr, tr("SQL Error"), msg, QMessageBox::Ok);
+        return;
+    }
+
+    if(query.next() && query.value(1).toString() == zv_default_user_name)
+    {
+        qDebug() << query.value(0) << query.value(1) ;
+        return;
+    }
+
+    // create default user
+    statement = "INSERT INTO users (id, name) VALUES (:id, :name)";
+    if(!query.prepare(statement))
+    {
+        QString msg = tr("The SQL statement \"%1\" has been executed with error: \"%2\"!").arg(statement, query.lastError().text());
+        QMessageBox::warning(nullptr, tr("SQL Error"), msg, QMessageBox::Ok);
+        return;
+    }
+
+    query.bindValue(":id", 0);
+    query.bindValue(":name", zv_default_user_name);
+    if(!query.exec())
+    {
+        QString msg = tr("The SQL statement \"%1\" has been executed with error: \"%2\"!").arg(statement, query.lastError().text());
+        QMessageBox::warning(nullptr, tr("SQL Error"), msg, QMessageBox::Ok);
+
+    }
 }
 //===================================================
 void ZDataSourceManager::zp_createNewTask()

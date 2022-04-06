@@ -13,6 +13,17 @@ public:
     QString zp_nextLine() override;
     void zp_reset() override;
 
+private:
+
+    // VARS
+    bool zv_repeat;
+    int zv_index;
+    QVector<int> zv_lineIndices;
+
+    // FUNCS
+    void zh_initIndices();
+    void zh_suffleIndices();
+
 };
 //===================================================
 #endif // ZRANDOMLINECONTROLLER_H

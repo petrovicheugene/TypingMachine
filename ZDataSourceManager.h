@@ -28,6 +28,7 @@ signals:
 private:
 
     // VARS
+    const QString zv_default_user_name = "default_user";
     QSqlTableModel* zv_taskModel;
     const QString zv_databaseName = "typing_training.sqlite";
 
@@ -36,6 +37,8 @@ private:
     void zh_createComponents();
     void zh_createConnections();
     bool zh_reviseDatabaseTables();
+    void zh_reviseDefaultUser();
+
     int zh_findNextTaskNum() const;
 
 

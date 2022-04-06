@@ -14,7 +14,11 @@ class ZTrainingWidget : public QWidget
 public:
     explicit ZTrainingWidget(QWidget *parent = nullptr);
 
-    void zp_connectToTrainingManager(ZTrainingManager* taskManager);
+    void zp_connectToTrainingManager(ZTrainingManager* manager);
+
+public slots:
+
+    void zp_update();
 
 signals:
 
@@ -23,6 +27,7 @@ signals:
 private:
 
     // VARS
+    ZTrainingManager* zv_trainingManager;
     QPushButton* zv_stopBtn;
 
     // FUNCS

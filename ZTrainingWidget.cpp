@@ -1,5 +1,6 @@
 //===================================================
 #include "ZTrainingWidget.h"
+#include "ZTrainingManager.h"
 
 #include <QDebug>
 #include <QDialogButtonBox>
@@ -10,6 +11,7 @@
 ZTrainingWidget::ZTrainingWidget(QWidget *parent)
     : QWidget{parent}
 {
+    zv_trainingManager = nullptr;
     zh_createComponents();
     zh_createConnections();
 }
@@ -34,9 +36,18 @@ void ZTrainingWidget::zh_createConnections()
             this, &ZTrainingWidget::zg_requestTaskStop);
 }
 //===================================================
-void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* taskManager)
+void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
 {
+    zv_trainingManager = manager;
+    connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
+            this, &ZTrainingWidget::zp_update);
+}
+//===================================================
+void ZTrainingWidget::zp_update()
+{
+    qDebug() << "CurLine" << zv_trainingManager->zp_currentLine() << zv_trainingManager->zp_currentSymbolIndex() << zv_trainingManager->zp_isWrong();
 
 }
 //===================================================
+
 

@@ -15,8 +15,6 @@ public:
     QString zp_nextLine() override;
     void zp_reset() override;
 
-signals:
-
 private:
 
     // VARS

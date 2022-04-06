@@ -76,6 +76,7 @@ SOURCES += \
     ZAbstractLineController.cpp \
     ZDataSourceManager.cpp \
     ZLineControllerCreator.cpp \
+    ZNewUserWidget.cpp \
     ZRandomLineController.cpp \
     ZSuccessivelyLineController.cpp \
     ZTask.cpp \
@@ -87,6 +88,7 @@ SOURCES += \
     ZTrainingWidget.cpp \
     ZTranslatorManager.cpp \
     ZTypingSpeedLineController.cpp \
+    ZUserSelectionDialog.cpp \
     ZWorkController.cpp \
         main.cpp
 
@@ -95,6 +97,7 @@ HEADERS += \
     ZAbstractLineController.h \
     ZDataSourceManager.h \
     ZLineControllerCreator.h \
+    ZNewUserWidget.h \
     ZRandomLineController.h \
     ZSqlTableStatements.h \
     ZSuccessivelyLineController.h \
@@ -108,6 +111,7 @@ HEADERS += \
     ZTaskWidget.h \
     ZTrainingWidget.h \
     ZTypingSpeedLineController.h \
+    ZUserSelectionDialog.h \
     ZWorkController.h
 
 # Default rules for deployment.

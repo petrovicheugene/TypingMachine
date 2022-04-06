@@ -16,6 +16,10 @@ class ZTrainingManager : public QObject
 public:
     explicit ZTrainingManager(QObject *parent = nullptr);
 
+    QString zp_currentLine() const;
+    int zp_currentSymbolIndex() const;
+    bool zp_isWrong() const;
+
 
 public slots:
 
@@ -27,6 +31,9 @@ protected:
     bool eventFilter(QObject* object, QEvent* event) override;
 
 signals:
+
+    void zg_stateChanged();
+    void zg_durationChanged();
 
 private slots:
 
@@ -50,7 +57,7 @@ private:
 
     bool zv_lineCompleted;
     int zv_currentSymbolIndex;
-    bool zv_wrongSymbol;
+    bool zv_wrongSymbolFlag;
 
     // FUNCS
     void zh_createComponents();

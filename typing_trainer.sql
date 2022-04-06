@@ -13,6 +13,36 @@ CREATE TABLE "tasks"(
   "repeat_task" INTEGER
 );
 
+CREATE TABLE "users"(
+"id" INTEGER PRIMARY KEY NOT NULL,
+"name" VARCHAR(80),
+"password" TEXT
+);
+
+CREATE TABLE "lines"(
+"id" INTEGER PRIMARY KEY NOT NULL,
+"line" TEXT NOT NULL
+);
+
+CREATE TABLE "typing_durations"(
+"id" INTEGER PRIMARY KEY NOT NULL,
+"user_id" INTEGER NOT NULL,
+"line_id" INTEGER NOT NULL,
+"duration" INTEGER,
+"datetime" TEXT,
+CONSTRAINT "fk_typing_durations_users1"
+    FOREIGN KEY("user_id")
+    REFERENCES "users"("id")
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+CONSTRAINT "fk_typing_durations_lines1"
+    FOREIGN KEY("line_id")
+    REFERENCES "lines"("id")
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+
 --CREATE TABLE "measuring_conditions"(
 --  "id" INTEGER PRIMARY KEY NOT NULL,
 --  "gain_factor" INTEGER NOT NULL,

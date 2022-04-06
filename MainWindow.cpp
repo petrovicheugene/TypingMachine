@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QMenuBar>
+#include <QPushButton>
 #include <QSettings>
 #include <QStyleFactory>
 
@@ -44,8 +45,11 @@ MainWindow::~MainWindow()
 void MainWindow::zh_createComponents()
 {
     // Menu
-    QAction* action = new QAction("Action");
+    QAction* action = new QAction("Settings");
     menuBar()->addAction(action);
+
+    zv_userButton = new QPushButton;
+    menuBar()->setCornerWidget(zv_userButton);
 
     // Central widget
     zv_stackedWidget = new QStackedWidget;
@@ -90,8 +94,6 @@ void MainWindow::zh_createConnections()
             zv_trainingManager, &ZTrainingManager::zp_initTaskStart);
     connect(zv_workController, &ZWorkController::zg_requestTaskStop,
             zv_trainingManager, &ZTrainingManager::zp_stopTask);
-
-
 }
 //===================================================
 void MainWindow::zh_saveSettings()

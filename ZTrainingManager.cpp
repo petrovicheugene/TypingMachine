@@ -104,41 +104,41 @@ void ZTrainingManager::zh_onTaskFinish()
     qDebug() << "TASK FINISHED";
 }
 //===================================================
-//std::vector<int> ZTrainingManager::zh_createKeyVector() const
-//{
-//    std::vector<int> keyVector = zh_createKeyVector();
-
-//    if(zv_outputOrder == SUCCESSIVELY)
-//    {
-//        for (int i = 0; i < lineList.count(); ++i)
-//        {
-//            keyVector.push_back(i);
-//        }
-//    }
-//    else if (zv_outputOrder == RANDOM)
-//    {
-//        for (int i = 0; i < lineList.count(); ++i)
-//        {
-//            keyVector.push_back(i);
-//        }
-
-//        std::srand(unsigned(std::time(0)));
-//        std::random_shuffle(keyVector.begin(), keyVector.end(), myrandom);
-//    }
-
-//}
+QString ZTrainingManager::zp_currentLine() const
+{
+    return zv_line;
+}
+//===================================================
+int ZTrainingManager::zp_currentSymbolIndex() const
+{
+    return zv_currentSymbolIndex;
+}
+//===================================================
+bool ZTrainingManager::zp_isWrong() const
+{
+    return zv_wrongSymbolFlag;
+}
 //===================================================
 void ZTrainingManager::zh_handleKeyPress(QString symbol)
 {
     if(zv_line.at(zv_currentSymbolIndex) != symbol)
     {
-        zv_wrongSymbol = true;
-        qDebug() << "Wrong Symbol";
+        if(!zv_wrongSymbolFlag)
+        {
+            zv_wrongSymbolFlag = true;
+            emit zg_stateChanged();
+        }
+
         return;
     }
 
+
     // right symbol
-    zv_wrongSymbol = false;
+    if(zv_wrongSymbolFlag)
+    {
+        zv_wrongSymbolFlag = false;
+        emit zg_stateChanged();
+    }
 
     if(++zv_currentSymbolIndex == zv_line.count())
     {
@@ -149,16 +149,20 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
             zh_nextLine();
         }
     }
+
+//    emit zg_stateChanged();
 }
 //===================================================
 void ZTrainingManager::zh_nextLine()
 {
     zv_line = zv_LineController->zp_nextLine();
-    zv_wrongSymbol = false;
+    zv_wrongSymbolFlag = false;
     zv_lineCompleted = false;
     zv_currentSymbolIndex = 0;
 
-    qDebug() << zv_line;
+    emit zg_stateChanged();
+
+    // qDebug() << zv_line;
 }
 //===================================================
 

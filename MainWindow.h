@@ -5,12 +5,14 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 //===================================================
+class QPushButton;
+
 class ZDataSourceManager;
 class ZTaskWidget;
-
 class ZTrainingManager;
 class ZTrainingWidget;
 class ZWorkController;
+
 //===================================================
 class MainWindow : public QMainWindow
 {
@@ -27,6 +29,7 @@ private slots:
 private:
 
     // VARS
+    QPushButton* zv_userButton;
     ZWorkController* zv_workController;
     QStackedWidget* zv_stackedWidget;
     ZTrainingWidget* zv_trainingWidget;
