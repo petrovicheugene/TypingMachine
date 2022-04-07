@@ -18,7 +18,7 @@ public:
 
 signals:
 
-    void zg_taskFinished();
+    void zg_taskCompleted();
 
 protected:
 

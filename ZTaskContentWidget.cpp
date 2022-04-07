@@ -23,6 +23,8 @@ ZTaskContentWidget::ZTaskContentWidget(QWidget *parent)
 {
     zh_createComponents();
     zh_createConnections();
+
+    zh_setFontPointSize(zv_fontSizeSlider->value());
 }
 //===================================================
 void ZTaskContentWidget::zh_createComponents()
@@ -56,6 +58,7 @@ void ZTaskContentWidget::zh_createComponents()
     QHBoxLayout* taskBasementLayout = new QHBoxLayout;
     taskBasementLayout->addStretch(999999);
     taskMainLayout->addLayout(taskBasementLayout);
+
     taskBasementLayout->addWidget(new QLabel("-"));
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
     zv_fontSizeSlider->setRange(8, 72);
@@ -77,6 +80,12 @@ void ZTaskContentWidget::zh_createComponents()
     QHBoxLayout* taskSettingsBasementLayout = new QHBoxLayout;
     taskSettingsBasementLayout->addStretch(999999);
     taskSettingsLayout->addLayout(taskSettingsBasementLayout);
+
+    zv_saveButton = new QPushButton();
+    zv_saveButton = new QPushButton;
+    zv_saveButton->setIcon(QIcon(":/images/save.png"));
+    zv_saveButton->setToolTip(tr("Run task"));
+    taskSettingsBasementLayout->addWidget(zv_saveButton);
 
     zv_runTaskButton = new QPushButton;
     zv_runTaskButton->setIcon(QIcon(":/images/run-256.png"));
@@ -131,7 +140,6 @@ void ZTaskContentWidget::zh_createConnections()
             this, &ZTaskContentWidget::zh_setFontPointSize);
     connect(zv_runTaskButton, &QPushButton::clicked,
             this, &ZTaskContentWidget::zg_requestTrainingStart);
-
 }
 //===================================================
 void ZTaskContentWidget::zp_setContentManagment(ZTrainingManager* taskManager)
@@ -160,7 +168,7 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 void ZTaskContentWidget::zh_setFontPointSize(int val)
 {
     QFont font = zv_taskTextEdit->font();
-    font.setPixelSize(val);
+    font.setPointSize(val);
     zv_taskTextEdit->setFont(font);
 }
 //===================================================

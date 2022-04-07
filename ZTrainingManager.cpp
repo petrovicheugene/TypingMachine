@@ -15,6 +15,7 @@ ZTrainingManager::ZTrainingManager(QObject *parent)
     : QObject{parent}
 {
     zv_LineController = nullptr;
+    zv_taskActive = false;
     zh_createComponents();
     zh_createConnections();
 
@@ -71,15 +72,22 @@ void ZTrainingManager::zh_startTask()
 {
     //    zv_currentLineIndex = -1;
     //    zv_wrongSymbol = false;
-
-    zh_nextLine();
     qApp->installEventFilter(this);
+    zv_taskActive = true;
+    zh_nextLine();
 }
 //===================================================
-void ZTrainingManager::zp_stopTask()
+void ZTrainingManager::zp_finishTask()
+{
+    qApp->removeEventFilter(this);
+    zv_taskActive = false;
+}
+//===================================================
+void ZTrainingManager::zp_restartTask()
 {
     zv_LineController->zp_reset();
-    qApp->removeEventFilter(this);
+    zh_startTask();
+    qDebug() << "RESTART";
 }
 //===================================================
 void ZTrainingManager::zh_prepareTask(ZTask task)
@@ -94,14 +102,17 @@ void ZTrainingManager::zh_prepareTask(ZTask task)
     }
 
     zv_LineController = ZLineControllerCreator::zp_createLineController(task);
-    connect(zv_LineController, &ZAbstractLineController::zg_taskFinished,
-            this, &ZTrainingManager::zh_onTaskFinish);
+    connect(zv_LineController, &ZAbstractLineController::zg_taskCompleted,
+            this, &ZTrainingManager::zh_onTaskCompleting);
 
 }
 //===================================================
-void ZTrainingManager::zh_onTaskFinish()
+void ZTrainingManager::zh_onTaskCompleting()
 {
-    qDebug() << "TASK FINISHED";
+    qApp->removeEventFilter(this);
+    zv_line = tr("TASK COMPLETED");
+    zv_taskActive = false;
+    emit zg_stateChanged();
 }
 //===================================================
 QString ZTrainingManager::zp_currentLine() const
@@ -119,6 +130,11 @@ bool ZTrainingManager::zp_isWrong() const
     return zv_wrongSymbolFlag;
 }
 //===================================================
+bool ZTrainingManager::zp_isActive() const
+{
+    return zv_taskActive;
+}
+//===================================================
 void ZTrainingManager::zh_handleKeyPress(QString symbol)
 {
     if(zv_line.at(zv_currentSymbolIndex) != symbol)
@@ -128,18 +144,10 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
             zv_wrongSymbolFlag = true;
             emit zg_stateChanged();
         }
-
         return;
     }
 
-
     // right symbol
-    if(zv_wrongSymbolFlag)
-    {
-        zv_wrongSymbolFlag = false;
-        emit zg_stateChanged();
-    }
-
     if(++zv_currentSymbolIndex == zv_line.count())
     {
         // line completed
@@ -147,10 +155,16 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         if(zv_lineEndKey == AUTO)
         {
             zh_nextLine();
+            return;
         }
     }
 
-//    emit zg_stateChanged();
+    if(zv_wrongSymbolFlag)
+    {
+        zv_wrongSymbolFlag = false;
+    }
+
+    emit zg_stateChanged();
 }
 //===================================================
 void ZTrainingManager::zh_nextLine()
@@ -160,9 +174,11 @@ void ZTrainingManager::zh_nextLine()
     zv_lineCompleted = false;
     zv_currentSymbolIndex = 0;
 
-    emit zg_stateChanged();
-
-    // qDebug() << zv_line;
+    if(zv_taskActive)
+    {
+        qDebug() << zv_line;
+        emit zg_stateChanged();
+    }
 }
 //===================================================
 
