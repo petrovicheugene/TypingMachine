@@ -19,9 +19,5 @@ ZAbstractLineController* ZLineControllerCreator::zp_createLineController(ZTask& 
     default:
         return new ZTypingSpeedLineController(task);
     }
-
-
-
-
 }
 //===================================================
