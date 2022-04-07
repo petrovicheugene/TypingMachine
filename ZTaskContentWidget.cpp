@@ -162,7 +162,7 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper->addMapping(zv_lineEndKeyComboBox, 5);
     zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);
 
-    zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+    zv_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
