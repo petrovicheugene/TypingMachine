@@ -6,14 +6,13 @@ ZSuccessivelyLineController::ZSuccessivelyLineController(ZTask &task, QObject *p
 {
     zv_lineIndex = 0;
     zv_repeat = std::get<5>(task);
-
 }
 //===================================================
 QString ZSuccessivelyLineController::zp_nextLine()
 {
     if(zv_lineList.isEmpty())
     {
-        emit zg_taskFinished();
+        emit zg_taskCompleted();
         return QString();
     }
 
@@ -22,7 +21,7 @@ QString ZSuccessivelyLineController::zp_nextLine()
         zv_lineIndex = 0;
         if(!zv_repeat)
         {
-            emit zg_taskFinished();
+            emit zg_taskCompleted();
             return QString();
         }
     }

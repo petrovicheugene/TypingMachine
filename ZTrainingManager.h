@@ -19,12 +19,13 @@ public:
     QString zp_currentLine() const;
     int zp_currentSymbolIndex() const;
     bool zp_isWrong() const;
-
+    bool zp_isActive() const;
 
 public slots:
 
     void zp_initTaskStart(ZTask task);
-    void zp_stopTask();
+    void zp_finishTask();
+    void zp_restartTask();
 
 protected:
 
@@ -37,7 +38,7 @@ signals:
 
 private slots:
 
-    void zh_onTaskFinish();
+    void zh_onTaskCompleting();
 
 private:
 
@@ -56,6 +57,7 @@ private:
     LINE_END_KEY zv_lineEndKey;
 
     bool zv_lineCompleted;
+    bool zv_taskActive;
     int zv_currentSymbolIndex;
     bool zv_wrongSymbolFlag;
 

@@ -51,7 +51,7 @@ private:
     QCheckBox* zv_repeatTaskCheckBox;
 
     QPushButton* zv_runTaskButton;
-
+    QPushButton* zv_saveButton;
 
 
     // FUNCS

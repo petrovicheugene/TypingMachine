@@ -27,9 +27,9 @@ void ZWorkController::zp_initTaskStart(int row)
 
 }
 //===================================================
-void ZWorkController::zp_initTaskStop()
+void ZWorkController::zp_initTaskFinish()
 {
     emit zg_setStackedWidgetIndex(0);
-    emit zg_requestTaskStop();
+    emit zg_requestTaskFinish();
 }
 //===================================================

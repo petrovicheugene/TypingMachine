@@ -19,13 +19,13 @@ public:
 public slots:
 
     void zp_initTaskStart(int row);
-    void zp_initTaskStop();
+    void zp_initTaskFinish();
 
 signals:
 
     void zg_setStackedWidgetIndex(int index);
     void zg_requestTaskStart(ZTask task);
-    void zg_requestTaskStop();
+    void zg_requestTaskFinish();
 
 private:
 

@@ -84,16 +84,19 @@ void MainWindow::zh_createConnections()
     // work controller connections
     connect(zv_taskWidget, &ZTaskWidget::zg_requestTaskRun,
             zv_workController, &ZWorkController::zp_initTaskStart);
-    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskStop,
-            zv_workController, &ZWorkController::zp_initTaskStop);
+    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskFinish,
+            zv_workController, &ZWorkController::zp_initTaskFinish);
 
     connect(zv_workController, &ZWorkController::zg_setStackedWidgetIndex,
             zv_stackedWidget, &QStackedWidget::setCurrentIndex);
 
     connect(zv_workController, &ZWorkController::zg_requestTaskStart,
             zv_trainingManager, &ZTrainingManager::zp_initTaskStart);
-    connect(zv_workController, &ZWorkController::zg_requestTaskStop,
-            zv_trainingManager, &ZTrainingManager::zp_stopTask);
+    connect(zv_workController, &ZWorkController::zg_requestTaskFinish,
+            zv_trainingManager, &ZTrainingManager::zp_finishTask);
+    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskRestart,
+            zv_trainingManager, &ZTrainingManager::zp_restartTask);
+
 }
 //===================================================
 void MainWindow::zh_saveSettings()

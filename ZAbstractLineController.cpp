@@ -1,6 +1,6 @@
 //===================================================
 #include "ZAbstractLineController.h"
-
+#include <QDebug>
 #include <QRegularExpression>
 //===================================================
 ZAbstractLineController::ZAbstractLineController(ZTask& task, QObject *parent)
@@ -15,8 +15,8 @@ ZAbstractLineController::ZAbstractLineController(ZTask& task, QObject *parent)
         zv_lineList = taskContent.split(QRegularExpression ("[\\s\\n]"), Qt::SkipEmptyParts);
         break;
     case OUTPUT_LINE_TYPE::STRING:
-        zv_lineList = taskContent.split(QRegularExpression ("[\\n]"));
+        zv_lineList = taskContent.split(QRegularExpression ("[\\n]"), Qt::SkipEmptyParts);
         break;
     }
-}
+ }
 //===================================================

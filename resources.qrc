@@ -3,5 +3,8 @@
         <file>add-256.png</file>
         <file>remove-256.png</file>
         <file>run-256.png</file>
+        <file>save.png</file>
+        <file>exitDoor-256.png</file>
+        <file>restart.png</file>
     </qresource>
 </RCC>

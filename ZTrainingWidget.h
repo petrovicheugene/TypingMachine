@@ -4,7 +4,9 @@
 
 #include <QWidget>
 //===================================================
+class QLabel;
 class QPushButton;
+class QSlider;
 
 class ZTrainingManager;
 //===================================================
@@ -16,19 +18,36 @@ public:
 
     void zp_connectToTrainingManager(ZTrainingManager* manager);
 
+
 public slots:
 
     void zp_update();
+    void zp_setCompletedColor(QColor& color);
+    void zp_setCurrentSymbolColor(QColor& color);
+    void zp_setWrongSymbolColor(QColor& color);
+    void zp_setIncompletedColor(QColor& color);
+    void zp_setFontSize(int size);
 
 signals:
 
-    void zg_requestTaskStop();
+    void zg_requestTaskFinish();
+    void zg_requestTaskRestart();
 
 private:
 
     // VARS
     ZTrainingManager* zv_trainingManager;
-    QPushButton* zv_stopBtn;
+    QLabel* zv_lineLabel;
+
+    QSlider* zv_fontSizeSlider;
+    QPushButton* zv_restartBtn;
+    QPushButton* zv_finishBtn;
+
+    int zv_fontSize;
+    QColor zv_completedColor;
+    QColor zv_currentSymbolColor;
+    QColor zv_wrongSymbolColor;
+    QColor zv_incompletedColor;
 
     // FUNCS
     void zh_createComponents();

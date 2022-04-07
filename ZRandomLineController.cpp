@@ -15,16 +15,17 @@ QString ZRandomLineController::zp_nextLine()
 {
     if(zv_lineList.isEmpty())
     {
-        emit zg_taskFinished();
+        emit zg_taskCompleted();
         return QString();
     }
 
     if(zv_index == zv_lineList.count())
     {
         zv_index = 0;
+        zh_suffleIndices();
         if(!zv_repeat)
         {
-            emit zg_taskFinished();
+            emit zg_taskCompleted();
             return QString();
         }
     }
@@ -50,13 +51,6 @@ void ZRandomLineController::zh_initIndices()
 void ZRandomLineController::zh_suffleIndices()
 {
     std::random_shuffle(zv_lineIndices.begin(), zv_lineIndices.end());
-
-    qDebug() << "INDICES";
-    foreach(auto i, zv_lineIndices )
-    {
-        qDebug() << i;
-    }
-
 }
 //===================================================
 
