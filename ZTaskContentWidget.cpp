@@ -61,7 +61,7 @@ void ZTaskContentWidget::zh_createComponents()
 
     taskBasementLayout->addWidget(new QLabel("-"));
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
-    zv_fontSizeSlider->setRange(8, 72);
+    zv_fontSizeSlider->setRange(8, 96);
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     taskBasementLayout->addWidget(zv_fontSizeSlider);
     taskBasementLayout->addWidget(new QLabel("+"));
@@ -140,6 +140,10 @@ void ZTaskContentWidget::zh_createConnections()
             this, &ZTaskContentWidget::zh_setFontPointSize);
     connect(zv_runTaskButton, &QPushButton::clicked,
             this, &ZTaskContentWidget::zg_requestTrainingStart);
+    connect(zv_saveButton, &QPushButton::clicked,
+            this, &ZTaskContentWidget::zg_requestSaveTasks);
+
+
 }
 //===================================================
 void ZTaskContentWidget::zp_setContentManagment(ZTrainingManager* taskManager)
@@ -162,6 +166,8 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
+    connect(this, &ZTaskContentWidget::zg_requestSaveTasks,
+            zv_mapper, &QDataWidgetMapper::submit);
 
 }
 //===================================================

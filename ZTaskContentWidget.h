@@ -31,6 +31,7 @@ signals:
 
     void zg_currentIndexChanged(int index);
     void zg_requestTrainingStart();
+    void zg_requestSaveTasks();
 
 private slots:
 
