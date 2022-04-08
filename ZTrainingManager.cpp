@@ -37,15 +37,18 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
         {
             if(keyEvent->key() == zv_lineEndKey)
             {
-                zh_nextLine();
+                zh_prepareNextLine();
             }
             return true;
         }
 
-        //
         zh_handleKeyPress(keyEvent->text());
-        qDebug() << keyEvent->text() << keyEvent->key();
-
+        return true;
+    }
+    else if(zv_wrongSymbolFlag && event->type() == QEvent::KeyRelease)
+    {
+        zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
+        emit zg_stateChanged();
         return true;
     }
 
@@ -74,7 +77,7 @@ void ZTrainingManager::zh_startTask()
     //    zv_wrongSymbol = false;
     qApp->installEventFilter(this);
     zv_taskActive = true;
-    zh_nextLine();
+    zh_prepareNextLine();
 }
 //===================================================
 void ZTrainingManager::zp_finishTask()
@@ -102,17 +105,6 @@ void ZTrainingManager::zh_prepareTask(ZTask task)
     }
 
     zv_LineController = ZLineControllerCreator::zp_createLineController(task);
-    connect(zv_LineController, &ZAbstractLineController::zg_taskCompleted,
-            this, &ZTrainingManager::zh_onTaskCompleting);
-
-}
-//===================================================
-void ZTrainingManager::zh_onTaskCompleting()
-{
-    qApp->removeEventFilter(this);
-    zv_line = tr("TASK COMPLETED");
-    zv_taskActive = false;
-    emit zg_stateChanged();
 }
 //===================================================
 QString ZTrainingManager::zp_currentLine() const
@@ -123,6 +115,39 @@ QString ZTrainingManager::zp_currentLine() const
 int ZTrainingManager::zp_currentSymbolIndex() const
 {
     return zv_currentSymbolIndex;
+}
+//===================================================
+QString ZTrainingManager::zp_completed() const
+{
+    if(zv_currentSymbolIndex < zv_line.count())
+    {
+        return zv_line.first(zv_currentSymbolIndex);
+    }
+    else if(!zv_taskActive)
+    {
+        return tr("TASK COMPLETED");
+    }
+    else
+    {
+        return QString();
+    }
+}
+//===================================================
+QString ZTrainingManager::zp_currentSymbol() const
+{
+    return zv_currentSymbol;
+}
+//===================================================
+QString ZTrainingManager::zp_incompleted() const
+{
+    if(zv_currentSymbolIndex < zv_line.count())
+    {
+        return zv_line.last(zv_line.count() - zv_currentSymbolIndex - 1);
+    }
+    else
+    {
+        return QString();
+    }
 }
 //===================================================
 bool ZTrainingManager::zp_isWrong() const
@@ -137,13 +162,17 @@ bool ZTrainingManager::zp_isActive() const
 //===================================================
 void ZTrainingManager::zh_handleKeyPress(QString symbol)
 {
-    if(zv_line.at(zv_currentSymbolIndex) != symbol)
+    // if(zv_line.at(zv_currentSymbolIndex) != symbol)
+    if(zv_currentSymbol != symbol)
     {
         if(!zv_wrongSymbolFlag)
         {
             zv_wrongSymbolFlag = true;
-            emit zg_stateChanged();
         }
+
+        zv_currentSymbol = symbol;
+        emit zg_stateChanged();
+
         return;
     }
 
@@ -154,11 +183,12 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         zv_lineCompleted = true;
         if(zv_lineEndKey == AUTO)
         {
-            zh_nextLine();
+            zh_prepareNextLine();
             return;
         }
     }
 
+    zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
     if(zv_wrongSymbolFlag)
     {
         zv_wrongSymbolFlag = false;
@@ -167,18 +197,26 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
     emit zg_stateChanged();
 }
 //===================================================
-void ZTrainingManager::zh_nextLine()
+void ZTrainingManager::zh_prepareNextLine()
 {
-    zv_line = zv_LineController->zp_nextLine();
     zv_wrongSymbolFlag = false;
     zv_lineCompleted = false;
     zv_currentSymbolIndex = 0;
 
+    zv_line = zv_LineController->zp_nextLine(&zv_taskActive);
+
     if(zv_taskActive)
     {
+        zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
         qDebug() << zv_line;
-        emit zg_stateChanged();
     }
+    else // END TASK
+    {
+        zv_currentSymbol = QString();
+        qApp->removeEventFilter(this);
+    }
+
+    emit zg_stateChanged();
 }
 //===================================================
 

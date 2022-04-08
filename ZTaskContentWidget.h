@@ -22,16 +22,13 @@ class ZTaskContentWidget : public QWidget
     Q_OBJECT
 public:
     explicit ZTaskContentWidget(QWidget *parent = nullptr);
-    void zp_setContentManagment(ZTrainingManager* taskManager);
 
     void zp_setTaskModel(QAbstractItemModel* model);
-
 
 signals:
 
     void zg_currentIndexChanged(int index);
     void zg_requestTrainingStart();
-    void zg_requestSaveTasks();
 
 private slots:
 
@@ -52,8 +49,6 @@ private:
     QCheckBox* zv_repeatTaskCheckBox;
 
     QPushButton* zv_runTaskButton;
-    QPushButton* zv_saveButton;
-
 
     // FUNCS
     void zh_createComponents();

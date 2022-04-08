@@ -17,7 +17,11 @@ public:
     explicit ZTrainingManager(QObject *parent = nullptr);
 
     QString zp_currentLine() const;
+    QString zp_completed() const;
+    QString zp_currentSymbol() const;
+    QString zp_incompleted() const;
     int zp_currentSymbolIndex() const;
+
     bool zp_isWrong() const;
     bool zp_isActive() const;
 
@@ -35,10 +39,6 @@ signals:
 
     void zg_stateChanged();
     void zg_durationChanged();
-
-private slots:
-
-    void zh_onTaskCompleting();
 
 private:
 
@@ -60,6 +60,7 @@ private:
     bool zv_taskActive;
     int zv_currentSymbolIndex;
     bool zv_wrongSymbolFlag;
+    QString zv_currentSymbol;
 
     // FUNCS
     void zh_createComponents();
@@ -68,7 +69,7 @@ private:
 
     void zh_prepareTask(ZTask task);
     void zh_handleKeyPress(QString key);
-    void zh_nextLine();
+    void zh_prepareNextLine();
 
 };
 //===================================================

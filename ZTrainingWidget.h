@@ -17,7 +17,7 @@ public:
     explicit ZTrainingWidget(QWidget *parent = nullptr);
 
     void zp_connectToTrainingManager(ZTrainingManager* manager);
-
+    void zp_applySettings(QMap<int, QVariant> settings);
 
 public slots:
 
@@ -33,7 +33,17 @@ signals:
     void zg_requestTaskFinish();
     void zg_requestTaskRestart();
 
+private slots:
+
+    void zh_setFontSize(int size);
+
 private:
+
+    enum SETTING_NAMES {SN_FONT_SIZE=0,
+                       SN_COMPLETED_COLOR=1,
+                       SN_CURRENT_COLOR=2,
+                       SN_INCOMPLETED_COLOR=3,
+                       SN_WRONG_COLOR=4};
 
     // VARS
     ZTrainingManager* zv_trainingManager;

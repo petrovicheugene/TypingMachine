@@ -7,8 +7,9 @@ ZTypingSpeedLineController::ZTypingSpeedLineController(ZTask &task, QObject *par
 
 }
 //===================================================
-QString ZTypingSpeedLineController::zp_nextLine()
+QString ZTypingSpeedLineController::zp_nextLine(bool *ok)
 {
+
     return "typing Speed";
 }
 //===================================================

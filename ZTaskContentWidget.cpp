@@ -32,11 +32,11 @@ void ZTaskContentWidget::zh_createComponents()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
-//    QHBoxLayout* labelLayout = new QHBoxLayout;
-//    mainLayout->addLayout(labelLayout);
+    //    QHBoxLayout* labelLayout = new QHBoxLayout;
+    //    mainLayout->addLayout(labelLayout);
 
-//    zv_taskNameLabel = new QLabel;
-//    labelLayout->addWidget(zv_taskNameLabel, 999999);
+    //    zv_taskNameLabel = new QLabel;
+    //    labelLayout->addWidget(zv_taskNameLabel, 999999);
 
     // WIdget layout
     QHBoxLayout* widgetLayout = new QHBoxLayout;
@@ -70,28 +70,16 @@ void ZTaskContentWidget::zh_createComponents()
     QVBoxLayout* taskSettingsLayout = new QVBoxLayout;
     widgetLayout->addLayout(taskSettingsLayout);
 
-//    labelLayout = new QHBoxLayout;
-//    taskSettingsLayout->addLayout(labelLayout);
-
-//    labelLayout->addWidget(new QLabel(tr("Task settings")), 999999);
-
     taskSettingsLayout->addWidget(zh_createTaskSettingsWidget());
 
     QHBoxLayout* taskSettingsBasementLayout = new QHBoxLayout;
     taskSettingsBasementLayout->addStretch(999999);
     taskSettingsLayout->addLayout(taskSettingsBasementLayout);
 
-    zv_saveButton = new QPushButton();
-    zv_saveButton = new QPushButton;
-    zv_saveButton->setIcon(QIcon(":/images/save.png"));
-    zv_saveButton->setToolTip(tr("Run task"));
-    taskSettingsBasementLayout->addWidget(zv_saveButton);
-
     zv_runTaskButton = new QPushButton;
     zv_runTaskButton->setIcon(QIcon(":/images/run-256.png"));
     zv_runTaskButton->setToolTip(tr("Run task"));
     taskSettingsBasementLayout->addWidget(zv_runTaskButton);
-
 }
 //===================================================
 QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
@@ -105,11 +93,10 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
     foreach(auto key, outputLineStringMap.keys())
     {
         zv_outputLineComboBox->insertItem(zv_outputLineComboBox->count(),
-                                           outputLineStringMap.value(key), key);
+                                          outputLineStringMap.value(key), key);
     }
 
-//     zv_outputLineComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
-
+    // zv_outputLineComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
     layout->addRow(tr("Output by:"), zv_outputLineComboBox);
 
     zv_outputOrderComboBox = new QComboBox;
@@ -124,7 +111,7 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
     foreach(auto key, lineEndKeyStringMap.keys())
     {
         zv_lineEndKeyComboBox->insertItem(zv_lineEndKeyComboBox->count(),
-                                           lineEndKeyStringMap.value(key), key);
+                                          lineEndKeyStringMap.value(key), key);
     }
     layout->addRow(tr("Next line by:"), zv_lineEndKeyComboBox);
 
@@ -140,15 +127,6 @@ void ZTaskContentWidget::zh_createConnections()
             this, &ZTaskContentWidget::zh_setFontPointSize);
     connect(zv_runTaskButton, &QPushButton::clicked,
             this, &ZTaskContentWidget::zg_requestTrainingStart);
-    connect(zv_saveButton, &QPushButton::clicked,
-            this, &ZTaskContentWidget::zg_requestSaveTasks);
-
-
-}
-//===================================================
-void ZTaskContentWidget::zp_setContentManagment(ZTrainingManager* taskManager)
-{
-
 }
 //===================================================
 void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
@@ -162,12 +140,12 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper->addMapping(zv_lineEndKeyComboBox, 5);
     zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);
 
-    zv_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+    zv_mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
-    connect(this, &ZTaskContentWidget::zg_requestSaveTasks,
-            zv_mapper, &QDataWidgetMapper::submit);
+//    connect(zv_taskTextEdit->viewport(), &QWi,
+//            zv_mapper, &QDataWidgetMapper::submit);
 
 }
 //===================================================
