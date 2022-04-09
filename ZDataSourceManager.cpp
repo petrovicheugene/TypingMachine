@@ -37,12 +37,12 @@ ZDataSourceManager::ZDataSourceManager(QObject *parent)
 //===================================================
 ZDataSourceManager::~ZDataSourceManager()
 {
+    zv_taskModel->submitAll();
     {
         QSqlDatabase db = QSqlDatabase::database();
-        db.close();
+       db.close();
     }
     QSqlDatabase::removeDatabase( QSqlDatabase::defaultConnection );
-
 }
 //===================================================
 QAbstractItemModel* ZDataSourceManager::zp_taskModel() const

@@ -22,7 +22,6 @@ class ZTaskContentWidget : public QWidget
     Q_OBJECT
 public:
     explicit ZTaskContentWidget(QWidget *parent = nullptr);
-
     void zp_setTaskModel(QAbstractItemModel* model);
 
 signals:
