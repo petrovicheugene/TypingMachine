@@ -17,12 +17,18 @@ class QPlainTextEdit;
 
 class ZTrainingManager;
 //===================================================
+typedef  QMap<int, QVariant> SettingsMap;
+//===================================================
 class ZTaskContentWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ZTaskContentWidget(QWidget *parent = nullptr);
+    ~ZTaskContentWidget();
+
     void zp_setTaskModel(QAbstractItemModel* model);
+    void zp_applySettings(QMap<int, QVariant> settingsMap);
+    QMap<int, QVariant> zp_settings() const;
 
 signals:
 
@@ -34,6 +40,8 @@ private slots:
     void zh_setFontPointSize(int val);
 
 private:
+
+    enum SETTING_NAMES {SN_FONT_SIZE=0};
 
     // VARS
     QDataWidgetMapper* zv_mapper;
@@ -52,6 +60,10 @@ private:
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+    void zh_restoreSettings();
+    void zh_saveSettings() const;
+
+
     QWidget* zh_createTaskSettingsWidget();
 
 };

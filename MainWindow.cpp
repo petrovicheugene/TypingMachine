@@ -15,9 +15,13 @@
 #include "ZTrainingWidget.h"
 #include "ZWorkController.h"
 //===================================================
+
+//===================================================
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    qRegisterMetaType<SettingsMap>();
+
     setWindowTitle(qApp->applicationDisplayName());
 
     zh_createComponents();
@@ -103,12 +107,13 @@ void MainWindow::zh_saveSettings()
 {
     QSettings settings;
     settings.setValue("AppGeometry", saveGeometry());
+
 }
 //===================================================
 void MainWindow::zh_restoreSettings()
 {
     QSettings settings;
     restoreGeometry(settings.value("AppGeometry").toByteArray());
+
 }
 //===================================================
-

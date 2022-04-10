@@ -13,6 +13,7 @@ class ZTrainingManager;
 class ZTrainingWidget;
 class ZWorkController;
 
+typedef QMap<int, QVariant> SettingsMap;
 //===================================================
 class MainWindow : public QMainWindow
 {
@@ -27,7 +28,6 @@ private slots:
 
 
 private:
-
     // VARS
     QPushButton* zv_userButton;
     ZWorkController* zv_workController;

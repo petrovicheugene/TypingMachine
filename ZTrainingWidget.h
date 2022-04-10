@@ -3,6 +3,7 @@
 #define ZTRAININGWIDGET_H
 
 #include <QWidget>
+#include <QColor>
 //===================================================
 class QLabel;
 class QPushButton;
@@ -10,14 +11,18 @@ class QSlider;
 
 class ZTrainingManager;
 //===================================================
+typedef  QMap<int, QVariant> SettingsMap;
+//===================================================
 class ZTrainingWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ZTrainingWidget(QWidget *parent = nullptr);
+    ~ZTrainingWidget();
 
     void zp_connectToTrainingManager(ZTrainingManager* manager);
     void zp_applySettings(QMap<int, QVariant> settings);
+    QMap<int, QVariant> zp_settings() const;
 
 public slots:
 
@@ -62,6 +67,8 @@ private:
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
+    void zh_restoreSettings();
+    void zh_saveSettings() const;
 
 
 };

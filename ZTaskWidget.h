@@ -19,6 +19,8 @@ public:
     ~ZTaskWidget();
 
     void zp_setTaskModel(QAbstractItemModel* model);
+    void  zp_applySettings(QMap<int, QVariant>);
+    QMap<int, QVariant> zp_settings();
 
 signals:
 

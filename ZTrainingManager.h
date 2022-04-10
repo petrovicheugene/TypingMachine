@@ -57,7 +57,7 @@ private:
     LINE_END_KEY zv_lineEndKey;
 
     bool zv_lineCompleted;
-    bool zv_taskActive;
+    bool zv_taskInProgress;
     int zv_currentSymbolIndex;
     bool zv_wrongSymbolFlag;
     QString zv_currentSymbol;

@@ -32,12 +32,12 @@ ZDataSourceManager::ZDataSourceManager(QObject *parent)
 
     zh_createComponents();
     zh_createConnections();
-
 }
 //===================================================
 ZDataSourceManager::~ZDataSourceManager()
 {
     zv_taskModel->submitAll();
+
     {
         QSqlDatabase db = QSqlDatabase::database();
        db.close();

@@ -13,30 +13,47 @@
 #include <QPushButton>
 #include <QSlider>
 #include <QPlainTextEdit>
+#include <QSettings>
 #include <QVBoxLayout>
 //===================================================
-
+Q_DECLARE_METATYPE(SettingsMap);
 //===================================================
-
 ZTaskContentWidget::ZTaskContentWidget(QWidget *parent)
     : QWidget{parent}
 {
+    qRegisterMetaType<SettingsMap>();
     zh_createComponents();
     zh_createConnections();
 
     zh_setFontPointSize(zv_fontSizeSlider->value());
+    zh_restoreSettings();
+}
+//===================================================
+ZTaskContentWidget::~ZTaskContentWidget()
+{
+    zh_saveSettings();
+}
+//===================================================
+void ZTaskContentWidget::zh_restoreSettings()
+{
+    QSettings settings;
+    QVariant vData = settings.value("TaskContentWidget");
+    if(vData.canConvert<SettingsMap>())
+    {
+        zp_applySettings(vData.value<SettingsMap>());
+    }
+}
+//===================================================
+void ZTaskContentWidget::zh_saveSettings() const
+{
+    QSettings settings;
+    settings.setValue("TaskContentWidget", QVariant::fromValue(zp_settings()));
 }
 //===================================================
 void ZTaskContentWidget::zh_createComponents()
 {
     QVBoxLayout* mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-
-    //    QHBoxLayout* labelLayout = new QHBoxLayout;
-    //    mainLayout->addLayout(labelLayout);
-
-    //    zv_taskNameLabel = new QLabel;
-    //    labelLayout->addWidget(zv_taskNameLabel, 999999);
 
     // WIdget layout
     QHBoxLayout* widgetLayout = new QHBoxLayout;
@@ -129,6 +146,21 @@ void ZTaskContentWidget::zh_createConnections()
             this, &ZTaskContentWidget::zg_requestTrainingStart);
 }
 //===================================================
+void ZTaskContentWidget::zp_applySettings(QMap<int, QVariant> settingsMap)
+{
+    if(settingsMap.contains(SN_FONT_SIZE))
+    {
+        zv_fontSizeSlider->setValue(settingsMap.value(SN_FONT_SIZE).toInt());
+    }
+}
+//===================================================
+QMap<int, QVariant> ZTaskContentWidget::zp_settings() const
+{
+    QMap<int, QVariant> settingsMap;
+    settingsMap.insert(SN_FONT_SIZE, zv_fontSizeSlider->value());
+    return settingsMap;
+}
+//===================================================
 void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 {
     zv_mapper = new QDataWidgetMapper(this);
@@ -144,8 +176,8 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
-//    connect(zv_taskTextEdit->viewport(), &QWi,
-//            zv_mapper, &QDataWidgetMapper::submit);
+    //    connect(zv_taskTextEdit->viewport(), &QWi,
+    //            zv_mapper, &QDataWidgetMapper::submit);
 
 }
 //===================================================
