@@ -74,10 +74,13 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 SOURCES += \
     MainWindow.cpp \
     ZAbstractLineController.cpp \
+    ZClickableLabel.cpp \
+    ZColorButton.cpp \
     ZDataSourceManager.cpp \
     ZLineControllerCreator.cpp \
     ZNewUserWidget.cpp \
     ZRandomLineController.cpp \
+    ZSettingsDialog.cpp \
     ZSuccessivelyLineController.cpp \
     ZTask.cpp \
     ZTaskContentWidget.cpp \
@@ -95,10 +98,14 @@ SOURCES += \
 
 HEADERS += \
     ZAbstractLineController.h \
+    ZAppSettings.h \
+    ZClickableLabel.h \
+    ZColorButton.h \
     ZDataSourceManager.h \
     ZLineControllerCreator.h \
     ZNewUserWidget.h \
     ZRandomLineController.h \
+    ZSettingsDialog.h \
     ZSqlTableStatements.h \
     ZSuccessivelyLineController.h \
     ZTask.h \

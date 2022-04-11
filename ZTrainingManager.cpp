@@ -90,7 +90,6 @@ void ZTrainingManager::zp_restartTask()
 {
     zv_LineController->zp_reset();
     zh_startTask();
-    qDebug() << "RESTART";
 }
 //===================================================
 void ZTrainingManager::zh_prepareTask(ZTask task)
@@ -214,7 +213,6 @@ void ZTrainingManager::zh_prepareNextLine()
     if(zv_taskInProgress)
     {
         zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
-        qDebug() << zv_line;
     }
     else // END TASK
     {

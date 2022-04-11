@@ -9,9 +9,10 @@ class QLabel;
 class QPushButton;
 class QSlider;
 
+class ZClickableLabel;
 class ZTrainingManager;
 //===================================================
-typedef  QMap<int, QVariant> SettingsMap;
+// typedef  QMap<int, QVariant> SettingsMap;
 //===================================================
 class ZTrainingWidget : public QWidget
 {
@@ -21,16 +22,23 @@ public:
     ~ZTrainingWidget();
 
     void zp_connectToTrainingManager(ZTrainingManager* manager);
-    void zp_applySettings(QMap<int, QVariant> settings);
-    QMap<int, QVariant> zp_settings() const;
+    // void zp_applySettings(const QMap<int, QVariant> &settings);
+    // QMap<int, QVariant> zp_settings() const;
+
+    void zp_setCompletedColor(QColor color);
+    void zp_setCurrentSymbolColor(QColor color);
+    void zp_setWrongSymbolColor(QColor color);
+    void zp_setIncompletedColor(QColor color);
+
+    QColor zp_completedColor() const;
+    QColor zp_currentSymbolColor() const;
+    QColor zp_wrongSymbolColor() const;
+    QColor zp_incompletedColor() const;
+
 
 public slots:
 
     void zp_update();
-    void zp_setCompletedColor(QColor& color);
-    void zp_setCurrentSymbolColor(QColor& color);
-    void zp_setWrongSymbolColor(QColor& color);
-    void zp_setIncompletedColor(QColor& color);
     void zp_setFontSize(int size);
 
 signals:
@@ -41,18 +49,16 @@ signals:
 private slots:
 
     void zh_setFontSize(int size);
+    void zh_changeFontSizeSliderValue();
 
 private:
-
-    enum SETTING_NAMES {SN_FONT_SIZE=0,
-                       SN_COMPLETED_COLOR=1,
-                       SN_CURRENT_COLOR=2,
-                       SN_INCOMPLETED_COLOR=3,
-                       SN_WRONG_COLOR=4};
 
     // VARS
     ZTrainingManager* zv_trainingManager;
     QLabel* zv_lineLabel;
+
+    ZClickableLabel* zv_minusLabel;
+    ZClickableLabel* zv_plusLabel;
 
     QSlider* zv_fontSizeSlider;
     QPushButton* zv_restartBtn;

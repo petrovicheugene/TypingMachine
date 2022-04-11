@@ -15,9 +15,9 @@ class QSlider;
 class QSplitter;
 class QPlainTextEdit;
 
+class ZClickableLabel;
 class ZTrainingManager;
 //===================================================
-typedef  QMap<int, QVariant> SettingsMap;
 //===================================================
 class ZTaskContentWidget : public QWidget
 {
@@ -38,6 +38,7 @@ signals:
 private slots:
 
     void zh_setFontPointSize(int val);
+    void zh_changeFontSizeSliderValue();
 
 private:
 
@@ -48,6 +49,9 @@ private:
 
     QLabel* zv_taskNameLabel;
     QPlainTextEdit* zv_taskTextEdit;
+
+    ZClickableLabel* zv_minusLabel;
+    ZClickableLabel* zv_plusLabel;
     QSlider* zv_fontSizeSlider;
 
     QComboBox* zv_outputLineComboBox;

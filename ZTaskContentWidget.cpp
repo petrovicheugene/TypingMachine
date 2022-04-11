@@ -1,7 +1,9 @@
 //===================================================
 #include "ZTaskContentWidget.h"
+#include "ZClickableLabel.h"
 #include "ZTask.h"
 
+#include <QApplication>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDataWidgetMapper>
@@ -16,12 +18,10 @@
 #include <QSettings>
 #include <QVBoxLayout>
 //===================================================
-Q_DECLARE_METATYPE(SettingsMap);
 //===================================================
 ZTaskContentWidget::ZTaskContentWidget(QWidget *parent)
     : QWidget{parent}
 {
-    qRegisterMetaType<SettingsMap>();
     zh_createComponents();
     zh_createConnections();
 
@@ -37,17 +37,21 @@ ZTaskContentWidget::~ZTaskContentWidget()
 void ZTaskContentWidget::zh_restoreSettings()
 {
     QSettings settings;
-    QVariant vData = settings.value("TaskContentWidget");
-    if(vData.canConvert<SettingsMap>())
+    settings.beginGroup("TaskContentWidget");
+    QVariant vData = settings.value("FontSize");
+    if(vData.isValid() && vData.canConvert<int>())
     {
-        zp_applySettings(vData.value<SettingsMap>());
+        zv_fontSizeSlider->setValue(vData.toInt());
     }
+    settings.endGroup();
 }
 //===================================================
 void ZTaskContentWidget::zh_saveSettings() const
 {
     QSettings settings;
-    settings.setValue("TaskContentWidget", QVariant::fromValue(zp_settings()));
+    settings.beginGroup("TaskContentWidget");
+    settings.setValue("FontSize", QVariant(zv_fontSizeSlider->value()));
+    settings.endGroup();
 }
 //===================================================
 void ZTaskContentWidget::zh_createComponents()
@@ -76,12 +80,17 @@ void ZTaskContentWidget::zh_createComponents()
     taskBasementLayout->addStretch(999999);
     taskMainLayout->addLayout(taskBasementLayout);
 
-    taskBasementLayout->addWidget(new QLabel("-"));
+    zv_minusLabel = new ZClickableLabel(this);
+    zv_minusLabel->setText("-");
+    zv_plusLabel = new ZClickableLabel(this);
+    zv_plusLabel->setText("+");
+
+    taskBasementLayout->addWidget(zv_minusLabel);
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
     zv_fontSizeSlider->setRange(8, 96);
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     taskBasementLayout->addWidget(zv_fontSizeSlider);
-    taskBasementLayout->addWidget(new QLabel("+"));
+    taskBasementLayout->addWidget(zv_plusLabel);
 
     // task Settings layout
     QVBoxLayout* taskSettingsLayout = new QVBoxLayout;
@@ -144,6 +153,12 @@ void ZTaskContentWidget::zh_createConnections()
             this, &ZTaskContentWidget::zh_setFontPointSize);
     connect(zv_runTaskButton, &QPushButton::clicked,
             this, &ZTaskContentWidget::zg_requestTrainingStart);
+
+    connect(zv_minusLabel, &ZClickableLabel::clicked,
+            this, &ZTaskContentWidget::zh_changeFontSizeSliderValue);
+    connect(zv_plusLabel, &ZClickableLabel::clicked,
+            this, &ZTaskContentWidget::zh_changeFontSizeSliderValue);
+
 }
 //===================================================
 void ZTaskContentWidget::zp_applySettings(QMap<int, QVariant> settingsMap)
@@ -188,5 +203,21 @@ void ZTaskContentWidget::zh_setFontPointSize(int val)
     zv_taskTextEdit->setFont(font);
 }
 //===================================================
+void ZTaskContentWidget::zh_changeFontSizeSliderValue()
+{
+    int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
+                zv_fontSizeSlider->pageStep() : zv_fontSizeSlider->singleStep();
+
+    if(sender() == zv_plusLabel)
+    {
+        zv_fontSizeSlider->setValue(zv_fontSizeSlider->value() + delta);
+    }
+    else if(sender() == zv_minusLabel)
+    {
+        zv_fontSizeSlider->setValue(zv_fontSizeSlider->value() - delta);
+    }
+}
+//===================================================
+
 
 

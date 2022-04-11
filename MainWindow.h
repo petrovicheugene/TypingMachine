@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 //===================================================
+class QAction;
 class QPushButton;
 
 class ZDataSourceManager;
@@ -13,7 +14,6 @@ class ZTrainingManager;
 class ZTrainingWidget;
 class ZWorkController;
 
-typedef QMap<int, QVariant> SettingsMap;
 //===================================================
 class MainWindow : public QMainWindow
 {
@@ -29,7 +29,11 @@ private slots:
 
 private:
     // VARS
-    QPushButton* zv_userButton;
+
+    QAction* zv_settingsAction;
+    QAction* zv_exitAction;
+
+    // QPushButton* zv_userButton;
     ZWorkController* zv_workController;
     QStackedWidget* zv_stackedWidget;
     ZTrainingWidget* zv_trainingWidget;
@@ -45,7 +49,7 @@ private:
     void zh_saveSettings();
     void zh_restoreSettings();
 
-
+    void zh_runSettings();
 
 };
 //===================================================

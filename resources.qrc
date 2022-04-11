@@ -6,5 +6,13 @@
         <file>save.png</file>
         <file>exitDoor-256.png</file>
         <file>restart.png</file>
+        <file>settings-01.png</file>
+        <file>menu-512.png</file>
+        <file>settings-02.png</file>
+        <file>settings-03.png</file>
+        <file>settings-01-1.png</file>
+        <file>stop-01.png</file>
+        <file>refresh-01.png</file>
+        <file>refresh-02.png</file>
     </qresource>
 </RCC>

@@ -1,7 +1,11 @@
 //===================================================
 #include "ZTrainingWidget.h"
+
+#include "ZClickableLabel.h"
+#include "ZTaskContentWidget.h"
 #include "ZTrainingManager.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QDialogButtonBox>
 #include <QLabel>
@@ -10,7 +14,7 @@
 #include <QSlider>
 #include <QVBoxLayout>
 //===================================================
-Q_DECLARE_METATYPE(SettingsMap);
+//Q_DECLARE_METATYPE(SettingsMap);
 //===================================================
 ZTrainingWidget::ZTrainingWidget(QWidget *parent)
     : QWidget{parent}
@@ -50,20 +54,25 @@ void ZTrainingWidget::zh_createComponents()
     basementLayout->addStretch(999999);
     mainLayout->addLayout(basementLayout);
 
-    basementLayout->addWidget(new QLabel("-"));
+    zv_minusLabel = new ZClickableLabel(this);
+    zv_minusLabel->setText("-");
+    zv_plusLabel = new ZClickableLabel(this);
+    zv_plusLabel->setText("+");
+
+    basementLayout->addWidget(zv_minusLabel);
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
     zv_fontSizeSlider->setRange(10, 120);
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     basementLayout->addWidget(zv_fontSizeSlider);
-    basementLayout->addWidget(new QLabel("+"));
+    basementLayout->addWidget(zv_plusLabel);
 
     zv_restartBtn = new QPushButton;
-    zv_restartBtn->setIcon(QIcon(":/images/restart.png"));
+    zv_restartBtn->setIcon(QIcon(":/images/refresh-02.png"));
     zv_restartBtn->setToolTip(tr("Restart task"));
     basementLayout->addWidget(zv_restartBtn);
 
     zv_finishBtn = new QPushButton;
-    zv_finishBtn->setIcon(QIcon(":/images/exitDoor-256.png"));
+    zv_finishBtn->setIcon(QIcon(":/images/stop-01.png"));
     zv_finishBtn->setToolTip(tr("Finish task"));
     basementLayout->addWidget(zv_finishBtn);
 
@@ -78,22 +87,32 @@ void ZTrainingWidget::zh_createConnections()
     connect(zv_fontSizeSlider, &QSlider::valueChanged,
             this, &ZTrainingWidget::zh_setFontSize);
 
+    connect(zv_minusLabel, &ZClickableLabel::clicked,
+            this, &ZTrainingWidget::zh_changeFontSizeSliderValue);
+    connect(zv_plusLabel, &ZClickableLabel::clicked,
+            this, &ZTrainingWidget::zh_changeFontSizeSliderValue);
+
 }
 //===================================================
 void ZTrainingWidget::zh_restoreSettings()
 {
     QSettings settings;
-    QVariant vData = settings.value("ZTrainingWidget");
-    if(vData.canConvert<SettingsMap>())
+    settings.beginGroup("TrainingWidget");
+    QVariant vData = settings.value("FontSize");
+    if(vData.isValid() && vData.canConvert<int>())
     {
-        zp_applySettings(vData.value<SettingsMap>());
+        zv_fontSizeSlider->setValue(vData.toInt());
     }
+    settings.endGroup();
+
 }
 //===================================================
 void ZTrainingWidget::zh_saveSettings() const
 {
     QSettings settings;
-    settings.setValue("ZTrainingWidget", QVariant::fromValue(zp_settings()));
+    settings.beginGroup("TrainingWidget");
+    settings.setValue("FontSize", QVariant(zv_fontSizeSlider->value()));
+    settings.endGroup();
 }
 //===================================================
 void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
@@ -103,60 +122,75 @@ void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
             this, &ZTrainingWidget::zp_update);
 }
 //===================================================
-void ZTrainingWidget::zp_applySettings(QMap<int, QVariant> settingsMap)
-{
-    if(settingsMap.contains(SN_FONT_SIZE))
-    {
-        zv_fontSizeSlider->setValue(settingsMap.value(SN_FONT_SIZE).toInt());
-    }
+//void ZTrainingWidget::zp_applySettings(const QMap<int, QVariant> &settingsMap)
+//{
 
-    if(settingsMap.contains(SN_COMPLETED_COLOR))
-    {
-        zv_completedColor = settingsMap.value(SN_COMPLETED_COLOR).value<QColor>();
-    }
-    if(settingsMap.contains(SN_CURRENT_COLOR))
-    {
-        zv_currentSymbolColor = settingsMap.value(SN_CURRENT_COLOR).value<QColor>();
-    }
-    if(settingsMap.contains(SN_INCOMPLETED_COLOR))
-    {
-        zv_incompletedColor = settingsMap.value(SN_INCOMPLETED_COLOR).value<QColor>();
-    }
-    if(settingsMap.contains(SN_WRONG_COLOR))
-    {
-        zv_wrongSymbolColor = settingsMap.value(SN_WRONG_COLOR).value<QColor>();
-    }
-}
+//    if(settingsMap.contains(SN_COMPLETED_COLOR))
+//    {
+//        zv_completedColor = settingsMap.value(SN_COMPLETED_COLOR).value<QColor>();
+//    }
+//    if(settingsMap.contains(SN_CURRENT_COLOR))
+//    {
+//        zv_currentSymbolColor = settingsMap.value(SN_CURRENT_COLOR).value<QColor>();
+//    }
+//    if(settingsMap.contains(SN_INCOMPLETED_COLOR))
+//    {
+//        zv_incompletedColor = settingsMap.value(SN_INCOMPLETED_COLOR).value<QColor>();
+//    }
+//    if(settingsMap.contains(SN_WRONG_COLOR))
+//    {
+//        zv_wrongSymbolColor = settingsMap.value(SN_WRONG_COLOR).value<QColor>();
+//    }
+//}
 //===================================================
-QMap<int, QVariant> ZTrainingWidget::zp_settings() const
-{
-    QMap<int, QVariant> settingsMap;
-    settingsMap.insert(SN_FONT_SIZE, zv_fontSizeSlider->value());
-    settingsMap.insert(SN_COMPLETED_COLOR, QVariant::fromValue(zv_completedColor));
-    settingsMap.insert(SN_CURRENT_COLOR, QVariant::fromValue(zv_currentSymbolColor));
-    settingsMap.insert(SN_INCOMPLETED_COLOR, QVariant::fromValue(zv_incompletedColor));
-    settingsMap.insert(SN_WRONG_COLOR, QVariant::fromValue(zv_wrongSymbolColor));
-    return settingsMap;
-}
+//QMap<int, QVariant> ZTrainingWidget::zp_settings() const
+//{
+//    QMap<int, QVariant> settingsMap;
+//    settingsMap.insert(SN_COMPLETED_COLOR, QVariant::fromValue(zv_completedColor));
+//    settingsMap.insert(SN_CURRENT_COLOR, QVariant::fromValue(zv_currentSymbolColor));
+//    settingsMap.insert(SN_INCOMPLETED_COLOR, QVariant::fromValue(zv_incompletedColor));
+//    settingsMap.insert(SN_WRONG_COLOR, QVariant::fromValue(zv_wrongSymbolColor));
+//    return settingsMap;
+//}
 //===================================================
-void ZTrainingWidget::zp_setCompletedColor(QColor& color)
+void ZTrainingWidget::zp_setCompletedColor(QColor color)
 {
     zv_completedColor = color;
 }
 //===================================================
-void ZTrainingWidget::zp_setCurrentSymbolColor(QColor& color)
+void ZTrainingWidget::zp_setCurrentSymbolColor(QColor color)
 {
     zv_currentSymbolColor = color;
 }
 //===================================================
-void ZTrainingWidget::zp_setWrongSymbolColor(QColor& color)
+void ZTrainingWidget::zp_setWrongSymbolColor(QColor color)
 {
     zv_wrongSymbolColor = color;
 }
 //===================================================
-void ZTrainingWidget::zp_setIncompletedColor(QColor& color)
+void ZTrainingWidget::zp_setIncompletedColor(QColor color)
 {
     zv_incompletedColor = color;
+}
+//===================================================
+QColor ZTrainingWidget::zp_completedColor() const
+{
+    return zv_completedColor;
+}
+//===================================================
+QColor ZTrainingWidget::zp_currentSymbolColor() const
+{
+    return zv_currentSymbolColor;
+}
+//===================================================
+QColor ZTrainingWidget::zp_wrongSymbolColor() const
+{
+    return zv_wrongSymbolColor;
+}
+//===================================================
+QColor ZTrainingWidget::zp_incompletedColor() const
+{
+    return zv_incompletedColor;
 }
 //===================================================
 void ZTrainingWidget::zp_setFontSize(int size)
@@ -173,6 +207,21 @@ void ZTrainingWidget::zh_setFontSize(int size)
     QFont font = zv_lineLabel->font();
     font.setPointSize(size);
     zv_lineLabel->setFont(font);
+}
+//===================================================
+void ZTrainingWidget::zh_changeFontSizeSliderValue()
+{
+    int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
+                zv_fontSizeSlider->pageStep() : zv_fontSizeSlider->singleStep();
+
+    if(sender() == zv_plusLabel)
+    {
+        zv_fontSizeSlider->setValue(zv_fontSizeSlider->value() + delta);
+    }
+    else if(sender() == zv_minusLabel)
+    {
+        zv_fontSizeSlider->setValue(zv_fontSizeSlider->value() - delta);
+    }
 }
 //===================================================
 void ZTrainingWidget::zp_update()
