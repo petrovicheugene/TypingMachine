@@ -29,11 +29,11 @@ void ZTaskListWidget::zh_createComponents()
     mainLayout->addWidget(buttonBox);
 
     zv_newTaskButton = new QPushButton();
-    zv_newTaskButton->setIcon(QIcon(":/images/add-256.png"));
+    zv_newTaskButton->setIcon(QIcon(":/images/add-6.png"));
     zv_newTaskButton->setToolTip(tr("New task"));
     buttonBox->addButton(zv_newTaskButton, QDialogButtonBox::ActionRole);
     zv_deleteTasklButton = new QPushButton();
-    zv_deleteTasklButton->setIcon(QIcon(":/images/remove-256.png"));
+    zv_deleteTasklButton->setIcon(QIcon(":/images/remove-6.png"));
     zv_deleteTasklButton->setToolTip(tr("Remove selected tasks"));
     buttonBox->addButton(zv_deleteTasklButton, QDialogButtonBox::ActionRole);
 }

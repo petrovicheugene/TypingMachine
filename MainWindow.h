@@ -23,15 +23,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
-
 
 private:
     // VARS
 
     QAction* zv_settingsAction;
-    QAction* zv_exitAction;
 
     // QPushButton* zv_userButton;
     ZWorkController* zv_workController;

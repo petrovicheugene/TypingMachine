@@ -16,6 +16,7 @@ ZTranslatorManager::ZTranslatorManager(QObject* parent,
     zv_resoucesTranslatorDirName = resoucesTranslatorDirName;
     zv_internalTranslatorDir = internalTranslatorDir;
     zv_prefix = prefix;
+
     zh_createAvailableLocaleList();
 }
 //================================================

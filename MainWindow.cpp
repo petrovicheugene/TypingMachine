@@ -52,20 +52,15 @@ MainWindow::~MainWindow()
 void MainWindow::zh_createComponents()
 {
     // Menu
-    QMenu* mainMenu = new QMenu();
-    mainMenu->setToolTip(tr("Main menu"));
-    mainMenu->setIcon(QIcon(":images/menu-512.png"));
-    menuBar()->addMenu(mainMenu);
+//    QMenu* mainMenu = new QMenu();
+//    mainMenu->setToolTip(tr("Main menu"));
+//    mainMenu->setIcon(QIcon(":images/menu-512.png"));
+//    menuBar()->addMenu(mainMenu);
 
-    zv_settingsAction = new QAction(tr("Settings"));
+    zv_settingsAction = new QAction;
     //zv_settingsAction->setToolTip(tr("Settings"));
     zv_settingsAction->setIcon(QIcon(":images/settings-01.png"));
-    mainMenu->addAction(zv_settingsAction);
-
-    zv_exitAction = new QAction(tr("Exit"));
-    //zv_settingsAction->setToolTip(tr("Settings"));
-    zv_exitAction->setIcon(QIcon(":images/exitDoor-256.png"));
-    mainMenu->addAction(zv_exitAction);
+    menuBar()->addAction(zv_settingsAction);
 
 //    zv_userButton = new QPushButton;
 //    menuBar()->setCornerWidget(zv_userButton);
@@ -118,8 +113,6 @@ void MainWindow::zh_createConnections()
 
     connect(zv_settingsAction, &QAction::triggered,
             this, &MainWindow::zh_runSettings);
-    connect(zv_exitAction, &QAction::triggered,
-            this, &MainWindow::close);
 
 }
 //===================================================
@@ -127,38 +120,21 @@ void MainWindow::zh_saveSettings()
 {
     QSettings settings;
     settings.setValue("AppGeometry", saveGeometry());
-    ZAppSettings appSettings;
-    appSettings[SN_COMPLETED_COLOR] =  zv_trainingWidget->zp_completedColor();
-    appSettings[SN_INCOMPLETED_COLOR] =  zv_trainingWidget->zp_incompletedColor();
-    appSettings[SN_CURRENT_COLOR] =  zv_trainingWidget->zp_currentSymbolColor();
-    appSettings[SN_WRONG_COLOR] =  zv_trainingWidget->zp_wrongSymbolColor();
-
-    settings.setValue("AppSettings", QVariant::fromValue<ZAppSettings>(appSettings));
 }
 //===================================================
 void MainWindow::zh_restoreSettings()
 {
     QSettings settings;
     restoreGeometry(settings.value("AppGeometry").toByteArray());
-
-    QVariant vData = settings.value("AppSettings");
-    if(vData.canConvert<ZAppSettings>())
-    {
-        ZAppSettings appSettings = vData.value<ZAppSettings>();
-        // zv_trainingWidget->zp_applySettings(appSettings);
-        zv_trainingWidget->zp_setCompletedColor(appSettings.value(SN_COMPLETED_COLOR).value<QColor>());
-        zv_trainingWidget->zp_setIncompletedColor(appSettings.value(SN_INCOMPLETED_COLOR).value<QColor>());
-        zv_trainingWidget->zp_setCurrentSymbolColor(appSettings.value(SN_CURRENT_COLOR).value<QColor>());
-        zv_trainingWidget->zp_setWrongSymbolColor(appSettings.value(SN_WRONG_COLOR).value<QColor>());
-    }
 }
 //===================================================
 void MainWindow::zh_runSettings()
 {
     ZSettingsDialog dialog;
-    dialog.exec();
+    dialog.zp_setTrainingManager(zv_trainingManager);
+    dialog.zp_setTrainingWidget(zv_trainingWidget);
 
-    qDebug() << "SETTINGS";
+    dialog.exec();
 }
 //===================================================
 
