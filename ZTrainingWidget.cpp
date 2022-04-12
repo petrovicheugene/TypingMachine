@@ -61,7 +61,7 @@ void ZTrainingWidget::zh_createComponents()
 
     basementLayout->addWidget(zv_minusLabel);
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
-    zv_fontSizeSlider->setRange(10, 120);
+    zv_fontSizeSlider->setRange(10, 144);
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     basementLayout->addWidget(zv_fontSizeSlider);
     basementLayout->addWidget(zv_plusLabel);
@@ -121,37 +121,6 @@ void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
     connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
             this, &ZTrainingWidget::zp_update);
 }
-//===================================================
-//void ZTrainingWidget::zp_applySettings(const QMap<int, QVariant> &settingsMap)
-//{
-
-//    if(settingsMap.contains(SN_COMPLETED_COLOR))
-//    {
-//        zv_completedColor = settingsMap.value(SN_COMPLETED_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_CURRENT_COLOR))
-//    {
-//        zv_currentSymbolColor = settingsMap.value(SN_CURRENT_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_INCOMPLETED_COLOR))
-//    {
-//        zv_incompletedColor = settingsMap.value(SN_INCOMPLETED_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_WRONG_COLOR))
-//    {
-//        zv_wrongSymbolColor = settingsMap.value(SN_WRONG_COLOR).value<QColor>();
-//    }
-//}
-//===================================================
-//QMap<int, QVariant> ZTrainingWidget::zp_settings() const
-//{
-//    QMap<int, QVariant> settingsMap;
-//    settingsMap.insert(SN_COMPLETED_COLOR, QVariant::fromValue(zv_completedColor));
-//    settingsMap.insert(SN_CURRENT_COLOR, QVariant::fromValue(zv_currentSymbolColor));
-//    settingsMap.insert(SN_INCOMPLETED_COLOR, QVariant::fromValue(zv_incompletedColor));
-//    settingsMap.insert(SN_WRONG_COLOR, QVariant::fromValue(zv_wrongSymbolColor));
-//    return settingsMap;
-//}
 //===================================================
 void ZTrainingWidget::zp_setCompletedColor(QColor color)
 {

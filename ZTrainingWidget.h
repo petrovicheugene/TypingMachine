@@ -12,8 +12,6 @@ class QSlider;
 class ZClickableLabel;
 class ZTrainingManager;
 //===================================================
-// typedef  QMap<int, QVariant> SettingsMap;
-//===================================================
 class ZTrainingWidget : public QWidget
 {
     Q_OBJECT
@@ -22,8 +20,6 @@ public:
     ~ZTrainingWidget();
 
     void zp_connectToTrainingManager(ZTrainingManager* manager);
-    // void zp_applySettings(const QMap<int, QVariant> &settings);
-    // QMap<int, QVariant> zp_settings() const;
 
     void zp_setCompletedColor(QColor color);
     void zp_setCurrentSymbolColor(QColor color);
