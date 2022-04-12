@@ -17,12 +17,15 @@ public:
                               QString internalTranslatorDir = qApp->applicationDirPath(),
                               QString prefix = "_");
 
+
     bool zp_installTranslatorsToApplication();
     QString zp_lastError() const;
 
     QString zp_resourcesTranslatorDirName() const;
     QString internalTranslatorDir() const;
     QString prefix() const;
+
+
 
 public slots:
 

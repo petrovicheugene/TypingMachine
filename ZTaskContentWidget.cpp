@@ -103,7 +103,7 @@ void ZTaskContentWidget::zh_createComponents()
     taskSettingsLayout->addLayout(taskSettingsBasementLayout);
 
     zv_runTaskButton = new QPushButton;
-    zv_runTaskButton->setIcon(QIcon(":/images/run-256.png"));
+    zv_runTaskButton->setIcon(QIcon(":/images/start-8.png"));
     zv_runTaskButton->setToolTip(tr("Run task"));
     taskSettingsBasementLayout->addWidget(zv_runTaskButton);
 }
@@ -191,8 +191,6 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
 
     connect(this, &ZTaskContentWidget::zg_currentIndexChanged,
             zv_mapper, &QDataWidgetMapper::setCurrentIndex);
-    //    connect(zv_taskTextEdit->viewport(), &QWi,
-    //            zv_mapper, &QDataWidgetMapper::submit);
 
 }
 //===================================================
@@ -206,7 +204,7 @@ void ZTaskContentWidget::zh_setFontPointSize(int val)
 void ZTaskContentWidget::zh_changeFontSizeSliderValue()
 {
     int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
-                zv_fontSizeSlider->pageStep() : zv_fontSizeSlider->singleStep();
+                zv_fontSizeSlider->singleStep() : zv_fontSizeSlider->pageStep();
 
     if(sender() == zv_plusLabel)
     {

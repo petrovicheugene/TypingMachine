@@ -25,6 +25,7 @@ ZTrainingWidget::ZTrainingWidget(QWidget *parent)
     zv_currentSymbolColor = QColor(Qt::white);
     zv_wrongSymbolColor = QColor(Qt::red);
     zv_incompletedColor = QColor(Qt::gray);;
+    zv_symbolUnderlinedFlag = true;
 
     zh_createComponents();
     zh_createConnections();
@@ -61,18 +62,18 @@ void ZTrainingWidget::zh_createComponents()
 
     basementLayout->addWidget(zv_minusLabel);
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
-    zv_fontSizeSlider->setRange(10, 120);
+    zv_fontSizeSlider->setRange(12, 144);
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     basementLayout->addWidget(zv_fontSizeSlider);
     basementLayout->addWidget(zv_plusLabel);
 
     zv_restartBtn = new QPushButton;
-    zv_restartBtn->setIcon(QIcon(":/images/refresh-02.png"));
+    zv_restartBtn->setIcon(QIcon(":/images/restart.png"));
     zv_restartBtn->setToolTip(tr("Restart task"));
     basementLayout->addWidget(zv_restartBtn);
 
     zv_finishBtn = new QPushButton;
-    zv_finishBtn->setIcon(QIcon(":/images/stop-01.png"));
+    zv_finishBtn->setIcon(QIcon(":/images/stop-10.png"));
     zv_finishBtn->setToolTip(tr("Finish task"));
     basementLayout->addWidget(zv_finishBtn);
 
@@ -103,8 +104,38 @@ void ZTrainingWidget::zh_restoreSettings()
     {
         zv_fontSizeSlider->setValue(vData.toInt());
     }
-    settings.endGroup();
 
+    vData = settings.value("CompleteColor");
+    if(vData.isValid() && vData.canConvert<QColor>())
+    {
+        zv_completedColor = vData.value<QColor>();
+    }
+
+    vData = settings.value("IncompleteColor");
+    if(vData.isValid() && vData.canConvert<QColor>())
+    {
+        zv_incompletedColor = vData.value<QColor>();
+    }
+
+    vData = settings.value("CurrentSymbolColor");
+    if(vData.isValid() && vData.canConvert<QColor>())
+    {
+        zv_currentSymbolColor = vData.value<QColor>();
+    }
+
+    vData = settings.value("WrongSymbolColor");
+    if(vData.isValid() && vData.canConvert<QColor>())
+    {
+        zv_wrongSymbolColor = vData.value<QColor>();
+    }
+
+    vData = settings.value("SymbolUnderlined");
+    if(vData.isValid() && vData.canConvert<bool>())
+    {
+        zv_symbolUnderlinedFlag = vData.toBool();
+    }
+
+    settings.endGroup();
 }
 //===================================================
 void ZTrainingWidget::zh_saveSettings() const
@@ -112,6 +143,13 @@ void ZTrainingWidget::zh_saveSettings() const
     QSettings settings;
     settings.beginGroup("TrainingWidget");
     settings.setValue("FontSize", QVariant(zv_fontSizeSlider->value()));
+
+    settings.setValue("CompleteColor", QVariant::fromValue<QColor>(zv_completedColor));
+    settings.setValue("IncompleteColor", QVariant::fromValue<QColor>(zv_incompletedColor));
+    settings.setValue("CurrentSymbolColor", QVariant::fromValue<QColor>(zv_currentSymbolColor));
+    settings.setValue("WrongSymbolColor", QVariant::fromValue<QColor>(zv_wrongSymbolColor));
+    settings.setValue("SymbolUnderlined", zv_symbolUnderlinedFlag);
+
     settings.endGroup();
 }
 //===================================================
@@ -122,55 +160,34 @@ void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
             this, &ZTrainingWidget::zp_update);
 }
 //===================================================
-//void ZTrainingWidget::zp_applySettings(const QMap<int, QVariant> &settingsMap)
-//{
-
-//    if(settingsMap.contains(SN_COMPLETED_COLOR))
-//    {
-//        zv_completedColor = settingsMap.value(SN_COMPLETED_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_CURRENT_COLOR))
-//    {
-//        zv_currentSymbolColor = settingsMap.value(SN_CURRENT_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_INCOMPLETED_COLOR))
-//    {
-//        zv_incompletedColor = settingsMap.value(SN_INCOMPLETED_COLOR).value<QColor>();
-//    }
-//    if(settingsMap.contains(SN_WRONG_COLOR))
-//    {
-//        zv_wrongSymbolColor = settingsMap.value(SN_WRONG_COLOR).value<QColor>();
-//    }
-//}
-//===================================================
-//QMap<int, QVariant> ZTrainingWidget::zp_settings() const
-//{
-//    QMap<int, QVariant> settingsMap;
-//    settingsMap.insert(SN_COMPLETED_COLOR, QVariant::fromValue(zv_completedColor));
-//    settingsMap.insert(SN_CURRENT_COLOR, QVariant::fromValue(zv_currentSymbolColor));
-//    settingsMap.insert(SN_INCOMPLETED_COLOR, QVariant::fromValue(zv_incompletedColor));
-//    settingsMap.insert(SN_WRONG_COLOR, QVariant::fromValue(zv_wrongSymbolColor));
-//    return settingsMap;
-//}
-//===================================================
 void ZTrainingWidget::zp_setCompletedColor(QColor color)
 {
     zv_completedColor = color;
+    zp_update();
 }
 //===================================================
 void ZTrainingWidget::zp_setCurrentSymbolColor(QColor color)
 {
     zv_currentSymbolColor = color;
+    zp_update();
 }
 //===================================================
 void ZTrainingWidget::zp_setWrongSymbolColor(QColor color)
 {
     zv_wrongSymbolColor = color;
+    zp_update();
 }
 //===================================================
 void ZTrainingWidget::zp_setIncompletedColor(QColor color)
 {
     zv_incompletedColor = color;
+    zp_update();
+}
+//===================================================
+void ZTrainingWidget::zp_setCurrentSymbolUnderlined(bool underlined)
+{
+    zv_symbolUnderlinedFlag = underlined;
+    zp_update();
 }
 //===================================================
 QColor ZTrainingWidget::zp_completedColor() const
@@ -193,6 +210,11 @@ QColor ZTrainingWidget::zp_incompletedColor() const
     return zv_incompletedColor;
 }
 //===================================================
+bool ZTrainingWidget::zp_isSymbolUnderlined() const
+{
+    return zv_symbolUnderlinedFlag;
+}
+//===================================================
 void ZTrainingWidget::zp_setFontSize(int size)
 {
     if(zv_fontSizeSlider->minimum() <= size && size <=  zv_fontSizeSlider->maximum())
@@ -212,7 +234,7 @@ void ZTrainingWidget::zh_setFontSize(int size)
 void ZTrainingWidget::zh_changeFontSizeSliderValue()
 {
     int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
-                zv_fontSizeSlider->pageStep() : zv_fontSizeSlider->singleStep();
+                zv_fontSizeSlider->singleStep() : zv_fontSizeSlider->pageStep();
 
     if(sender() == zv_plusLabel)
     {
@@ -230,11 +252,13 @@ void ZTrainingWidget::zp_update()
 
     QString completedLine = QString("<font color=%1>%2</font>").arg(zv_completedColor.name(),
                                                                     zv_trainingManager->zp_completed());
-    QString currentSymbol = QString("<font color=%1><u>%2<u></font>").arg(symbolColor.name(),
-                                                                          zv_trainingManager->zp_currentSymbol());
+    QString currentSymbol = zv_symbolUnderlinedFlag?
+                "<u>"+zv_trainingManager->zp_currentSymbol()+"</u>" : zv_trainingManager->zp_currentSymbol();
+    QString currentSymbolLine = QString("<font color=%1>%2</font>").arg(symbolColor.name(),
+                                                                        currentSymbol);
     QString endLine = QString("<font color=%1>%2</font>").arg(zv_incompletedColor.name(),
                                                               zv_trainingManager->zp_incompleted());
-    QString displayLine = completedLine + currentSymbol + endLine;
+    QString displayLine = completedLine + currentSymbolLine + endLine;
     zv_lineLabel->setText(displayLine);
 }
 //===================================================

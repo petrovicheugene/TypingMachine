@@ -25,21 +25,22 @@ public:
     // void zp_applySettings(const QMap<int, QVariant> &settings);
     // QMap<int, QVariant> zp_settings() const;
 
-    void zp_setCompletedColor(QColor color);
-    void zp_setCurrentSymbolColor(QColor color);
-    void zp_setWrongSymbolColor(QColor color);
-    void zp_setIncompletedColor(QColor color);
-
     QColor zp_completedColor() const;
     QColor zp_currentSymbolColor() const;
     QColor zp_wrongSymbolColor() const;
     QColor zp_incompletedColor() const;
-
+    bool zp_isSymbolUnderlined() const;
 
 public slots:
 
     void zp_update();
     void zp_setFontSize(int size);
+
+    void zp_setCompletedColor(QColor color);
+    void zp_setCurrentSymbolColor(QColor color);
+    void zp_setWrongSymbolColor(QColor color);
+    void zp_setIncompletedColor(QColor color);
+    void zp_setCurrentSymbolUnderlined(bool underlined);
 
 signals:
 
@@ -69,6 +70,7 @@ private:
     QColor zv_currentSymbolColor;
     QColor zv_wrongSymbolColor;
     QColor zv_incompletedColor;
+    bool zv_symbolUnderlinedFlag;
 
     // FUNCS
     void zh_createComponents();

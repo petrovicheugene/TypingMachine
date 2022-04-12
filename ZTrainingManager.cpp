@@ -5,20 +5,28 @@
 #include <QApplication>
 #include <QDebug>
 #include <QKeyEvent>
-#include <QRandomGenerator64>
-#include <QRegularExpression>
-
-//===================================================
-int myrandom (int i) { return std::rand()%i;}
+#include <QSettings>
+#include <QTimer>
 //===================================================
 ZTrainingManager::ZTrainingManager(QObject *parent)
     : QObject{parent}
 {
     zv_LineController = nullptr;
     zv_taskInProgress = false;
+    zv_currentSymbolIndex = 0;
+    zv_wrongSymbolShowDuration = 100;
+    zv_wrongSymbolShowMode = WSSM_WHILE_PRESSED;
+
     zh_createComponents();
     zh_createConnections();
 
+    zh_restoreSettings();
+
+}
+//===================================================
+ZTrainingManager::~ZTrainingManager()
+{
+    zh_saveSettings();
 }
 //===================================================
 bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
@@ -47,8 +55,12 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
     }
     else if(zv_wrongSymbolFlag && event->type() == QEvent::KeyRelease)
     {
-        zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
-        emit zg_stateChanged();
+        if(zv_wrongSymbolShowMode != WSSM_WHILE_PRESSED)
+        {
+            return true;
+        }
+
+        zh_resetSymbol();
         return true;
     }
 
@@ -62,6 +74,35 @@ void ZTrainingManager::zh_createComponents()
 //===================================================
 void ZTrainingManager::zh_createConnections()
 {
+
+}
+//===================================================
+void ZTrainingManager::zh_restoreSettings()
+{
+    QSettings settings;
+    settings.beginGroup("TrainingManager");
+    QVariant vData = settings.value("wrongSymbolShowDuration");
+    if(vData.isValid() && vData.canConvert<int>())
+    {
+        zv_wrongSymbolShowDuration = vData.toInt();
+    }
+
+    vData = settings.value("wrongSymbolShowMode");
+    if(vData.isValid() && vData.canConvert<WRONG_SYMBOL_SHOW_MODE>())
+    {
+        zv_wrongSymbolShowMode = vData.value<WRONG_SYMBOL_SHOW_MODE>();
+    }
+
+    settings.endGroup();
+}
+//===================================================
+void ZTrainingManager::zh_saveSettings() const
+{
+    QSettings settings;
+    settings.beginGroup("TrainingManager");
+    settings.setValue("wrongSymbolShowDuration", zv_wrongSymbolShowDuration);
+    settings.setValue("wrongSymbolShowMode", zv_wrongSymbolShowMode);
+    settings.endGroup();
 
 }
 //===================================================
@@ -171,7 +212,16 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         }
 
         // for displaying while the key is pressed
-        zv_currentSymbol = symbol;
+        if(zv_wrongSymbolShowMode == WSSM_WHILE_PRESSED)
+        {
+            zv_currentSymbol = symbol;
+        }
+        else if(zv_wrongSymbolShowMode == WSSM_FOR_TIME)
+        {
+            zv_currentSymbol = symbol;
+            QTimer::singleShot(zv_wrongSymbolShowDuration, this, &ZTrainingManager::zh_resetSymbol);
+        }
+
         emit zg_stateChanged();
         return;
     }
@@ -202,6 +252,12 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
     emit zg_stateChanged();
 }
 //===================================================
+void ZTrainingManager::zh_resetSymbol()
+{
+    zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
+    emit zg_stateChanged();
+}
+//===================================================
 void ZTrainingManager::zh_prepareNextLine()
 {
     zv_wrongSymbolFlag = false;
@@ -223,6 +279,31 @@ void ZTrainingManager::zh_prepareNextLine()
     emit zg_stateChanged();
 }
 //===================================================
+int ZTrainingManager::zp_wrongSymbolShowDuration() const
+{
+    return zv_wrongSymbolShowDuration;
+}
+//===================================================
+ZTrainingManager::WRONG_SYMBOL_SHOW_MODE ZTrainingManager::zp_wrongSymbolShowMode() const
+{
+    return zv_wrongSymbolShowMode;
+}
+//===================================================
+void ZTrainingManager::zp_setWrongSymbolShowDuration(int value)
+{
+    if(value < 0 || value > zv_maxDuration)
+    {
+        return;
+    }
+
+    zv_wrongSymbolShowDuration = value;
+}
+//================================================
+void ZTrainingManager::zp_setWrongSymbolShowMode(WRONG_SYMBOL_SHOW_MODE mode)
+{
+    zv_wrongSymbolShowMode = mode;
+}
+//================================================
 
 
 

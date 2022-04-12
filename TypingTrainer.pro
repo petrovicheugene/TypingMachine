@@ -98,7 +98,6 @@ SOURCES += \
 
 HEADERS += \
     ZAbstractLineController.h \
-    ZAppSettings.h \
     ZClickableLabel.h \
     ZColorButton.h \
     ZDataSourceManager.h \
