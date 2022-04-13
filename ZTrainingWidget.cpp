@@ -62,7 +62,11 @@ void ZTrainingWidget::zh_createComponents()
 
     basementLayout->addWidget(zv_minusLabel);
     zv_fontSizeSlider = new QSlider(Qt::Horizontal);
+<<<<<<< HEAD
+    zv_fontSizeSlider->setRange(10, 144);
+=======
     zv_fontSizeSlider->setRange(12, 144);
+>>>>>>> b266f949e7ec9f16f32bc3ac3d2d7f2a95b23cca
     zv_fontSizeSlider->setToolTip(tr("Font size"));
     basementLayout->addWidget(zv_fontSizeSlider);
     basementLayout->addWidget(zv_plusLabel);
