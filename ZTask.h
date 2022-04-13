@@ -7,7 +7,7 @@
 #include <QMap>
 #include <QObject>
 //===================================================
-enum OUTPUT_LINE_TYPE {WORD,
+enum SPLIT_LINE_BY {WORD,
                    STRING};
 
 enum LINE_END_KEY {AUTO = 0,
@@ -20,14 +20,14 @@ enum OUTPUT_ORDER {RANDOM = 0,
                   };
 
 //===================================================
-extern QMap<OUTPUT_LINE_TYPE, QString> outputLineStringMap;
+extern QMap<SPLIT_LINE_BY, QString> splitByStringMap;
 extern QMap<OUTPUT_ORDER, QString> outputOrderStringMap;
 extern QMap<LINE_END_KEY, QString> lineEndKeyStringMap;
 
 //===================================================
 typedef std::tuple<std::string,
 std::string,
-OUTPUT_LINE_TYPE,
+SPLIT_LINE_BY,
 OUTPUT_ORDER,
 LINE_END_KEY,
 bool> ZTask;

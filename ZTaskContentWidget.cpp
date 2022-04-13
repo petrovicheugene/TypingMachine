@@ -115,15 +115,14 @@ QWidget* ZTaskContentWidget::zh_createTaskSettingsWidget()
     QFormLayout* layout = new QFormLayout;
     w->setLayout(layout);
 
-    zv_outputLineComboBox = new QComboBox;
-    foreach(auto key, outputLineStringMap.keys())
+    zv_splitByComboBox = new QComboBox;
+    foreach(auto key, splitByStringMap.keys())
     {
-        zv_outputLineComboBox->insertItem(zv_outputLineComboBox->count(),
-                                          outputLineStringMap.value(key), key);
+        zv_splitByComboBox->insertItem(zv_splitByComboBox->count(),
+                                          splitByStringMap.value(key), key);
     }
 
-    // zv_outputLineComboBox->insertItems(-1, QStringList({tr("Word"), tr("String")}));
-    layout->addRow(tr("Output by:"), zv_outputLineComboBox);
+    layout->addRow(tr("Split by:"), zv_splitByComboBox);
 
     zv_outputOrderComboBox = new QComboBox;
     foreach(auto key, outputOrderStringMap.keys())
@@ -182,7 +181,7 @@ void ZTaskContentWidget::zp_setTaskModel(QAbstractItemModel* model)
     zv_mapper->setModel(model);
     zv_mapper->addMapping(zv_taskNameLabel, 1, "text");
     zv_mapper->addMapping(zv_taskTextEdit, 2);
-    zv_mapper->addMapping(zv_outputLineComboBox, 3);
+    zv_mapper->addMapping(zv_splitByComboBox, 3);
     zv_mapper->addMapping(zv_outputOrderComboBox, 4);
     zv_mapper->addMapping(zv_lineEndKeyComboBox, 5);
     zv_mapper->addMapping(zv_repeatTaskCheckBox, 6);

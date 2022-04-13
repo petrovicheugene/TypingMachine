@@ -54,7 +54,7 @@ private:
     ZClickableLabel* zv_plusLabel;
     QSlider* zv_fontSizeSlider;
 
-    QComboBox* zv_outputLineComboBox;
+    QComboBox* zv_splitByComboBox;
     QComboBox* zv_outputOrderComboBox;
     QComboBox* zv_lineEndKeyComboBox;
     QCheckBox* zv_repeatTaskCheckBox;
