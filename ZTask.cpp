@@ -1,9 +1,9 @@
 //===================================================
 #include "ZTask.h"
 //===================================================
-QMap<OUTPUT_LINE_TYPE, QString> initOutputLineStringMap()
+QMap<SPLIT_LINE_BY, QString> initOutputLineStringMap()
 {
-    QMap<OUTPUT_LINE_TYPE, QString> map;
+    QMap<SPLIT_LINE_BY, QString> map;
     map.insert(WORD, QObject::tr("Word"));
     map.insert(STRING, QObject::tr("String"));
     return map;
@@ -27,7 +27,7 @@ QMap<LINE_END_KEY, QString> initLineEndKeyStringMap()
     return map;
 }
 //===================================================
-QMap<OUTPUT_LINE_TYPE, QString> outputLineStringMap = initOutputLineStringMap();
+QMap<SPLIT_LINE_BY, QString> splitByStringMap = initOutputLineStringMap();
 QMap<OUTPUT_ORDER, QString> outputOrderStringMap = initOutputOrderStringMap();
 QMap<LINE_END_KEY, QString> lineEndKeyStringMap = initLineEndKeyStringMap();
 //===================================================

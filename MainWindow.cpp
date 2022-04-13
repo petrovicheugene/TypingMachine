@@ -9,27 +9,22 @@
 #include <QSettings>
 #include <QStyleFactory>
 
-#include "ZAppSettings.h"
 #include "ZDataSourceManager.h"
 #include "ZSettingsDialog.h"
 #include "ZTaskWidget.h"
 #include "ZTrainingManager.h"
 #include "ZTrainingWidget.h"
 #include "ZWorkController.h"
-//===================================================
-Q_DECLARE_METATYPE(ZAppSettings);
+
 //===================================================
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
-    qRegisterMetaType<ZAppSettings>();
-
     setWindowTitle(qApp->applicationDisplayName());
 
     zh_createComponents();
     zh_createConnections();
-
 
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette p = QPalette(Qt::darkGray);

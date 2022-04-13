@@ -202,7 +202,7 @@ void ZDataSourceManager::zp_createNewTask()
     zv_taskModel->insertRows(row, 1);
     zv_taskModel->setData(zv_taskModel->index(row, 1),  tr("Task %1").arg(QString::number(taskNum)));
     zv_taskModel->setData(zv_taskModel->index(row, 2),  "");
-    zv_taskModel->setData(zv_taskModel->index(row, 3),  outputLineStringMap.value(OUTPUT_LINE_TYPE::WORD));
+    zv_taskModel->setData(zv_taskModel->index(row, 3),  splitByStringMap.value(SPLIT_LINE_BY::WORD));
     zv_taskModel->setData(zv_taskModel->index(row, 4),  outputOrderStringMap.value(OUTPUT_ORDER::RANDOM));
     zv_taskModel->setData(zv_taskModel->index(row, 5),  lineEndKeyStringMap.value(LINE_END_KEY::AUTO));
     zv_taskModel->setData(zv_taskModel->index(row, 6),  true);
@@ -263,7 +263,7 @@ ZTask ZDataSourceManager::zp_taskForRow(int row) const
     ZTask task;
     std::get<0>(task) = record.value(1).toString().toStdString();
     std::get<1>(task) = record.value(2).toString().toStdString();
-    std::get<2>(task) = outputLineStringMap.key(record.value(3).toString());
+    std::get<2>(task) = splitByStringMap.key(record.value(3).toString());
     std::get<3>(task) = outputOrderStringMap.key(record.value(4).toString());
     std::get<4>(task) = lineEndKeyStringMap.key(record.value(5).toString());
     std::get<5>(task) = record.value(6).toBool();
