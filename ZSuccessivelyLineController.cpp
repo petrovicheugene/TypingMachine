@@ -8,13 +8,13 @@ ZSuccessivelyLineController::ZSuccessivelyLineController(ZTask &task, QObject *p
     zv_repeat = std::get<5>(task);
 }
 //===================================================
-QString ZSuccessivelyLineController::zp_nextLine(bool *ok)
+QString ZSuccessivelyLineController::zp_nextLine(bool *completed)
 {
     if(zv_lineList.isEmpty())
     {
-        if(ok)
+        if(completed)
         {
-            *ok = false;
+            *completed = true;
         }        return QString();
     }
 
@@ -23,16 +23,17 @@ QString ZSuccessivelyLineController::zp_nextLine(bool *ok)
         zv_lineIndex = 0;
         if(!zv_repeat)
         {
-            if(ok)
+            if(completed)
             {
-                *ok = false;
-            }            return QString();
+                *completed = true;
+            }
+            return QString();
         }
     }
 
-    if(ok)
+    if(completed)
     {
-        *ok = true;
+        *completed = false;
     }
     return zv_lineList.at(zv_lineIndex++);
 }

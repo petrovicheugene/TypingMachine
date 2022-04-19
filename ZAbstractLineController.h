@@ -13,7 +13,7 @@ class ZAbstractLineController : public QObject
 public:
     explicit ZAbstractLineController(ZTask& task, QObject *parent = nullptr);
 
-    virtual QString zp_nextLine(bool* ok = nullptr)  = 0;
+    virtual QString zp_nextLine(bool* completed = nullptr)  = 0;
     virtual void zp_reset() = 0;
 
 signals:

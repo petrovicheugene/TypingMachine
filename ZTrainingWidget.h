@@ -25,11 +25,17 @@ public:
     QColor zp_currentSymbolColor() const;
     QColor zp_wrongSymbolColor() const;
     QColor zp_incompletedColor() const;
+
     bool zp_isSymbolUnderlined() const;
+
+    QColor zp_infoColor() const;
+    bool zp_isTaskDurationDisplayed() const;
 
 public slots:
 
     void zp_update();
+    void zp_updateDuration(int duration);
+
     void zp_setFontSize(int size);
 
     void zp_setCompletedColor(QColor color);
@@ -37,6 +43,9 @@ public slots:
     void zp_setWrongSymbolColor(QColor color);
     void zp_setIncompletedColor(QColor color);
     void zp_setCurrentSymbolUnderlined(bool underlined);
+
+    void zp_setInfoColor(QColor color);
+    void zp_setTaskDurationDisplayFlag(bool displayFlag);
 
 signals:
 
@@ -53,6 +62,7 @@ private:
     // VARS
     ZTrainingManager* zv_trainingManager;
     QLabel* zv_lineLabel;
+    QLabel* zv_taskDurationLabel;
 
     ZClickableLabel* zv_minusLabel;
     ZClickableLabel* zv_plusLabel;
@@ -67,6 +77,9 @@ private:
     QColor zv_wrongSymbolColor;
     QColor zv_incompletedColor;
     bool zv_symbolUnderlinedFlag;
+
+    QColor zv_infoColor;
+    bool zv_taskDurationDisplayFlag;
 
     // FUNCS
     void zh_createComponents();

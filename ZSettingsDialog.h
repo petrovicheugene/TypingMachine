@@ -29,11 +29,11 @@ public:
 
 signals:
 
-    void zg_wrongSymbolShowModeChanged( ZTrainingManager::WRONG_SYMBOL_SHOW_MODE);
+    void zg_wrongSymbolDisplayModeChanged( ZTrainingManager::WRONG_SYMBOL_DISPLAY_MODE);
 
 private slots:
 
-    void zh_onWrongSymbolShowModeChange(int radioButtonIndex);
+    void zh_onWrongSymbolDisplayModeChange(int radioButtonIndex);
 
 private:
 
@@ -42,14 +42,17 @@ private:
     ZColorButton* zv_currentColorButton;
     ZColorButton* zv_incompleteColorButton;
     ZColorButton* zv_wrongColorButton;
-    QCheckBox* zv_underlinedCheckBox;
+    ZColorButton* zv_infoColorButton;
 
-    // show wrong button radiobuttons
+    QCheckBox* zv_underlinedCheckBox;
+    QCheckBox* zv_taskDurationDisplayCheckBox;
+
+    // display wrong button radiobuttons
     QButtonGroup* zv_radioButtonGroup;
-    QRadioButton* zv_dontShow;
-    QRadioButton* zv_showWhilePressed;
-    QRadioButton* zv_showForTime;
-    QSpinBox* zv_showDurationSpinBox;
+    QRadioButton* zv_dontDisplay;
+    QRadioButton* zv_displayWhilePressed;
+    QRadioButton* zv_displayForTime;
+    QSpinBox* zv_wrongSymbolDisplayDurationSpinBox;
 
     QPushButton* zv_closeButton;
 

@@ -10,7 +10,7 @@ class ZRandomLineController : public ZAbstractLineController
 public:
     explicit ZRandomLineController(ZTask& task, QObject* parent = nullptr);
 
-    QString zp_nextLine(bool* ok = nullptr) override;
+    QString zp_nextLine(bool* completed = nullptr) override;
     void zp_reset() override;
 
 private:

@@ -9,6 +9,7 @@
 #include "ZTask.h"
 
 //===================================================
+class QTimer;
 //===================================================
 class ZTrainingManager : public QObject
 {
@@ -17,7 +18,7 @@ public:
     explicit ZTrainingManager(QObject *parent = nullptr);
     ~ZTrainingManager();
 
-    enum WRONG_SYMBOL_SHOW_MODE {WSSM_DONT_SHOW = 0,
+    enum WRONG_SYMBOL_DISPLAY_MODE {WSSM_DONT_DISPLAY = 0,
                                  WSSM_WHILE_PRESSED = 1,
                                  WSSM_FOR_TIME = 2};
 
@@ -28,10 +29,10 @@ public:
     int zp_currentSymbolIndex() const;
 
     bool zp_isWrong() const;
-    bool zp_isActive() const;
+    bool zp_isInProgress() const;
 
-    int zp_wrongSymbolShowDuration() const;
-    WRONG_SYMBOL_SHOW_MODE zp_wrongSymbolShowMode() const;
+    int zp_wrongSymbolDisplayDuration() const;
+    WRONG_SYMBOL_DISPLAY_MODE zp_wrongSymbolDisplayMode() const;
 
 public slots:
 
@@ -39,8 +40,8 @@ public slots:
     void zp_finishTask();
     void zp_restartTask();
 
-    void zp_setWrongSymbolShowDuration(int value);
-    void zp_setWrongSymbolShowMode(WRONG_SYMBOL_SHOW_MODE mode);
+    void zp_setWrongSymbolDisplayDuration(int value);
+    void zp_setWrongSymbolDisplayMode(WRONG_SYMBOL_DISPLAY_MODE mode);
 
 protected:
 
@@ -49,11 +50,13 @@ protected:
 signals:
 
     void zg_stateChanged();
-    void zg_durationChanged();
+    void zg_durationChanged(int duration);
+
 
 private slots:
 
     void zh_resetSymbol();
+    void zh_changeDuration();
 
 private:
 
@@ -72,14 +75,19 @@ private:
     LINE_END_KEY zv_lineEndKey;
 
     bool zv_lineCompleted;
-    bool zv_taskInProgress;
+    bool zv_taskCompleted;
+    // bool zv_paused;
     int zv_currentSymbolIndex;
     bool zv_wrongSymbolFlag;
     QString zv_currentSymbol;
 
-    const int zv_maxDuration = 3000;
-    int zv_wrongSymbolShowDuration;
-    WRONG_SYMBOL_SHOW_MODE zv_wrongSymbolShowMode;
+    QTimer* zv_taskDurationTimer;
+    int zv_taskDurationSec;
+
+
+    const int zv_maxWrongSymbolDuration = 3000;
+    int zv_wrongSymbolDisplayDuration;
+    WRONG_SYMBOL_DISPLAY_MODE zv_wrongSymbolDisplayMode;
 
     // FUNCS
     void zh_createComponents();

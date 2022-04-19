@@ -11,13 +11,13 @@ ZRandomLineController::ZRandomLineController(ZTask &task, QObject *parent) :
     zh_suffleIndices();
 }
 //===================================================
-QString ZRandomLineController::zp_nextLine(bool *ok)
+QString ZRandomLineController::zp_nextLine(bool *completed)
 {
     if(zv_lineList.isEmpty())
     {
-       if(ok)
+       if(completed)
        {
-           *ok = false;
+           *completed = true;
        }
         // emit zg_taskCompleted();
         return QString();
@@ -29,17 +29,17 @@ QString ZRandomLineController::zp_nextLine(bool *ok)
         zh_suffleIndices();
         if(!zv_repeat)
         {
-            if(ok)
+            if(completed)
             {
-                *ok = false;
+                *completed = true;
             }
             return QString();
         }
     }
 
-    if(ok)
+    if(completed)
     {
-        *ok = true;
+        *completed = false;
     }
 
     return zv_lineList.at(zv_lineIndices.at(zv_index++));

@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QSlider>
+#include <QTime>
 #include <QVBoxLayout>
 //===================================================
 //Q_DECLARE_METATYPE(SettingsMap);
@@ -24,8 +25,11 @@ ZTrainingWidget::ZTrainingWidget(QWidget *parent)
     zv_completedColor = QColor(Qt::green);
     zv_currentSymbolColor = QColor(Qt::white);
     zv_wrongSymbolColor = QColor(Qt::red);
-    zv_incompletedColor = QColor(Qt::gray);;
+    zv_incompletedColor = QColor(Qt::gray);
     zv_symbolUnderlinedFlag = true;
+
+    zv_infoColor = QColor(Qt::gray);
+    zv_taskDurationDisplayFlag = true;
 
     zh_createComponents();
     zh_createConnections();
@@ -49,6 +53,11 @@ void ZTrainingWidget::zh_createComponents()
     zv_lineLabel->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(zv_lineLabel);
     mainLayout->addStretch();
+
+
+    zv_taskDurationLabel = new QLabel;
+    zv_taskDurationLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+    mainLayout->addWidget(zv_taskDurationLabel);
 
     // basement
     QHBoxLayout* basementLayout = new QHBoxLayout;
@@ -135,6 +144,19 @@ void ZTrainingWidget::zh_restoreSettings()
         zv_symbolUnderlinedFlag = vData.toBool();
     }
 
+    //
+    vData = settings.value("InfoColor");
+    if(vData.isValid() && vData.canConvert<QColor>())
+    {
+        zv_infoColor = vData.value<QColor>();
+    }
+
+    vData = settings.value("DisplayTaskDuration");
+    if(vData.isValid() && vData.canConvert<bool>())
+    {
+        zv_taskDurationDisplayFlag = vData.toBool();
+    }
+
     settings.endGroup();
 }
 //===================================================
@@ -149,6 +171,8 @@ void ZTrainingWidget::zh_saveSettings() const
     settings.setValue("CurrentSymbolColor", QVariant::fromValue<QColor>(zv_currentSymbolColor));
     settings.setValue("WrongSymbolColor", QVariant::fromValue<QColor>(zv_wrongSymbolColor));
     settings.setValue("SymbolUnderlined", zv_symbolUnderlinedFlag);
+    settings.setValue("InfoColor", QVariant::fromValue<QColor>(zv_infoColor));
+    settings.setValue("DisplayTaskDuration", zv_taskDurationDisplayFlag);
 
     settings.endGroup();
 }
@@ -158,6 +182,9 @@ void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
     zv_trainingManager = manager;
     connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
             this, &ZTrainingWidget::zp_update);
+    connect(zv_trainingManager, &ZTrainingManager::zg_durationChanged,
+            this, &ZTrainingWidget::zp_updateDuration);
+
 }
 //===================================================
 void ZTrainingWidget::zp_setCompletedColor(QColor color)
@@ -190,6 +217,20 @@ void ZTrainingWidget::zp_setCurrentSymbolUnderlined(bool underlined)
     zp_update();
 }
 //===================================================
+void ZTrainingWidget::zp_setInfoColor(QColor color)
+{
+    zv_infoColor = color;
+}
+//===================================================
+void ZTrainingWidget::zp_setTaskDurationDisplayFlag(bool displayFlag)
+{
+    zv_taskDurationDisplayFlag = displayFlag;
+    if(!zv_taskDurationDisplayFlag)
+    {
+        zv_taskDurationLabel->clear();
+    }
+}
+//===================================================
 QColor ZTrainingWidget::zp_completedColor() const
 {
     return zv_completedColor;
@@ -213,6 +254,16 @@ QColor ZTrainingWidget::zp_incompletedColor() const
 bool ZTrainingWidget::zp_isSymbolUnderlined() const
 {
     return zv_symbolUnderlinedFlag;
+}
+//===================================================
+QColor ZTrainingWidget::zp_infoColor() const
+{
+    return zv_infoColor;
+}
+//===================================================
+bool ZTrainingWidget::zp_isTaskDurationDisplayed() const
+{
+    return zv_taskDurationDisplayFlag;
 }
 //===================================================
 void ZTrainingWidget::zp_setFontSize(int size)
@@ -262,4 +313,21 @@ void ZTrainingWidget::zp_update()
     zv_lineLabel->setText(displayLine);
 }
 //===================================================
+void ZTrainingWidget::zp_updateDuration(int duration)
+{
+    if(zv_taskDurationDisplayFlag)
+    {
+        int hours = duration / 3600;
+        int minutes = (duration - hours * 3600) / 60;
+        int seconds = duration - hours * 3600 - minutes * 60;
+
+        QString durationText =  QString("<font color=%1>%2</font>").
+                arg(zv_infoColor.name(), QTime(hours, minutes, seconds).toString("hh:mm:ss"));
+
+        zv_taskDurationLabel->setText(durationText);
+
+    }
+}
+//===================================================
+
 

@@ -40,57 +40,90 @@ void ZSettingsDialog::zh_createComponents()
     QGroupBox* colorGroupBox = new QGroupBox(tr("Color"));
     mainLayout->addWidget(colorGroupBox);
 
+    QHBoxLayout* stretchLayout = new QHBoxLayout;
+    colorGroupBox->setLayout(stretchLayout);
+
     QGridLayout* trainingWidgetGridLayout = new QGridLayout;
-    colorGroupBox->setLayout(trainingWidgetGridLayout);
+    stretchLayout->addLayout(trainingWidgetGridLayout);
+    stretchLayout->addStretch(999999);
 
     zv_completeColorButton = new ZColorButton(this);
+    trainingWidgetGridLayout->addWidget(zv_completeColorButton, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     QLabel* label = new QLabel(tr("Complete text"));
-    trainingWidgetGridLayout->addWidget(label, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    trainingWidgetGridLayout->addWidget(zv_completeColorButton, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    trainingWidgetGridLayout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_incompleteColorButton = new ZColorButton(this);
+    trainingWidgetGridLayout->addWidget(zv_incompleteColorButton, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
     label = new QLabel(tr("Incomplete text"));
-    trainingWidgetGridLayout->addWidget(label, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    trainingWidgetGridLayout->addWidget(zv_incompleteColorButton, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    trainingWidgetGridLayout->addWidget(label, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_currentColorButton = new ZColorButton(this);
+    trainingWidgetGridLayout->addWidget(zv_currentColorButton, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
     label = new QLabel(tr("Current symbol"));
-    trainingWidgetGridLayout->addWidget(label, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    trainingWidgetGridLayout->addWidget(zv_currentColorButton, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    trainingWidgetGridLayout->addWidget(label, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_wrongColorButton = new ZColorButton(this);
+    trainingWidgetGridLayout->addWidget(zv_wrongColorButton, 3, 0, Qt::AlignLeft | Qt::AlignVCenter);
     label = new QLabel(tr("Wrong symbol"));
-    trainingWidgetGridLayout->addWidget(label, 3, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    trainingWidgetGridLayout->addWidget(zv_wrongColorButton, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    trainingWidgetGridLayout->addWidget(label, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
-    zv_underlinedCheckBox = new QCheckBox(tr("Underline current symbol"));
+    zv_underlinedCheckBox = new QCheckBox;
     trainingWidgetGridLayout->addWidget(zv_underlinedCheckBox, 4, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    label = new QLabel(tr("Underline current symbol"));
+    trainingWidgetGridLayout->addWidget(label, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
-    // Show wrong symbol
+    // Display wrong symbol
     QGroupBox* wrongSymbolGroupBox = new QGroupBox(tr("Wrong symbol"));
     mainLayout->addWidget(wrongSymbolGroupBox);
 
+    stretchLayout = new QHBoxLayout;
+    wrongSymbolGroupBox->setLayout(stretchLayout);
+
     QGridLayout* wrongSymbolGridLayout = new QGridLayout;
-    wrongSymbolGroupBox->setLayout(wrongSymbolGridLayout);
+    stretchLayout->addLayout(wrongSymbolGridLayout);
+    stretchLayout->addStretch(999999);
 
-    zv_dontShow = new QRadioButton(tr("Don't show"));
-    wrongSymbolGridLayout->addWidget(zv_dontShow, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    zv_showWhilePressed  = new QRadioButton(tr("Show while pressed"));
-    wrongSymbolGridLayout->addWidget(zv_showWhilePressed, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    zv_showForTime  = new QRadioButton(tr("Show for"));
-    wrongSymbolGridLayout->addWidget(zv_showForTime, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
-    zv_showDurationSpinBox = new QSpinBox;
-    zv_showDurationSpinBox->setRange(0, 3000);
-    wrongSymbolGridLayout->addWidget(zv_showDurationSpinBox, 2, 1, Qt::AlignRight | Qt::AlignVCenter);
+    zv_dontDisplay = new QRadioButton(tr("Don't display"));
+    wrongSymbolGridLayout->addWidget(zv_dontDisplay, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    zv_displayWhilePressed  = new QRadioButton(tr("Display while pressed"));
+    wrongSymbolGridLayout->addWidget(zv_displayWhilePressed, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    zv_displayForTime  = new QRadioButton(tr("Display for"));
+    wrongSymbolGridLayout->addWidget(zv_displayForTime, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
+
+    zv_wrongSymbolDisplayDurationSpinBox = new QSpinBox;
+    zv_wrongSymbolDisplayDurationSpinBox->setRange(0, 3000);
+    wrongSymbolGridLayout->addWidget(zv_wrongSymbolDisplayDurationSpinBox, 2, 1, Qt::AlignRight | Qt::AlignVCenter);
     label = new QLabel(tr("ms."));
     wrongSymbolGridLayout->addWidget(label, 2, 2, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_radioButtonGroup = new QButtonGroup;
-    zv_radioButtonGroup->addButton(zv_dontShow, int(ZTrainingManager::WSSM_DONT_SHOW));
-    zv_radioButtonGroup->addButton(zv_showWhilePressed, int(ZTrainingManager::WSSM_WHILE_PRESSED));
-    zv_radioButtonGroup->addButton(zv_showForTime, int(ZTrainingManager::WSSM_FOR_TIME));
+    zv_radioButtonGroup->addButton(zv_dontDisplay, int(ZTrainingManager::WSSM_DONT_DISPLAY));
+    zv_radioButtonGroup->addButton(zv_displayWhilePressed, int(ZTrainingManager::WSSM_WHILE_PRESSED));
+    zv_radioButtonGroup->addButton(zv_displayForTime, int(ZTrainingManager::WSSM_FOR_TIME));
 
+    // INFO
+    QGroupBox* infoGroupBox = new QGroupBox(tr("Info messages"));
+    mainLayout->addWidget(infoGroupBox);
+
+    stretchLayout = new QHBoxLayout;
+    infoGroupBox->setLayout(stretchLayout);
+
+    QGridLayout* infoGridLayout = new QGridLayout;
+    stretchLayout->addLayout(infoGridLayout);
+    stretchLayout->addStretch(999999);
+
+    zv_infoColorButton = new ZColorButton(this);
+    infoGridLayout->addWidget(zv_infoColorButton, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    label = new QLabel(tr("Info messages"));
+    infoGridLayout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
+    zv_taskDurationDisplayCheckBox = new QCheckBox;
+    infoGridLayout->addWidget(zv_taskDurationDisplayCheckBox, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    label = new QLabel(tr("Display task duration"));
+    infoGridLayout->addWidget(label, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
+    // basement
     mainLayout->addStretch();
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox;
@@ -119,27 +152,36 @@ void ZSettingsDialog::zp_setTrainingWidget(ZTrainingWidget* trainingWidget)
     connect(zv_underlinedCheckBox, &QCheckBox::clicked,
            trainingWidget, &ZTrainingWidget::zp_setCurrentSymbolUnderlined);
 
+    connect(zv_infoColorButton, &ZColorButton::zg_colorChanged,
+           trainingWidget, &ZTrainingWidget::zp_setInfoColor);
+    connect(zv_taskDurationDisplayCheckBox, &QCheckBox::clicked,
+           trainingWidget, &ZTrainingWidget::zp_setTaskDurationDisplayFlag);
+
+
     zv_completeColorButton->zp_setColor(trainingWidget->zp_completedColor());
     zv_incompleteColorButton->zp_setColor(trainingWidget->zp_incompletedColor());
     zv_currentColorButton->zp_setColor(trainingWidget->zp_currentSymbolColor());
     zv_wrongColorButton->zp_setColor(trainingWidget->zp_wrongSymbolColor());
     zv_underlinedCheckBox->setChecked(trainingWidget->zp_isSymbolUnderlined());
+
+    zv_infoColorButton->zp_setColor(trainingWidget->zp_infoColor());
+    zv_taskDurationDisplayCheckBox->setChecked(trainingWidget->zp_isTaskDurationDisplayed());
 }
 //===================================================
 void ZSettingsDialog::zp_setTrainingManager(ZTrainingManager* trainingManager)
 {
-    connect(zv_showDurationSpinBox, &QSpinBox::valueChanged,
-            trainingManager, &ZTrainingManager::zp_setWrongSymbolShowDuration);
+    connect(zv_wrongSymbolDisplayDurationSpinBox, &QSpinBox::valueChanged,
+            trainingManager, &ZTrainingManager::zp_setWrongSymbolDisplayDuration);
     connect(zv_radioButtonGroup, &QButtonGroup::idClicked,
-            this, &ZSettingsDialog::zh_onWrongSymbolShowModeChange);
-    connect(this, &ZSettingsDialog::zg_wrongSymbolShowModeChanged,
-            trainingManager, &ZTrainingManager::zp_setWrongSymbolShowMode);
+            this, &ZSettingsDialog::zh_onWrongSymbolDisplayModeChange);
+    connect(this, &ZSettingsDialog::zg_wrongSymbolDisplayModeChanged,
+            trainingManager, &ZTrainingManager::zp_setWrongSymbolDisplayMode);
 
-    int buttonId = trainingManager->zp_wrongSymbolShowMode();
+    int buttonId = trainingManager->zp_wrongSymbolDisplayMode();
     zv_radioButtonGroup->button(buttonId)->setChecked(true);
-    zv_showDurationSpinBox->setEnabled(buttonId == 2);
+    zv_wrongSymbolDisplayDurationSpinBox->setEnabled(buttonId == 2);
 
-    zv_showDurationSpinBox->setValue(trainingManager->zp_wrongSymbolShowDuration());
+    zv_wrongSymbolDisplayDurationSpinBox->setValue(trainingManager->zp_wrongSymbolDisplayDuration());
 }
 //===================================================
 void ZSettingsDialog::zh_restoreSettings()
@@ -156,9 +198,9 @@ void ZSettingsDialog::zh_saveSettings() const
     settings.setValue("SettingsDialogGeometry", saveGeometry());
 }
 //===================================================
-void ZSettingsDialog::zh_onWrongSymbolShowModeChange(int radioButtonIndex)
+void ZSettingsDialog::zh_onWrongSymbolDisplayModeChange(int radioButtonIndex)
 {
-    zv_showDurationSpinBox->setEnabled(radioButtonIndex == 2);
-    emit zg_wrongSymbolShowModeChanged(ZTrainingManager::WRONG_SYMBOL_SHOW_MODE(radioButtonIndex));
+    zv_wrongSymbolDisplayDurationSpinBox->setEnabled(radioButtonIndex == 2);
+    emit zg_wrongSymbolDisplayModeChanged(ZTrainingManager::WRONG_SYMBOL_DISPLAY_MODE(radioButtonIndex));
 }
 //===================================================
