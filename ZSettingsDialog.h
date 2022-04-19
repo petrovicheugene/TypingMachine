@@ -11,6 +11,7 @@
 class ZColorButton;
 
 class QCheckBox;
+class QComboBox;
 class QButtonGroup;
 class QPushButton;
 class QRadioButton;
@@ -43,6 +44,7 @@ private:
     ZColorButton* zv_incompleteColorButton;
     ZColorButton* zv_wrongColorButton;
     ZColorButton* zv_infoColorButton;
+    QComboBox* zv_infoFontSizeComboBox;
 
     QCheckBox* zv_underlinedCheckBox;
     QCheckBox* zv_taskDurationDisplayCheckBox;
@@ -65,7 +67,7 @@ private:
     void zh_restoreSettings();
     void zh_saveSettings() const;
     //void zh_applySettingsValues(ZAppSettings appSettings);
-
+    QStringList zh_sizesStringList();
 };
 //===================================================
 #endif // ZSETTINGSDIALOG_H

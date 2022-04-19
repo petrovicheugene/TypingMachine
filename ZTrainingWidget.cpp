@@ -31,9 +31,9 @@ ZTrainingWidget::ZTrainingWidget(QWidget *parent)
     zv_infoColor = QColor(Qt::gray);
     zv_taskDurationDisplayFlag = true;
 
+
     zh_createComponents();
     zh_createConnections();
-
     zh_restoreSettings();
 }
 //===================================================
@@ -53,7 +53,6 @@ void ZTrainingWidget::zh_createComponents()
     zv_lineLabel->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(zv_lineLabel);
     mainLayout->addStretch();
-
 
     zv_taskDurationLabel = new QLabel;
     zv_taskDurationLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -144,7 +143,13 @@ void ZTrainingWidget::zh_restoreSettings()
         zv_symbolUnderlinedFlag = vData.toBool();
     }
 
-    //
+    // INFO
+    vData = settings.value("InfoFontSize");
+    if(vData.isValid() && vData.canConvert<int>())
+    {
+        zp_setInfoFontSize(vData.toInt());
+    }
+
     vData = settings.value("InfoColor");
     if(vData.isValid() && vData.canConvert<QColor>())
     {
@@ -171,6 +176,8 @@ void ZTrainingWidget::zh_saveSettings() const
     settings.setValue("CurrentSymbolColor", QVariant::fromValue<QColor>(zv_currentSymbolColor));
     settings.setValue("WrongSymbolColor", QVariant::fromValue<QColor>(zv_wrongSymbolColor));
     settings.setValue("SymbolUnderlined", zv_symbolUnderlinedFlag);
+
+    settings.setValue("InfoFontSize", QVariant(zp_infoFontSize()));
     settings.setValue("InfoColor", QVariant::fromValue<QColor>(zv_infoColor));
     settings.setValue("DisplayTaskDuration", zv_taskDurationDisplayFlag);
 
@@ -266,6 +273,11 @@ bool ZTrainingWidget::zp_isTaskDurationDisplayed() const
     return zv_taskDurationDisplayFlag;
 }
 //===================================================
+int ZTrainingWidget::zp_infoFontSize() const
+{
+    return zv_taskDurationLabel->font().pointSize();
+}
+//===================================================
 void ZTrainingWidget::zp_setFontSize(int size)
 {
     if(zv_fontSizeSlider->minimum() <= size && size <=  zv_fontSizeSlider->maximum())
@@ -280,6 +292,13 @@ void ZTrainingWidget::zh_setFontSize(int size)
     QFont font = zv_lineLabel->font();
     font.setPointSize(size);
     zv_lineLabel->setFont(font);
+}
+//===================================================
+void ZTrainingWidget::zp_setInfoFontSize(int size)
+{
+    QFont font = zv_taskDurationLabel->font();
+    font.setPointSize(size);
+    zv_taskDurationLabel->setFont(font);
 }
 //===================================================
 void ZTrainingWidget::zh_changeFontSizeSliderValue()
@@ -321,7 +340,7 @@ void ZTrainingWidget::zp_updateDuration(int duration)
         int minutes = (duration - hours * 3600) / 60;
         int seconds = duration - hours * 3600 - minutes * 60;
 
-        QString durationText =  QString("<font color=%1>%2</font>").
+        QString durationText =  QString("<font color=%1><b>%2</b></font>").
                 arg(zv_infoColor.name(), QTime(hours, minutes, seconds).toString("hh:mm:ss"));
 
         zv_taskDurationLabel->setText(durationText);

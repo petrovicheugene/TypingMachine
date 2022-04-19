@@ -2,7 +2,7 @@
 #include "ZSettingsDialog.h"
 #include "ZColorButton.h"
 
-
+#include <QComboBox>
 #include <QCheckBox>
 #include <QButtonGroup>
 #include <QDialogButtonBox>
@@ -37,7 +37,7 @@ void ZSettingsDialog::zh_createComponents()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
-    QGroupBox* colorGroupBox = new QGroupBox(tr("Color"));
+    QGroupBox* colorGroupBox = new QGroupBox(tr("Text"));
     mainLayout->addWidget(colorGroupBox);
 
     QHBoxLayout* stretchLayout = new QHBoxLayout;
@@ -49,22 +49,22 @@ void ZSettingsDialog::zh_createComponents()
 
     zv_completeColorButton = new ZColorButton(this);
     trainingWidgetGridLayout->addWidget(zv_completeColorButton, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    QLabel* label = new QLabel(tr("Complete text"));
+    QLabel* label = new QLabel(tr("Complete text color"));
     trainingWidgetGridLayout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_incompleteColorButton = new ZColorButton(this);
     trainingWidgetGridLayout->addWidget(zv_incompleteColorButton, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    label = new QLabel(tr("Incomplete text"));
+    label = new QLabel(tr("Incomplete text color"));
     trainingWidgetGridLayout->addWidget(label, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_currentColorButton = new ZColorButton(this);
     trainingWidgetGridLayout->addWidget(zv_currentColorButton, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    label = new QLabel(tr("Current symbol"));
+    label = new QLabel(tr("Current symbol color"));
     trainingWidgetGridLayout->addWidget(label, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_wrongColorButton = new ZColorButton(this);
     trainingWidgetGridLayout->addWidget(zv_wrongColorButton, 3, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    label = new QLabel(tr("Wrong symbol"));
+    label = new QLabel(tr("Wrong symbol color"));
     trainingWidgetGridLayout->addWidget(label, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_underlinedCheckBox = new QCheckBox;
@@ -115,13 +115,20 @@ void ZSettingsDialog::zh_createComponents()
 
     zv_infoColorButton = new ZColorButton(this);
     infoGridLayout->addWidget(zv_infoColorButton, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    label = new QLabel(tr("Info messages"));
+    label = new QLabel(tr("Info text color"));
     infoGridLayout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
-    zv_taskDurationDisplayCheckBox = new QCheckBox;
-    infoGridLayout->addWidget(zv_taskDurationDisplayCheckBox, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    label = new QLabel(tr("Display task duration"));
+    zv_infoFontSizeComboBox = new QComboBox(this);
+    std::vector<int> sizes({8,9,10,11,12,14,16,18,20,22,24,26,28,32,36,48, 72});
+    zv_infoFontSizeComboBox->addItems(zh_sizesStringList());
+    infoGridLayout->addWidget(zv_infoFontSizeComboBox, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    label = new QLabel(tr("Info text font size"));
     infoGridLayout->addWidget(label, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
+    zv_taskDurationDisplayCheckBox = new QCheckBox;
+    infoGridLayout->addWidget(zv_taskDurationDisplayCheckBox, 2, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    label = new QLabel(tr("Display task duration"));
+    infoGridLayout->addWidget(label, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     // basement
     mainLayout->addStretch();
@@ -133,6 +140,11 @@ void ZSettingsDialog::zh_createComponents()
     buttonBox->addButton(zv_closeButton, QDialogButtonBox::ActionRole);
 }
 //===================================================
+QStringList ZSettingsDialog::zh_sizesStringList()
+{
+    return QStringList({"8","9","10","11","12","14","16","18","20","22","24","26","28","32","36","48","72"});
+}
+//===================================================
 void ZSettingsDialog::zh_createConnections()
 {
     connect(zv_closeButton, &QPushButton::clicked,
@@ -142,20 +154,20 @@ void ZSettingsDialog::zh_createConnections()
 void ZSettingsDialog::zp_setTrainingWidget(ZTrainingWidget* trainingWidget)
 {
     connect(zv_completeColorButton, &ZColorButton::zg_colorChanged,
-           trainingWidget, &ZTrainingWidget::zp_setCompletedColor);
+            trainingWidget, &ZTrainingWidget::zp_setCompletedColor);
     connect(zv_incompleteColorButton, &ZColorButton::zg_colorChanged,
-           trainingWidget, &ZTrainingWidget::zp_setIncompletedColor);
+            trainingWidget, &ZTrainingWidget::zp_setIncompletedColor);
     connect(zv_currentColorButton, &ZColorButton::zg_colorChanged,
-           trainingWidget, &ZTrainingWidget::zp_setCurrentSymbolColor);
+            trainingWidget, &ZTrainingWidget::zp_setCurrentSymbolColor);
     connect(zv_wrongColorButton, &ZColorButton::zg_colorChanged,
-           trainingWidget, &ZTrainingWidget::zp_setWrongSymbolColor);
+            trainingWidget, &ZTrainingWidget::zp_setWrongSymbolColor);
     connect(zv_underlinedCheckBox, &QCheckBox::clicked,
-           trainingWidget, &ZTrainingWidget::zp_setCurrentSymbolUnderlined);
+            trainingWidget, &ZTrainingWidget::zp_setCurrentSymbolUnderlined);
 
     connect(zv_infoColorButton, &ZColorButton::zg_colorChanged,
-           trainingWidget, &ZTrainingWidget::zp_setInfoColor);
+            trainingWidget, &ZTrainingWidget::zp_setInfoColor);
     connect(zv_taskDurationDisplayCheckBox, &QCheckBox::clicked,
-           trainingWidget, &ZTrainingWidget::zp_setTaskDurationDisplayFlag);
+            trainingWidget, &ZTrainingWidget::zp_setTaskDurationDisplayFlag);
 
 
     zv_completeColorButton->zp_setColor(trainingWidget->zp_completedColor());

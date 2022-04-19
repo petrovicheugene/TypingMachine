@@ -30,6 +30,7 @@ public:
 
     QColor zp_infoColor() const;
     bool zp_isTaskDurationDisplayed() const;
+    int zp_infoFontSize() const;
 
 public slots:
 
@@ -46,6 +47,7 @@ public slots:
 
     void zp_setInfoColor(QColor color);
     void zp_setTaskDurationDisplayFlag(bool displayFlag);
+    void zp_setInfoFontSize(int size);
 
 signals:
 
