@@ -119,7 +119,6 @@ void ZSettingsDialog::zh_createComponents()
     infoGridLayout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     zv_infoFontSizeComboBox = new QComboBox(this);
-    std::vector<int> sizes({8,9,10,11,12,14,16,18,20,22,24,26,28,32,36,48, 72});
     zv_infoFontSizeComboBox->addItems(zh_sizesStringList());
     infoGridLayout->addWidget(zv_infoFontSizeComboBox, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
     label = new QLabel(tr("Info text font size"));
@@ -142,7 +141,8 @@ void ZSettingsDialog::zh_createComponents()
 //===================================================
 QStringList ZSettingsDialog::zh_sizesStringList()
 {
-    return QStringList({"8","9","10","11","12","14","16","18","20","22","24","26","28","32","36","48","72"});
+    return QStringList({"8","9","10","11","12","14","16","18","20","22",
+                        "24","26","28","32","36","48","72"});
 }
 //===================================================
 void ZSettingsDialog::zh_createConnections()
@@ -168,6 +168,8 @@ void ZSettingsDialog::zp_setTrainingWidget(ZTrainingWidget* trainingWidget)
             trainingWidget, &ZTrainingWidget::zp_setInfoColor);
     connect(zv_taskDurationDisplayCheckBox, &QCheckBox::clicked,
             trainingWidget, &ZTrainingWidget::zp_setTaskDurationDisplayFlag);
+    connect(zv_infoFontSizeComboBox, &QComboBox::currentTextChanged,
+            trainingWidget, &ZTrainingWidget::zp_setInfoFontSizeString);
 
 
     zv_completeColorButton->zp_setColor(trainingWidget->zp_completedColor());
@@ -178,6 +180,7 @@ void ZSettingsDialog::zp_setTrainingWidget(ZTrainingWidget* trainingWidget)
 
     zv_infoColorButton->zp_setColor(trainingWidget->zp_infoColor());
     zv_taskDurationDisplayCheckBox->setChecked(trainingWidget->zp_isTaskDurationDisplayed());
+    zv_infoFontSizeComboBox->setCurrentText(QString::number(trainingWidget->zp_infoFontSize()));
 }
 //===================================================
 void ZSettingsDialog::zp_setTrainingManager(ZTrainingManager* trainingManager)

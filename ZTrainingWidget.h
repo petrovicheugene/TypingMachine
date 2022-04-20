@@ -48,6 +48,7 @@ public slots:
     void zp_setInfoColor(QColor color);
     void zp_setTaskDurationDisplayFlag(bool displayFlag);
     void zp_setInfoFontSize(int size);
+    void zp_setInfoFontSizeString(QString size);
 
 signals:
 

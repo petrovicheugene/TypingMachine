@@ -301,6 +301,17 @@ void ZTrainingWidget::zp_setInfoFontSize(int size)
     zv_taskDurationLabel->setFont(font);
 }
 //===================================================
+void ZTrainingWidget::zp_setInfoFontSizeString(QString sizeString)
+{
+    bool ok = false;
+    int size = sizeString.toInt(&ok);
+    if(ok)
+    {
+        zp_setInfoFontSize(size);
+    }
+
+}
+//===================================================
 void ZTrainingWidget::zh_changeFontSizeSliderValue()
 {
     int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
