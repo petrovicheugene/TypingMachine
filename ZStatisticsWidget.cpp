@@ -5,6 +5,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QVBoxLayout>
 
 //===================================================
@@ -21,8 +22,24 @@ void ZStatisticsWidget::zh_createComponents()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
+    // Header
+    QLabel* label = new QLabel;
+
+    QFont font = label->font();
+    font.setPointSize(28);
+    font.setBold(true);
+    label->setFont(font);
+
+    label->setText(QString("<font color=%1>%2</font>").arg("red", tr("Statistics")));
+    label->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(label);
+
+    // Scroll area
+    QScrollArea* scrollArea = new QScrollArea;
+    mainLayout->addWidget(scrollArea);
+
+    QWidget* w = new QWidget;
     QFormLayout* tabLayout = new QFormLayout;
-    mainLayout->addLayout(tabLayout);
 
     for(int i = 1; i < 30; i++)
     {
@@ -30,8 +47,10 @@ void ZStatisticsWidget::zh_createComponents()
                           new QLabel(QString("Vechor ty pomnish vuga zlilas - %1").arg(QString::number(i))));
     }
 
+    w->setLayout(tabLayout);
+    scrollArea->setWidget(w);
+
     // basement
-    mainLayout->addStretch();
     QHBoxLayout* basementLayout = new QHBoxLayout;
     basementLayout->addStretch(999999);
     mainLayout->addLayout(basementLayout);
