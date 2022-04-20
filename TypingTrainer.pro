@@ -81,6 +81,7 @@ SOURCES += \
     ZNewUserWidget.cpp \
     ZRandomLineController.cpp \
     ZSettingsDialog.cpp \
+    ZStatisticsWidget.cpp \
     ZSuccessivelyLineController.cpp \
     ZTask.cpp \
     ZTaskContentWidget.cpp \
@@ -106,6 +107,7 @@ HEADERS += \
     ZRandomLineController.h \
     ZSettingsDialog.h \
     ZSqlTableStatements.h \
+    ZStatisticsWidget.h \
     ZSuccessivelyLineController.h \
     ZTask.h \
     ZTaskSource.h \

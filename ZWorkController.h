@@ -20,6 +20,7 @@ public slots:
 
     void zp_initTaskStart(int row);
     void zp_initTaskFinish();
+    void zp_initStatisticsDisplayFinish();
 
 signals:
 

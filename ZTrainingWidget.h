@@ -71,8 +71,8 @@ private:
     ZClickableLabel* zv_plusLabel;
 
     QSlider* zv_fontSizeSlider;
-    QPushButton* zv_restartBtn;
-    QPushButton* zv_finishBtn;
+    QPushButton* zv_restartButton;
+    QPushButton* zv_finishButton;
 
     int zv_fontSize;
     QColor zv_completedColor;

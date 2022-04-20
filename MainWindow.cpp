@@ -11,6 +11,7 @@
 
 #include "ZDataSourceManager.h"
 #include "ZSettingsDialog.h"
+#include "ZStatisticsWidget.h"
 #include "ZTaskWidget.h"
 #include "ZTrainingManager.h"
 #include "ZTrainingWidget.h"
@@ -67,9 +68,11 @@ void MainWindow::zh_createComponents()
     // create widgets and add  to stacked widget
     zv_taskWidget = new ZTaskWidget;
     zv_trainingWidget = new ZTrainingWidget;
+    zv_statisticsWidget = new ZStatisticsWidget;
 
     zv_stackedWidget->addWidget(zv_taskWidget);
     zv_stackedWidget->addWidget(zv_trainingWidget);
+    zv_stackedWidget->addWidget(zv_statisticsWidget);
 
     // task model
     zv_dataSourceManager = new ZDataSourceManager(this);
@@ -95,6 +98,9 @@ void MainWindow::zh_createConnections()
             zv_workController, &ZWorkController::zp_initTaskStart);
     connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskFinish,
             zv_workController, &ZWorkController::zp_initTaskFinish);
+    connect(zv_statisticsWidget, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish,
+            zv_workController, &ZWorkController::zp_initStatisticsDisplayFinish);
+
 
     connect(zv_workController, &ZWorkController::zg_setStackedWidgetIndex,
             zv_stackedWidget, &QStackedWidget::setCurrentIndex);

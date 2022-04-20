@@ -171,7 +171,6 @@ void ZSettingsDialog::zp_setTrainingWidget(ZTrainingWidget* trainingWidget)
     connect(zv_infoFontSizeComboBox, &QComboBox::currentTextChanged,
             trainingWidget, &ZTrainingWidget::zp_setInfoFontSizeString);
 
-
     zv_completeColorButton->zp_setColor(trainingWidget->zp_completedColor());
     zv_incompleteColorButton->zp_setColor(trainingWidget->zp_incompletedColor());
     zv_currentColorButton->zp_setColor(trainingWidget->zp_currentSymbolColor());

@@ -24,12 +24,17 @@ void ZWorkController::zp_initTaskStart(int row)
     ZTask task = zv_taskSource->zp_taskForRow(row);
     emit zg_setStackedWidgetIndex(1);
     emit zg_requestTaskStart(task);
-
 }
 //===================================================
 void ZWorkController::zp_initTaskFinish()
 {
-    emit zg_setStackedWidgetIndex(0);
     emit zg_requestTaskFinish();
+    emit zg_setStackedWidgetIndex(2);
 }
 //===================================================
+void ZWorkController::zp_initStatisticsDisplayFinish()
+{
+    emit zg_setStackedWidgetIndex(0);
+}
+//===================================================
+

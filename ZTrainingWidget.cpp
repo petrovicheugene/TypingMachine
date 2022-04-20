@@ -75,23 +75,23 @@ void ZTrainingWidget::zh_createComponents()
     basementLayout->addWidget(zv_fontSizeSlider);
     basementLayout->addWidget(zv_plusLabel);
 
-    zv_restartBtn = new QPushButton;
-    zv_restartBtn->setIcon(QIcon(":/images/restart.png"));
-    zv_restartBtn->setToolTip(tr("Restart task"));
-    basementLayout->addWidget(zv_restartBtn);
+    zv_restartButton = new QPushButton;
+    zv_restartButton->setIcon(QIcon(":/images/restart.png"));
+    zv_restartButton->setToolTip(tr("Restart task"));
+    basementLayout->addWidget(zv_restartButton);
 
-    zv_finishBtn = new QPushButton;
-    zv_finishBtn->setIcon(QIcon(":/images/stop-10.png"));
-    zv_finishBtn->setToolTip(tr("Finish task"));
-    basementLayout->addWidget(zv_finishBtn);
+    zv_finishButton = new QPushButton;
+    zv_finishButton->setIcon(QIcon(":/images/stop-10.png"));
+    zv_finishButton->setToolTip(tr("Finish task"));
+    basementLayout->addWidget(zv_finishButton);
 
 }
 //===================================================
 void ZTrainingWidget::zh_createConnections()
 {
-    connect(zv_finishBtn, &QPushButton::clicked,
+    connect(zv_finishButton, &QPushButton::clicked,
             this, &ZTrainingWidget::zg_requestTaskFinish);
-    connect(zv_restartBtn, &QPushButton::clicked,
+    connect(zv_restartButton, &QPushButton::clicked,
             this, &ZTrainingWidget::zg_requestTaskRestart);
     connect(zv_fontSizeSlider, &QSlider::valueChanged,
             this, &ZTrainingWidget::zh_setFontSize);

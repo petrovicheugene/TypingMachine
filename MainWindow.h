@@ -9,6 +9,7 @@ class QAction;
 class QPushButton;
 
 class ZDataSourceManager;
+class ZStatisticsWidget;
 class ZTaskWidget;
 class ZTrainingManager;
 class ZTrainingWidget;
@@ -35,6 +36,7 @@ private:
     QStackedWidget* zv_stackedWidget;
     ZTrainingWidget* zv_trainingWidget;
     ZTaskWidget* zv_taskWidget;
+    ZStatisticsWidget* zv_statisticsWidget;
 
     ZTrainingManager* zv_trainingManager;
     ZDataSourceManager* zv_dataSourceManager;
