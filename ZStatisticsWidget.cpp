@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTableView>
 #include <QVBoxLayout>
 
 //===================================================
@@ -14,7 +15,6 @@ ZStatisticsWidget::ZStatisticsWidget(QWidget *parent)
 {
     zh_createComponents();
     zh_createConnections();
-
 }
 //===================================================
 void ZStatisticsWidget::zh_createComponents()
@@ -26,8 +26,8 @@ void ZStatisticsWidget::zh_createComponents()
     QLabel* label = new QLabel;
 
     QFont font = label->font();
-    font.setPointSize(28);
-    font.setBold(true);
+    font.setPointSize(18);
+    //font.setBold(true);
     label->setFont(font);
 
     label->setText(QString("<font color=%1>%2</font>").arg("red", tr("Statistics")));
@@ -38,17 +38,8 @@ void ZStatisticsWidget::zh_createComponents()
     QScrollArea* scrollArea = new QScrollArea;
     mainLayout->addWidget(scrollArea);
 
-    QWidget* w = new QWidget;
-    QFormLayout* tabLayout = new QFormLayout;
-
-    for(int i = 1; i < 30; i++)
-    {
-        tabLayout->addRow(new QLabel(QString("Bambarbia Cirgudu Arum kusak - %1").arg(QString::number(i))),
-                          new QLabel(QString("Vechor ty pomnish vuga zlilas - %1").arg(QString::number(i))));
-    }
-
-    w->setLayout(tabLayout);
-    scrollArea->setWidget(w);
+    scrollArea->setWidget(zh_createInfoWidget());
+    scrollArea->setWidgetResizable(true);
 
     // basement
     QHBoxLayout* basementLayout = new QHBoxLayout;
@@ -60,6 +51,37 @@ void ZStatisticsWidget::zh_createComponents()
     zv_finishButton->setToolTip(tr("Finish task"));
     basementLayout->addWidget(zv_finishButton);
 
+}
+//===================================================
+QWidget* ZStatisticsWidget::zh_createInfoWidget()
+{
+    QWidget* w = new QWidget;
+    w->setPalette(QPalette(Qt::yellow));
+    w->setAutoFillBackground(true);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout;
+    w->setLayout(mainLayout);
+
+    zv_statsTableView = new QTableView;
+    zv_statsTableView->setMinimumHeight(zv_statsTableView->sizeHint().height());
+    mainLayout->addWidget(zv_statsTableView);
+
+    QFormLayout* fLayout = new QFormLayout;
+
+    for(int i = 0; i < 10; ++i)
+    {
+        QLabel* l1 = new QLabel;
+        l1->setText(QString("Bambarbia Cirgudu azym kusak - %1").arg(QString::number(i)));
+
+        QLabel* l2 = new QLabel;
+        l2->setText(QString("Nag sedoi ravninoi mora  - %1").arg(QString::number(i)));
+
+        fLayout->addRow(l1, l2);
+    }
+
+    mainLayout->addLayout(fLayout);
+
+    return w;
 }
 //===================================================
 void ZStatisticsWidget::zh_createConnections()

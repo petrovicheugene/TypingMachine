@@ -12,6 +12,7 @@
 #include "ZDataSourceManager.h"
 #include "ZSettingsDialog.h"
 #include "ZStatisticsWidget.h"
+#include "ZTaskStatisticsManager.h"
 #include "ZTaskWidget.h"
 #include "ZTrainingManager.h"
 #include "ZTrainingWidget.h"
@@ -84,6 +85,10 @@ void MainWindow::zh_createComponents()
 
     zv_workController = new ZWorkController(this);
     zv_workController->zp_setTaskSource(zv_dataSourceManager);
+
+    // task Statistics manager
+    zv_taskStatisticsManager = new ZTaskStatisticsManager(this);
+
 }
 //===================================================
 void MainWindow::zh_createConnections()

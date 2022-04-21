@@ -87,6 +87,7 @@ SOURCES += \
     ZTaskContentWidget.cpp \
     ZTaskListWidget.cpp \
     ZTaskSource.cpp \
+    ZTaskStatisticsManager.cpp \
     ZTaskWidget.cpp \
     ZTrainingManager.cpp \
     ZTrainingWidget.cpp \
@@ -111,6 +112,7 @@ HEADERS += \
     ZSuccessivelyLineController.h \
     ZTask.h \
     ZTaskSource.h \
+    ZTaskStatisticsManager.h \
     ZTrainingManager.h \
     ZTranslatorManager.h \
     MainWindow.h \

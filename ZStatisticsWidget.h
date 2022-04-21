@@ -5,6 +5,7 @@
 #include <QWidget>
 //===================================================
 class QPushButton;
+class QTableView;
 //===================================================
 class ZStatisticsWidget : public QWidget
 {
@@ -20,11 +21,12 @@ private:
 
     // VARS
     QPushButton* zv_finishButton;
+    QTableView* zv_statsTableView;
 
     // FUNCS
     void zh_createComponents();
     void zh_createConnections();
-
+    QWidget* zh_createInfoWidget();
 };
 //===================================================
 #endif // ZSTATISTICSWIDGET_H
