@@ -12,11 +12,17 @@ ZAbstractLineController::ZAbstractLineController(ZTask& task, QObject *parent)
     switch(outputLineType)
     {
     case SPLIT_LINE_BY::WORD:
-        zv_lineList = taskContent.split(QRegularExpression ("[\\s\\n]"), Qt::SkipEmptyParts);
+        zv_lineList = taskContent.split(QRegularExpression ("[\\t\\s\\n]"), Qt::SkipEmptyParts);
         break;
     case SPLIT_LINE_BY::STRING:
         zv_lineList = taskContent.split(QRegularExpression ("[\\n]"), Qt::SkipEmptyParts);
-        break;
+
+        // removing starting and ending spaces
+        for(int i = 0; i < zv_lineList.count(); ++i)
+        {
+            zv_lineList[i] = zv_lineList.at(i).trimmed();
+        }
     }
+
  }
 //===================================================

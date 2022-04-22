@@ -88,7 +88,7 @@ void MainWindow::zh_createComponents()
 
     // task Statistics manager
     zv_taskStatisticsManager = new ZTaskStatisticsManager(this);
-
+    zv_taskStatisticsManager->zp_connectToTrainingManager(zv_trainingManager);
 }
 //===================================================
 void MainWindow::zh_createConnections()

@@ -19,9 +19,7 @@ ZTrainingManager::ZTrainingManager(QObject *parent)
 
     zh_createComponents();
     zh_createConnections();
-
     zh_restoreSettings();
-
 }
 //===================================================
 ZTrainingManager::~ZTrainingManager()
@@ -41,14 +39,13 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
             return false;
         }
 
-        qDebug() << "KEY" << keyEvent->key();
+//        qDebug() << "KEY" << keyEvent->key();
         // PAUSE
         if(keyEvent->key() == Qt::Key_Pause)
         {
             //            zv_paused = !zv_paused;
             //            qDebug() <<  (zv_paused? "PAUSED" : "GO");
         }
-
 
         if(zv_lineCompleted)
         {
@@ -220,7 +217,7 @@ bool ZTrainingManager::zp_isInProgress() const
 void ZTrainingManager::zh_handleKeyPress(QString symbol)
 {
     // if(zv_line.at(zv_currentSymbolIndex) != symbol)
-    if(zv_currentSymbol != symbol)
+    if(zv_line.at(zv_currentSymbolIndex) != symbol)
     {
         if(!zv_wrongSymbolFlag)
         {
@@ -245,10 +242,12 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
     // right symbol
     if(zv_wrongSymbolFlag)
     {
+        zh_resetSymbol();
         zv_wrongSymbolFlag = false;
     }
 
-    if(++zv_currentSymbolIndex == zv_line.count())
+    ++zv_currentSymbolIndex;
+    if(zv_currentSymbolIndex == zv_line.count())
     {
         // line completed
         if(zv_lineEndKey == AUTO)
@@ -270,6 +269,11 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
 //===================================================
 void ZTrainingManager::zh_resetSymbol()
 {
+    if(!zv_wrongSymbolFlag)
+    {
+        return;
+    }
+
     zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
     emit zg_stateChanged();
 }

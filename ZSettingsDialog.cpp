@@ -2,6 +2,7 @@
 #include "ZSettingsDialog.h"
 #include "ZColorButton.h"
 
+#include <QApplication>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QButtonGroup>
