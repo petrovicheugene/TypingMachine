@@ -54,11 +54,13 @@ signals:
 
     void zg_requestTaskFinish();
     void zg_requestTaskRestart();
+    void zg_requestTaskPauseToggle(bool paused);
 
 private slots:
 
     void zh_setFontSize(int size);
     void zh_changeFontSizeSliderValue();
+    void zp_onTaskPauseToggle(bool checked);
 
 private:
 
@@ -72,6 +74,7 @@ private:
 
     QSlider* zv_fontSizeSlider;
     QPushButton* zv_restartButton;
+    QPushButton* zv_pauseButton;
     QPushButton* zv_finishButton;
 
     int zv_fontSize;
@@ -89,7 +92,7 @@ private:
     void zh_createConnections();
     void zh_restoreSettings();
     void zh_saveSettings() const;
-
+    void zh_pauseButtonControl(bool paused, bool enabled = true);
 
 };
 //===================================================

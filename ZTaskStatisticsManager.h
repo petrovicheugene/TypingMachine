@@ -17,6 +17,8 @@ public:
 public slots:
 
     void zp_updateStatistics();
+    void zp_registerError();
+    void zp_setPause(bool paused);
 
 signals:
 
@@ -28,8 +30,9 @@ private:
     QString zv_currentWord;
     qint64 zv_timeMark;
     int zv_errorCount;
+
     // FUNCS
-    void zh_registerWord();
+    void zh_registerWordAndStatistics();
 
 };
 //===================================================

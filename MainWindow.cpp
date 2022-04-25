@@ -116,6 +116,9 @@ void MainWindow::zh_createConnections()
             zv_trainingManager, &ZTrainingManager::zp_finishTask);
     connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskRestart,
             zv_trainingManager, &ZTrainingManager::zp_restartTask);
+    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskPauseToggle,
+            zv_trainingManager, &ZTrainingManager::zp_setTaskPaused);
+
 
     connect(zv_settingsAction, &QAction::triggered,
             this, &MainWindow::zh_runSettings);
@@ -140,7 +143,9 @@ void MainWindow::zh_runSettings()
     dialog.zp_setTrainingManager(zv_trainingManager);
     dialog.zp_setTrainingWidget(zv_trainingWidget);
 
+    zv_trainingManager->zp_setTaskPaused(true);
     dialog.exec();
+    zv_trainingManager->zp_setTaskPaused(false);
 }
 //===================================================
 

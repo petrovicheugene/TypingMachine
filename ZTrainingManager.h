@@ -22,14 +22,19 @@ public:
                                  WSSM_WHILE_PRESSED = 1,
                                  WSSM_FOR_TIME = 2};
 
+    enum TASK_STATE {TS_INACTIVE,
+                     TS_ACTIVE,
+                    TS_PAUSED,
+                    TS_COMPLETED};
+
     QString zp_currentLine() const;
-    QString zp_completed() const;
+    QString zp_completedLine() const;
     QString zp_currentSymbol() const;
-    QString zp_incompleted() const;
+    QString zp_incompletedLine() const;
     int zp_currentSymbolIndex() const;
 
     bool zp_isWrong() const;
-    bool zp_isInProgress() const;
+    TASK_STATE zp_taskState() const;
 
     int zp_wrongSymbolDisplayDuration() const;
     WRONG_SYMBOL_DISPLAY_MODE zp_wrongSymbolDisplayMode() const;
@@ -39,6 +44,7 @@ public slots:
     void zp_initTaskStart(ZTask task);
     void zp_finishTask();
     void zp_restartTask();
+    void zp_setTaskPaused(bool paused);
 
     void zp_setWrongSymbolDisplayDuration(int value);
     void zp_setWrongSymbolDisplayMode(WRONG_SYMBOL_DISPLAY_MODE mode);
@@ -51,7 +57,8 @@ signals:
 
     void zg_stateChanged();
     void zg_durationChanged(int duration);
-
+    void zg_wrongSymbolPressed();
+    //void zg_taskPaused(bool paused);
 
 private slots:
 
@@ -75,15 +82,14 @@ private:
     LINE_END_KEY zv_lineEndKey;
 
     bool zv_lineCompleted;
-    bool zv_taskCompleted;
-    // bool zv_paused;
+    TASK_STATE zv_taskState;
+
     int zv_currentSymbolIndex;
     bool zv_wrongSymbolFlag;
     QString zv_currentSymbol;
 
     QTimer* zv_taskDurationTimer;
     int zv_taskDurationSec;
-
 
     const int zv_maxWrongSymbolDuration = 3000;
     int zv_wrongSymbolDisplayDuration;
@@ -95,6 +101,7 @@ private:
     void zh_restoreSettings();
     void zh_saveSettings() const;
     void zh_startTask();
+    void zh_toggleTaskPause();
 
     void zh_prepareTask(ZTask task);
     void zh_handleKeyPress(QString key);

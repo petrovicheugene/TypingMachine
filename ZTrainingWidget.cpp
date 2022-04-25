@@ -80,6 +80,12 @@ void ZTrainingWidget::zh_createComponents()
     zv_restartButton->setToolTip(tr("Restart task"));
     basementLayout->addWidget(zv_restartButton);
 
+    zv_pauseButton = new QPushButton;
+    zv_pauseButton->setCheckable(true);
+    zv_pauseButton->setIcon(QIcon(":/images/pause-6.png"));
+    zv_pauseButton->setToolTip(tr("Pause task"));
+    basementLayout->addWidget(zv_pauseButton);
+
     zv_finishButton = new QPushButton;
     zv_finishButton->setIcon(QIcon(":/images/stop-10.png"));
     zv_finishButton->setToolTip(tr("Finish task"));
@@ -91,6 +97,8 @@ void ZTrainingWidget::zh_createConnections()
 {
     connect(zv_finishButton, &QPushButton::clicked,
             this, &ZTrainingWidget::zg_requestTaskFinish);
+    connect(zv_pauseButton, &QPushButton::toggled,
+            this, &ZTrainingWidget::zp_onTaskPauseToggle);
     connect(zv_restartButton, &QPushButton::clicked,
             this, &ZTrainingWidget::zg_requestTaskRestart);
     connect(zv_fontSizeSlider, &QSlider::valueChanged,
@@ -327,20 +335,50 @@ void ZTrainingWidget::zh_changeFontSizeSliderValue()
     }
 }
 //===================================================
+void ZTrainingWidget::zp_onTaskPauseToggle(bool checked)
+{
+    zh_pauseButtonControl(checked);
+    emit zg_requestTaskPauseToggle(checked);
+}
+//===================================================
+void ZTrainingWidget::zh_pauseButtonControl(bool paused, bool enabled)
+{
+    if(paused)
+    {
+        zv_pauseButton->setToolTip(tr("Resume task"));
+        zv_pauseButton->setIcon(QIcon(":/images/start-8.png"));
+    }
+    else
+    {
+        zv_pauseButton->setToolTip(tr("Pause task"));
+        zv_pauseButton->setIcon(QIcon(":/images/pause-6.png"));
+    }
+
+    zv_pauseButton->setEnabled(enabled);
+}
+//===================================================
 void ZTrainingWidget::zp_update()
 {
     QColor symbolColor = zv_trainingManager->zp_isWrong()? zv_wrongSymbolColor : zv_currentSymbolColor;
 
     QString completedLine = QString("<font color=%1>%2</font>").arg(zv_completedColor.name(),
-                                                                    zv_trainingManager->zp_completed());
+                                                                    zv_trainingManager->zp_completedLine());
     QString currentSymbol = zv_symbolUnderlinedFlag?
                 "<u>"+zv_trainingManager->zp_currentSymbol()+"</u>" : zv_trainingManager->zp_currentSymbol();
     QString currentSymbolLine = QString("<font color=%1>%2</font>").arg(symbolColor.name(),
                                                                         currentSymbol);
     QString endLine = QString("<font color=%1>%2</font>").arg(zv_incompletedColor.name(),
-                                                              zv_trainingManager->zp_incompleted());
+                                                              zv_trainingManager->zp_incompletedLine());
     QString displayLine = completedLine + currentSymbolLine + endLine;
     zv_lineLabel->setText(displayLine);
+
+    // pause button
+    bool paused = zv_trainingManager->zp_taskState() == ZTrainingManager::TS_PAUSED;
+
+    bool enabled = zv_trainingManager->zp_taskState() != ZTrainingManager::TS_COMPLETED &&
+            zv_trainingManager->zp_taskState() != ZTrainingManager::TS_INACTIVE;
+    zh_pauseButtonControl(paused, enabled);
+
 }
 //===================================================
 void ZTrainingWidget::zp_updateDuration(int duration)

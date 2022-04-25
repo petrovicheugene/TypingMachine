@@ -17,33 +17,39 @@ void ZTaskStatisticsManager::zp_connectToTrainingManager(ZTrainingManager* manag
     zv_trainingManager = manager;
     connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
             this, &ZTaskStatisticsManager::zp_updateStatistics);
-    //    connect(zv_trainingManager, &ZTrainingManager::zg_durationChanged,
-    //            this, &ZTaskStatisticsManager::zp_updateDuration);
+    connect(zv_trainingManager, &ZTrainingManager::zg_wrongSymbolPressed,
+            this, &ZTaskStatisticsManager::zp_registerError);
+//    connect(zv_trainingManager, &ZTrainingManager::zg_taskPaused,
+//            this, &ZTaskStatisticsManager::zp_setPause);
 
 }
 //===================================================
 void ZTaskStatisticsManager::zp_updateStatistics()
 {
     qDebug() << "UPD STAT";
+    if(zv_trainingManager->zp_taskState() == ZTrainingManager::TS_PAUSED)
+    {
+
+    }
+
     if(zv_trainingManager->zp_isWrong())
     {
-        qDebug() << "ERR"<< zv_errorCount++;
-
+        //qDebug() << "ERR"<< zv_errorCount++;
         return;
     }
 
-    QRegularExpression re("[\\s\\t]");
+    static QRegularExpression re("[\\s\\t]");
     if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
     {
         // space or tab in line: end of the current word
-        zh_registerWord();
+        zh_registerWordAndStatistics();
         return;
     }
 
     if(zv_trainingManager->zp_currentSymbolIndex() == 0)
     {
         // new line started
-        zh_registerWord();
+        zh_registerWordAndStatistics();
     }
 
     // in the midle of the word
@@ -51,7 +57,21 @@ void ZTaskStatisticsManager::zp_updateStatistics()
 
 }
 //===================================================
-void ZTaskStatisticsManager::zh_registerWord()
+void ZTaskStatisticsManager::zp_registerError()
+{
+    if(!zv_currentWord.isEmpty())
+    {
+        // exclude wrong pressed symbols instead spaces between words
+        qDebug() << ++zv_errorCount;
+    }
+}
+//===================================================
+void ZTaskStatisticsManager::zp_setPause(bool paused)
+{
+
+}
+//===================================================
+void ZTaskStatisticsManager::zh_registerWordAndStatistics()
 {
     if(!zv_currentWord.isEmpty())
     {

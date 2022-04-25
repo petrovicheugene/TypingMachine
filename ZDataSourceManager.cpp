@@ -135,7 +135,8 @@ bool ZDataSourceManager::zh_reviseDatabaseTables()
 
         if(sqlStatement.startsWith("CREATE TABLE", Qt::CaseInsensitive))
         {
-            QString tableName = sqlStatement.split(QRegularExpression("[\\s,(]")).at(2);
+            static QRegularExpression re("[\\s,(]");
+            QString tableName = sqlStatement.split(re).at(2);
             tableName = tableName.remove('"');
             if(!tableList.contains(tableName))
             {
@@ -223,7 +224,7 @@ int ZDataSourceManager::zh_findNextTaskNum() const
     }
 
     int maxNum = 0;
-    QRegularExpression re("^(Task)(\\s{0,})(?<number>\\d+)$");
+    static QRegularExpression re("^(Task)(\\s{0,})(?<number>\\d+)$");
     QRegularExpressionMatch match;
     while(query.next())
     {
