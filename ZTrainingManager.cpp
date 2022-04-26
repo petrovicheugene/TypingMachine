@@ -58,10 +58,14 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
             {
                 zh_prepareNextLine();
             }
-            return true;
+        }
+        else
+        {
+            zh_handleKeyPress(keyEvent->text());
         }
 
-        zh_handleKeyPress(keyEvent->text());
+        emit zg_symbolPressed(keyEvent->text());
+
         return true;
     }
     else if(zv_wrongSymbolFlag && event->type() == QEvent::KeyRelease)
@@ -148,8 +152,6 @@ void ZTrainingManager::zh_toggleTaskPause()
         zh_setTaskState(TS_PAUSED);
         zv_taskDurationTimer->stop();
     }
-
-    // emit zg_lineChanged();
 }
 //===================================================
 void ZTrainingManager::zp_stopTask()
@@ -184,9 +186,6 @@ void ZTrainingManager::zp_setTaskPaused(bool paused)
         zh_setTaskState(TS_ACTIVE);
         zv_taskDurationTimer->start();
     }
-
-    //qDebug() << "TASK STATE" << zv_taskState;
-    //emit zg_lineChanged();
 }
 //===================================================
 void ZTrainingManager::zh_prepareTask(ZTask task)
@@ -312,8 +311,11 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
                 zh_prepareNextLine();
                 return;
             }
-            // not AUTO next line
-            zv_currentSymbol = QString();
+            else
+            {
+                // not AUTO next line
+                zv_currentSymbol = QString();
+            }
         }
         else
         {
@@ -321,7 +323,7 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         }
     }
 
-    emit zg_symbolPressed(symbol);
+//    emit zg_symbolPressed(symbol);
     emit zg_lineChanged();
 }
 //===================================================
@@ -352,10 +354,12 @@ void ZTrainingManager::zh_prepareNextLine()
     if(taskCompleted)
     {
         zp_finishCompletedTask();
-        return;
+    }
+    else
+    {
+        zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
     }
 
-    zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
     emit zg_lineChanged();
 }
 //===================================================

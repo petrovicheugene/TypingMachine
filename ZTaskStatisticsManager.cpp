@@ -40,15 +40,18 @@ void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
     zv_currentWord.append(pressedSymbol);
 
     // if new line or current symbol is space
-    if(zv_trainingManager->zp_currentSymbolIndex() == 0
-            || re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
+    if(zv_trainingManager->zp_currentSymbolIndex() == 0 )
     {
         zh_registerCurrentWordStatistics();
         zh_resetCurrentWordStatistics();
-        return;
     }
-
-    if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
+    else if(zv_trainingManager->zp_currentSymbolIndex()
+            == zv_trainingManager->zp_currentLine().count())
+    {
+        // end of line
+        zh_registerCurrentWordStatistics();
+    }
+    else if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
     {
         zh_registerCurrentWordStatistics();
     }
@@ -69,10 +72,6 @@ void ZTaskStatisticsManager::zh_registerCurrentWordStatistics()
         qint64 wordDuration =  QDateTime::currentMSecsSinceEpoch() - zv_timeMark;
         qDebug() << zv_currentWord << "dur:" << wordDuration << "sp:" << wordDuration / zv_currentWord.count() << "spm" << "err:" << zv_errorCount;
     }
-
-//    zv_currentWord.clear();
-//    zv_errorCount = 0;
-//    zv_timeMark = QDateTime::currentMSecsSinceEpoch();
 }
 //===================================================
 void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
@@ -95,20 +94,18 @@ void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE p
         }
         else if(previous == ZTrainingManager::TS_INACTIVE)
         {
-            zv_errorCount = 0;
-            zv_timeMark = QDateTime::currentMSecsSinceEpoch();
+            zh_resetCurrentWordStatistics();
         }
     }
     else if(current == ZTrainingManager::TS_COMPLETED)
     {
         qDebug() << "TASK STATE COMPLETED" << current;
-        zh_registerCurrentWordStatistics();
-        zv_timeMark = 0;
+        //zh_registerCurrentWordStatistics();
+        //zh_resetCurrentWordStatistics();
     }
-    else
+    else // TS_INACTIVE
     {
-        qDebug() << "TASK STATE INactive" << current;
-        zv_timeMark = 0;
+        zh_resetCurrentWordStatistics();
     }
 }
 //===================================================
