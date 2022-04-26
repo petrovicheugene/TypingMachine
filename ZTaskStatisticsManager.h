@@ -2,9 +2,10 @@
 #ifndef ZTASKSTATISTICSMANAGER_H
 #define ZTASKSTATISTICSMANAGER_H
 //===================================================
+#include "ZTrainingManager.h"
+
 #include <QObject>
 //===================================================
-class ZTrainingManager;
 //===================================================
 class ZTaskStatisticsManager : public QObject
 {
@@ -16,10 +17,9 @@ public:
 
 public slots:
 
-    void zp_updateStatistics();
-    void zp_registerError();
-    void zp_setPause(bool paused);
-
+    void zp_updateStatistics(QString pressedSymbol);
+    void zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
+                              ZTrainingManager::TASK_STATE current);
 signals:
 
 
@@ -29,10 +29,12 @@ private:
     ZTrainingManager* zv_trainingManager;
     QString zv_currentWord;
     qint64 zv_timeMark;
+    qint64 zv_pauseStartMark;
     int zv_errorCount;
 
     // FUNCS
-    void zh_registerWordAndStatistics();
+    void zh_registerCurrentWordStatistics();
+    void zh_resetCurrentWordStatistics();
 
 };
 //===================================================

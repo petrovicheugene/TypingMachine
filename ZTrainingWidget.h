@@ -2,6 +2,8 @@
 #ifndef ZTRAININGWIDGET_H
 #define ZTRAININGWIDGET_H
 
+#include "ZTrainingManager.h"
+
 #include <QWidget>
 #include <QColor>
 //===================================================
@@ -10,7 +12,6 @@ class QPushButton;
 class QSlider;
 
 class ZClickableLabel;
-class ZTrainingManager;
 //===================================================
 class ZTrainingWidget : public QWidget
 {
@@ -34,7 +35,7 @@ public:
 
 public slots:
 
-    void zp_update();
+    void zp_updateLine();
     void zp_updateDuration(int duration);
 
     void zp_setFontSize(int size);
@@ -49,6 +50,9 @@ public slots:
     void zp_setTaskDurationDisplayFlag(bool displayFlag);
     void zp_setInfoFontSize(int size);
     void zp_setInfoFontSizeString(QString size);
+
+    void zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
+                                               ZTrainingManager::TASK_STATE current);
 
 signals:
 

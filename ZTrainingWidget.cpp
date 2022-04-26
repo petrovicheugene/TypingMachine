@@ -3,7 +3,6 @@
 
 #include "ZClickableLabel.h"
 #include "ZTaskContentWidget.h"
-#include "ZTrainingManager.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -195,41 +194,43 @@ void ZTrainingWidget::zh_saveSettings() const
 void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
 {
     zv_trainingManager = manager;
-    connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
-            this, &ZTrainingWidget::zp_update);
+    connect(zv_trainingManager, &ZTrainingManager::zg_lineChanged,
+            this, &ZTrainingWidget::zp_updateLine);
     connect(zv_trainingManager, &ZTrainingManager::zg_durationChanged,
             this, &ZTrainingWidget::zp_updateDuration);
 
+    connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
+            this, &ZTrainingWidget::zp_onTaskStateChange);
 }
 //===================================================
 void ZTrainingWidget::zp_setCompletedColor(QColor color)
 {
     zv_completedColor = color;
-    zp_update();
+    zp_updateLine();
 }
 //===================================================
 void ZTrainingWidget::zp_setCurrentSymbolColor(QColor color)
 {
     zv_currentSymbolColor = color;
-    zp_update();
+    zp_updateLine();
 }
 //===================================================
 void ZTrainingWidget::zp_setWrongSymbolColor(QColor color)
 {
     zv_wrongSymbolColor = color;
-    zp_update();
+    zp_updateLine();
 }
 //===================================================
 void ZTrainingWidget::zp_setIncompletedColor(QColor color)
 {
     zv_incompletedColor = color;
-    zp_update();
+    zp_updateLine();
 }
 //===================================================
 void ZTrainingWidget::zp_setCurrentSymbolUnderlined(bool underlined)
 {
     zv_symbolUnderlinedFlag = underlined;
-    zp_update();
+    zp_updateLine();
 }
 //===================================================
 void ZTrainingWidget::zp_setInfoColor(QColor color)
@@ -357,7 +358,7 @@ void ZTrainingWidget::zh_pauseButtonControl(bool paused, bool enabled)
     zv_pauseButton->setEnabled(enabled);
 }
 //===================================================
-void ZTrainingWidget::zp_update()
+void ZTrainingWidget::zp_updateLine()
 {
     QColor symbolColor = zv_trainingManager->zp_isWrong()? zv_wrongSymbolColor : zv_currentSymbolColor;
 
@@ -371,13 +372,6 @@ void ZTrainingWidget::zp_update()
                                                               zv_trainingManager->zp_incompletedLine());
     QString displayLine = completedLine + currentSymbolLine + endLine;
     zv_lineLabel->setText(displayLine);
-
-    // pause button
-    bool paused = zv_trainingManager->zp_taskState() == ZTrainingManager::TS_PAUSED;
-
-    bool enabled = zv_trainingManager->zp_taskState() != ZTrainingManager::TS_COMPLETED &&
-            zv_trainingManager->zp_taskState() != ZTrainingManager::TS_INACTIVE;
-    zh_pauseButtonControl(paused, enabled);
 
 }
 //===================================================
@@ -397,5 +391,14 @@ void ZTrainingWidget::zp_updateDuration(int duration)
     }
 }
 //===================================================
+void ZTrainingWidget::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
+                                           ZTrainingManager::TASK_STATE current)
+{
+    bool paused = current == ZTrainingManager::TS_PAUSED;
+    bool enabled = current != ZTrainingManager::TS_COMPLETED &&
+            current != ZTrainingManager::TS_INACTIVE;
 
-
+    zh_pauseButtonControl(paused, enabled);
+    zp_updateLine();
+}
+//===================================================

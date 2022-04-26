@@ -15,63 +15,54 @@ ZTaskStatisticsManager::ZTaskStatisticsManager(QObject *parent)
 void ZTaskStatisticsManager::zp_connectToTrainingManager(ZTrainingManager* manager)
 {
     zv_trainingManager = manager;
-    connect(zv_trainingManager, &ZTrainingManager::zg_stateChanged,
+    connect(zv_trainingManager, &ZTrainingManager::zg_symbolPressed,
             this, &ZTaskStatisticsManager::zp_updateStatistics);
-    connect(zv_trainingManager, &ZTrainingManager::zg_wrongSymbolPressed,
-            this, &ZTaskStatisticsManager::zp_registerError);
-//    connect(zv_trainingManager, &ZTrainingManager::zg_taskPaused,
-//            this, &ZTaskStatisticsManager::zp_setPause);
+    connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
+            this, &ZTaskStatisticsManager::zp_onTaskStateChange);
 
 }
 //===================================================
-void ZTaskStatisticsManager::zp_updateStatistics()
+void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
 {
-    qDebug() << "UPD STAT";
-    if(zv_trainingManager->zp_taskState() == ZTrainingManager::TS_PAUSED)
-    {
-
-    }
-
     if(zv_trainingManager->zp_isWrong())
     {
-        //qDebug() << "ERR"<< zv_errorCount++;
+        zv_errorCount++;
         return;
     }
 
     static QRegularExpression re("[\\s\\t]");
-    if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
+    if(re.match(pressedSymbol).hasMatch())
     {
-        // space or tab in line: end of the current word
-        zh_registerWordAndStatistics();
+        zh_resetCurrentWordStatistics();
         return;
     }
 
-    if(zv_trainingManager->zp_currentSymbolIndex() == 0)
+    zv_currentWord.append(pressedSymbol);
+
+    // if new line or current symbol is space
+    if(zv_trainingManager->zp_currentSymbolIndex() == 0
+            || re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
     {
-        // new line started
-        zh_registerWordAndStatistics();
+        zh_registerCurrentWordStatistics();
+        zh_resetCurrentWordStatistics();
+        return;
     }
 
-    // in the midle of the word
-    zv_currentWord.append(zv_trainingManager->zp_currentSymbol());
-
-}
-//===================================================
-void ZTaskStatisticsManager::zp_registerError()
-{
-    if(!zv_currentWord.isEmpty())
+    if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
     {
-        // exclude wrong pressed symbols instead spaces between words
-        qDebug() << ++zv_errorCount;
+        zh_registerCurrentWordStatistics();
     }
 }
 //===================================================
-void ZTaskStatisticsManager::zp_setPause(bool paused)
+void ZTaskStatisticsManager::zh_resetCurrentWordStatistics()
 {
+    zv_timeMark = QDateTime::currentMSecsSinceEpoch();
+    zv_errorCount = 0;
+    zv_currentWord = QString();
 
 }
 //===================================================
-void ZTaskStatisticsManager::zh_registerWordAndStatistics()
+void ZTaskStatisticsManager::zh_registerCurrentWordStatistics()
 {
     if(!zv_currentWord.isEmpty())
     {
@@ -79,11 +70,46 @@ void ZTaskStatisticsManager::zh_registerWordAndStatistics()
         qDebug() << zv_currentWord << "dur:" << wordDuration << "sp:" << wordDuration / zv_currentWord.count() << "spm" << "err:" << zv_errorCount;
     }
 
-    zv_currentWord.clear();
-    zv_errorCount = 0;
-    zv_timeMark = QDateTime::currentMSecsSinceEpoch();
-
+//    zv_currentWord.clear();
+//    zv_errorCount = 0;
+//    zv_timeMark = QDateTime::currentMSecsSinceEpoch();
 }
 //===================================================
-
+void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
+                                                  ZTrainingManager::TASK_STATE current)
+{
+    if(current == ZTrainingManager::TS_PAUSED)
+    {
+        qDebug() << "TASK STATE PAUSED" << current;
+        if(previous == ZTrainingManager::TS_ACTIVE)
+        {
+            zv_pauseStartMark = QDateTime::currentMSecsSinceEpoch();
+        }
+    }
+    else if(current == ZTrainingManager::TS_ACTIVE)
+    {
+        qDebug() << "TASK STATE ACTIVE" << current;
+        if(previous == ZTrainingManager::TS_PAUSED)
+        {
+            zv_timeMark = zv_timeMark + (QDateTime::currentMSecsSinceEpoch() - zv_pauseStartMark);
+        }
+        else if(previous == ZTrainingManager::TS_INACTIVE)
+        {
+            zv_errorCount = 0;
+            zv_timeMark = QDateTime::currentMSecsSinceEpoch();
+        }
+    }
+    else if(current == ZTrainingManager::TS_COMPLETED)
+    {
+        qDebug() << "TASK STATE COMPLETED" << current;
+        zh_registerCurrentWordStatistics();
+        zv_timeMark = 0;
+    }
+    else
+    {
+        qDebug() << "TASK STATE INactive" << current;
+        zv_timeMark = 0;
+    }
+}
+//===================================================
 

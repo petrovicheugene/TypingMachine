@@ -51,7 +51,8 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
             return false;
         }
 
-        if(zv_lineCompleted)
+        // if(zv_lineCompleted)
+        if(zv_currentSymbolIndex == zv_line.count())
         {
             if(keyEvent->key() == zv_lineEndKey)
             {
@@ -128,7 +129,7 @@ void ZTrainingManager::zp_initTaskStart(ZTask task)
 void ZTrainingManager::zh_startTask()
 {
     qApp->installEventFilter(this);
-    zv_taskState = TS_ACTIVE;
+    zh_setTaskState(TS_ACTIVE);
     zh_prepareNextLine();
     zv_taskDurationSec = 0;
     emit zg_durationChanged(++zv_taskDurationSec);
@@ -139,25 +140,30 @@ void ZTrainingManager::zh_toggleTaskPause()
 {
     if(zv_taskState == TS_PAUSED)
     {
-        zv_taskState = TS_ACTIVE;
+        zh_setTaskState(TS_ACTIVE);
         zv_taskDurationTimer->start();
     }
     else if(zv_taskState == TS_ACTIVE)
     {
-        zv_taskState = TS_PAUSED;
+        zh_setTaskState(TS_PAUSED);
         zv_taskDurationTimer->stop();
     }
 
-    qDebug() << "TASK STATE" << zv_taskState;
-    emit zg_stateChanged();
+    // emit zg_lineChanged();
 }
 //===================================================
-void ZTrainingManager::zp_finishTask()
+void ZTrainingManager::zp_stopTask()
 {
     qApp->removeEventFilter(this);
-    zv_taskState = TS_COMPLETED;
+    zh_setTaskState(TS_INACTIVE);
     zv_taskDurationTimer->stop();
-    emit zg_stateChanged();
+}
+//===================================================
+void ZTrainingManager::zp_finishCompletedTask()
+{
+    qApp->removeEventFilter(this);
+    zh_setTaskState(TS_COMPLETED);
+    zv_taskDurationTimer->stop();
 }
 //===================================================
 void ZTrainingManager::zp_restartTask()
@@ -170,17 +176,17 @@ void ZTrainingManager::zp_setTaskPaused(bool paused)
 {
     if(zv_taskState == TS_ACTIVE && paused)
     {
-        zv_taskState = TS_PAUSED;
+        zh_setTaskState(TS_PAUSED);
         zv_taskDurationTimer->stop();
     }
     else if(zv_taskState == TS_PAUSED && !paused)
     {
-        zv_taskState = TS_ACTIVE;
+        zh_setTaskState(TS_ACTIVE);
         zv_taskDurationTimer->start();
     }
 
-    qDebug() << "TASK STATE" << zv_taskState;
-    emit zg_stateChanged();
+    //qDebug() << "TASK STATE" << zv_taskState;
+    //emit zg_lineChanged();
 }
 //===================================================
 void ZTrainingManager::zh_prepareTask(ZTask task)
@@ -286,38 +292,37 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
             zv_currentSymbol = symbol;
             QTimer::singleShot(zv_wrongSymbolDisplayDuration, this, &ZTrainingManager::zh_resetSymbol);
         }
-
-        emit zg_wrongSymbolPressed();
-        emit zg_stateChanged();
-        return;
-    }
-
-    // right symbol
-    if(zv_wrongSymbolFlag)
-    {
-        zh_resetSymbol();
-        zv_wrongSymbolFlag = false;
-    }
-
-    ++zv_currentSymbolIndex;
-    if(zv_currentSymbolIndex == zv_line.count())
-    {
-        // line completed
-        if(zv_lineEndKey == AUTO)
-        {
-            zh_prepareNextLine();
-            return;
-        }
-        // not AUTO next line
-        zv_lineCompleted = true;
-        zv_currentSymbol = QString();
     }
     else
     {
-        zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
+        // right symbol
+        if(zv_wrongSymbolFlag)
+        {
+            zh_resetSymbol();
+            zv_wrongSymbolFlag = false;
+        }
+
+        // update line
+        ++zv_currentSymbolIndex;
+        if(zv_currentSymbolIndex == zv_line.count())
+        {
+            // line completed
+            if(zv_lineEndKey == AUTO)
+            {
+                zh_prepareNextLine();
+                return;
+            }
+            // not AUTO next line
+            zv_currentSymbol = QString();
+        }
+        else
+        {
+            zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
+        }
     }
 
-    emit zg_stateChanged();
+    emit zg_symbolPressed(symbol);
+    emit zg_lineChanged();
 }
 //===================================================
 void ZTrainingManager::zh_resetSymbol()
@@ -328,7 +333,7 @@ void ZTrainingManager::zh_resetSymbol()
     }
 
     zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
-    emit zg_stateChanged();
+    emit zg_lineChanged();
 }
 //===================================================
 void ZTrainingManager::zh_changeDuration()
@@ -339,7 +344,6 @@ void ZTrainingManager::zh_changeDuration()
 void ZTrainingManager::zh_prepareNextLine()
 {
     zv_wrongSymbolFlag = false;
-    zv_lineCompleted = false;
     zv_currentSymbolIndex = 0;
 
     bool taskCompleted = false;
@@ -347,12 +351,12 @@ void ZTrainingManager::zh_prepareNextLine()
 
     if(taskCompleted)
     {
-        zp_finishTask();
+        zp_finishCompletedTask();
         return;
     }
 
     zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
-    emit zg_stateChanged();
+    emit zg_lineChanged();
 }
 //===================================================
 int ZTrainingManager::zp_wrongSymbolDisplayDuration() const
@@ -367,7 +371,7 @@ ZTrainingManager::WRONG_SYMBOL_DISPLAY_MODE ZTrainingManager::zp_wrongSymbolDisp
 //===================================================
 void ZTrainingManager::zp_setWrongSymbolDisplayDuration(int value)
 {
-    if(value < 0 || value > zv_maxWrongSymbolDuration)
+    if(value < 0 || value > zv_maxWrongSymbolDisplayDuration)
     {
         return;
     }
@@ -380,7 +384,13 @@ void ZTrainingManager::zp_setWrongSymbolDisplayMode(WRONG_SYMBOL_DISPLAY_MODE mo
     zv_wrongSymbolDisplayMode = mode;
 }
 //================================================
-
+void ZTrainingManager::zh_setTaskState(TASK_STATE taskState)
+{
+    auto previous = zv_taskState;
+    zv_taskState = taskState;
+    emit zg_taskStateChanged(previous, zv_taskState);
+}
+//================================================
 
 
 

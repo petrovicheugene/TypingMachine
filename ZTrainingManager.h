@@ -27,6 +27,8 @@ public:
                     TS_PAUSED,
                     TS_COMPLETED};
 
+
+
     QString zp_currentLine() const;
     QString zp_completedLine() const;
     QString zp_currentSymbol() const;
@@ -42,12 +44,13 @@ public:
 public slots:
 
     void zp_initTaskStart(ZTask task);
-    void zp_finishTask();
+    void zp_stopTask();
+    void zp_finishCompletedTask();
     void zp_restartTask();
     void zp_setTaskPaused(bool paused);
 
     void zp_setWrongSymbolDisplayDuration(int value);
-    void zp_setWrongSymbolDisplayMode(WRONG_SYMBOL_DISPLAY_MODE mode);
+    void zp_setWrongSymbolDisplayMode(ZTrainingManager::WRONG_SYMBOL_DISPLAY_MODE mode);
 
 protected:
 
@@ -55,10 +58,13 @@ protected:
 
 signals:
 
-    void zg_stateChanged();
+    void zg_lineChanged();
     void zg_durationChanged(int duration);
-    void zg_wrongSymbolPressed();
-    //void zg_taskPaused(bool paused);
+    // void zg_wrongSymbolPressed();
+
+    void zg_taskStateChanged(ZTrainingManager::TASK_STATE previous,
+                             ZTrainingManager::TASK_STATE current);
+   void zg_symbolPressed(QString pressedSymbol);
 
 private slots:
 
@@ -81,7 +87,6 @@ private:
     ZAbstractLineController* zv_LineController;
     LINE_END_KEY zv_lineEndKey;
 
-    bool zv_lineCompleted;
     TASK_STATE zv_taskState;
 
     int zv_currentSymbolIndex;
@@ -91,7 +96,7 @@ private:
     QTimer* zv_taskDurationTimer;
     int zv_taskDurationSec;
 
-    const int zv_maxWrongSymbolDuration = 3000;
+    const int zv_maxWrongSymbolDisplayDuration = 3000;
     int zv_wrongSymbolDisplayDuration;
     WRONG_SYMBOL_DISPLAY_MODE zv_wrongSymbolDisplayMode;
 
@@ -106,7 +111,7 @@ private:
     void zh_prepareTask(ZTask task);
     void zh_handleKeyPress(QString key);
     void zh_prepareNextLine();
-
+    void zh_setTaskState(TASK_STATE taskState);
 };
 //===================================================
 #endif // ZTRAININGMANAGER_H

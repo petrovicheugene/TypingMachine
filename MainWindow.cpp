@@ -113,7 +113,7 @@ void MainWindow::zh_createConnections()
     connect(zv_workController, &ZWorkController::zg_requestTaskStart,
             zv_trainingManager, &ZTrainingManager::zp_initTaskStart);
     connect(zv_workController, &ZWorkController::zg_requestTaskFinish,
-            zv_trainingManager, &ZTrainingManager::zp_finishTask);
+            zv_trainingManager, &ZTrainingManager::zp_stopTask);
     connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskRestart,
             zv_trainingManager, &ZTrainingManager::zp_restartTask);
     connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskPauseToggle,
