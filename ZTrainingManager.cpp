@@ -3,8 +3,10 @@
 #include "ZLineControllerCreator.h"
 
 #include <QApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QTimer>
 //===================================================
@@ -57,6 +59,7 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
             if(keyEvent->key() == zv_lineEndKey)
             {
                 zh_prepareNextLine();
+                emit zg_lineChanged();
             }
         }
         else
@@ -64,7 +67,7 @@ bool ZTrainingManager::eventFilter(QObject* object, QEvent* event)
             zh_handleKeyPress(keyEvent->text());
         }
 
-        emit zg_symbolPressed(keyEvent->text());
+        //        emit zg_symbolPressed(keyEvent->text());
 
         return true;
     }
@@ -135,8 +138,11 @@ void ZTrainingManager::zh_startTask()
     qApp->installEventFilter(this);
     zh_setTaskState(TS_ACTIVE);
     zh_prepareNextLine();
+    emit zg_lineChanged();
+
+    //zv_taskStartTimeMark = QDateTime::currentMSecsSinceEpoch();
     zv_taskDurationSec = 0;
-    emit zg_durationChanged(++zv_taskDurationSec);
+    emit zg_durationChanged(zv_taskDurationSec++);
     zv_taskDurationTimer->start();
 }
 //===================================================
@@ -170,6 +176,7 @@ void ZTrainingManager::zp_finishCompletedTask()
 //===================================================
 void ZTrainingManager::zp_restartTask()
 {
+    zp_stopTask();
     zv_LineController->zp_reset();
     zh_startTask();
 }
@@ -180,11 +187,13 @@ void ZTrainingManager::zp_setTaskPaused(bool paused)
     {
         zh_setTaskState(TS_PAUSED);
         zv_taskDurationTimer->stop();
+        //zv_pauseStartTimeMark = QDateTime::currentMSecsSinceEpoch();
     }
     else if(zv_taskState == TS_PAUSED && !paused)
     {
         zh_setTaskState(TS_ACTIVE);
         zv_taskDurationTimer->start();
+        //zv_taskStartTimeMark = zv_taskStartTimeMark + (QDateTime::currentMSecsSinceEpoch() - zv_pauseStartTimeMark);
     }
 }
 //===================================================
@@ -280,6 +289,7 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         {
             zv_wrongSymbolFlag = true;
         }
+        emit zg_symbolPressed(symbol);
 
         // for displaying while the key is pressed
         if(zv_wrongSymbolDisplayMode == WSSM_WHILE_PRESSED)
@@ -305,11 +315,11 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         ++zv_currentSymbolIndex;
         if(zv_currentSymbolIndex == zv_line.count())
         {
+            emit zg_symbolPressed(symbol);
             // line completed
             if(zv_lineEndKey == AUTO)
             {
                 zh_prepareNextLine();
-                return;
             }
             else
             {
@@ -320,10 +330,10 @@ void ZTrainingManager::zh_handleKeyPress(QString symbol)
         else
         {
             zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
+            emit zg_symbolPressed(symbol);
         }
     }
 
-//    emit zg_symbolPressed(symbol);
     emit zg_lineChanged();
 }
 //===================================================
@@ -359,8 +369,6 @@ void ZTrainingManager::zh_prepareNextLine()
     {
         zv_currentSymbol = zv_line.at(zv_currentSymbolIndex);
     }
-
-    emit zg_lineChanged();
 }
 //===================================================
 int ZTrainingManager::zp_wrongSymbolDisplayDuration() const

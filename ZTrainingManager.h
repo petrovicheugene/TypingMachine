@@ -36,6 +36,7 @@ public:
     int zp_currentSymbolIndex() const;
 
     bool zp_isWrong() const;
+
     TASK_STATE zp_taskState() const;
 
     int zp_wrongSymbolDisplayDuration() const;
@@ -60,8 +61,6 @@ signals:
 
     void zg_lineChanged();
     void zg_durationChanged(int duration);
-    // void zg_wrongSymbolPressed();
-
     void zg_taskStateChanged(ZTrainingManager::TASK_STATE previous,
                              ZTrainingManager::TASK_STATE current);
    void zg_symbolPressed(QString pressedSymbol);
@@ -95,6 +94,8 @@ private:
 
     QTimer* zv_taskDurationTimer;
     int zv_taskDurationSec;
+//    qint64 zv_taskStartTimeMark;
+//    qint64 zv_pauseStartTimeMark;
 
     const int zv_maxWrongSymbolDisplayDuration = 3000;
     int zv_wrongSymbolDisplayDuration;

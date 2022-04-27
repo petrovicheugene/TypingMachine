@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QRegularExpression>
+
 //===================================================
 ZTaskStatisticsManager::ZTaskStatisticsManager(QObject *parent)
     : QObject{parent}
@@ -20,6 +21,11 @@ void ZTaskStatisticsManager::zp_connectToTrainingManager(ZTrainingManager* manag
     connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
             this, &ZTaskStatisticsManager::zp_onTaskStateChange);
 
+}
+//===================================================
+QMap<QString, WordStatistics> ZTaskStatisticsManager::zp_statistics() const
+{
+    return zv_statistics;
 }
 //===================================================
 void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
@@ -40,16 +46,11 @@ void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
     zv_currentWord.append(pressedSymbol);
 
     // if new line or current symbol is space
-    if(zv_trainingManager->zp_currentSymbolIndex() == 0 )
+    if(zv_trainingManager->zp_currentSymbolIndex() == 0  ||
+            zv_trainingManager->zp_currentSymbolIndex() == zv_trainingManager->zp_currentLine().count())
     {
         zh_registerCurrentWordStatistics();
         zh_resetCurrentWordStatistics();
-    }
-    else if(zv_trainingManager->zp_currentSymbolIndex()
-            == zv_trainingManager->zp_currentLine().count())
-    {
-        // end of line
-        zh_registerCurrentWordStatistics();
     }
     else if(re.match(zv_trainingManager->zp_currentSymbol()).hasMatch())
     {
@@ -59,19 +60,29 @@ void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
 //===================================================
 void ZTaskStatisticsManager::zh_resetCurrentWordStatistics()
 {
-    zv_timeMark = QDateTime::currentMSecsSinceEpoch();
+    zv_wordStartTimeMark = QDateTime::currentMSecsSinceEpoch();
     zv_errorCount = 0;
     zv_currentWord = QString();
-
 }
 //===================================================
 void ZTaskStatisticsManager::zh_registerCurrentWordStatistics()
 {
-    if(!zv_currentWord.isEmpty())
+    if(zv_currentWord.isEmpty())
     {
-        qint64 wordDuration =  QDateTime::currentMSecsSinceEpoch() - zv_timeMark;
-        qDebug() << zv_currentWord << "dur:" << wordDuration << "sp:" << wordDuration / zv_currentWord.count() << "spm" << "err:" << zv_errorCount;
+        return;
     }
+
+    qint64 wordDurationMsec =  QDateTime::currentMSecsSinceEpoch() - zv_wordStartTimeMark;
+
+    zv_statistics[zv_currentWord].typingCount = zv_statistics[zv_currentWord].typingCount + 1;
+    zv_statistics[zv_currentWord].errorCount = zv_statistics[zv_currentWord].errorCount + zv_errorCount;
+    zv_statistics[zv_currentWord].durationMsec = zv_statistics[zv_currentWord].durationMsec + wordDurationMsec;
+
+    qDebug() << zv_currentWord
+             << "DUR:" << zv_statistics[zv_currentWord].durationMsec/1000.0
+             << "SP:" << 60000.0 * zv_currentWord.count() / (zv_statistics[zv_currentWord].durationMsec / zv_statistics[zv_currentWord].typingCount)
+             << "spm" << "err:" << zv_statistics[zv_currentWord].errorCount;
+
 }
 //===================================================
 void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
@@ -82,7 +93,7 @@ void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE p
         qDebug() << "TASK STATE PAUSED" << current;
         if(previous == ZTrainingManager::TS_ACTIVE)
         {
-            zv_pauseStartMark = QDateTime::currentMSecsSinceEpoch();
+            zv_pauseStartTimeMark = QDateTime::currentMSecsSinceEpoch();
         }
     }
     else if(current == ZTrainingManager::TS_ACTIVE)
@@ -90,11 +101,14 @@ void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE p
         qDebug() << "TASK STATE ACTIVE" << current;
         if(previous == ZTrainingManager::TS_PAUSED)
         {
-            zv_timeMark = zv_timeMark + (QDateTime::currentMSecsSinceEpoch() - zv_pauseStartMark);
+            qint64 pauseDuration = QDateTime::currentMSecsSinceEpoch() - zv_pauseStartTimeMark;
+            zv_wordStartTimeMark = zv_wordStartTimeMark + pauseDuration;
+            zv_taskStartTimeMark = zv_taskStartTimeMark + pauseDuration;
         }
-        else if(previous == ZTrainingManager::TS_INACTIVE)
+        else
         {
             zh_resetCurrentWordStatistics();
+            zv_statistics.clear();
         }
     }
     else if(current == ZTrainingManager::TS_COMPLETED)

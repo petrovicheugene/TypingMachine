@@ -106,7 +106,6 @@ void MainWindow::zh_createConnections()
     connect(zv_statisticsWidget, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish,
             zv_workController, &ZWorkController::zp_initStatisticsDisplayFinish);
 
-
     connect(zv_workController, &ZWorkController::zg_setStackedWidgetIndex,
             zv_stackedWidget, &QStackedWidget::setCurrentIndex);
 
