@@ -1,6 +1,5 @@
 //===================================================
 #include "ZTaskStatisticsManager.h"
-#include "ZTrainingManager.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -10,10 +9,11 @@
 ZTaskStatisticsManager::ZTaskStatisticsManager(QObject *parent)
     : QObject{parent}
 {
-
+    zv_trainingManager = nullptr;
+    zv_statisticsSource = nullptr;
 }
 //===================================================
-void ZTaskStatisticsManager::zp_connectToTrainingManager(ZTrainingManager* manager)
+void ZTaskStatisticsManager::zp_setTrainingManager(ZTrainingManager* manager)
 {
     zv_trainingManager = manager;
     connect(zv_trainingManager, &ZTrainingManager::zg_symbolPressed,
@@ -21,6 +21,11 @@ void ZTaskStatisticsManager::zp_connectToTrainingManager(ZTrainingManager* manag
     connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
             this, &ZTaskStatisticsManager::zp_onTaskStateChange);
 
+}
+//===================================================
+void ZTaskStatisticsManager::zp_setStatisticsSource(ZAbstractStatisticsSource* statisticsSource)
+{
+    zv_statisticsSource = statisticsSource;
 }
 //===================================================
 QMap<QString, WordStatistics> ZTaskStatisticsManager::zp_statistics() const
@@ -113,13 +118,36 @@ void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE p
     }
     else if(current == ZTrainingManager::TS_COMPLETED)
     {
+        // TODO merge TS_COMPLETED & TS_INACTIVE
         qDebug() << "TASK STATE COMPLETED" << current;
-        //zh_registerCurrentWordStatistics();
-        //zh_resetCurrentWordStatistics();
+        zh_resetCurrentWordStatistics();
+
+        bool ready = !zv_statistics.isEmpty();
+        if(ready)
+        {
+            // no statistics
+            if(zv_statisticsSource)
+            {
+                zv_statisticsSource->zp_loadTaskStatistics(zv_statistics);
+            }
+        }
+        emit zg_taskStatisticsReadiness(ready);
     }
     else // TS_INACTIVE
     {
+        qDebug() << "TASK STATE INACTIVE" << current;
         zh_resetCurrentWordStatistics();
+
+        bool ready = !zv_statistics.isEmpty();
+        if(ready)
+        {
+            // no statistics
+            if(zv_statisticsSource)
+            {
+                zv_statisticsSource->zp_loadTaskStatistics(zv_statistics);
+            }
+        }
+        emit zg_taskStatisticsReadiness(ready);
     }
 }
 //===================================================

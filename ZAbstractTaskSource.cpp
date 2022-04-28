@@ -1,7 +1,7 @@
 //===================================================
-#include "ZTaskSource.h"
+#include "ZAbstractTaskSource.h"
 //===================================================
-ZTaskSource::ZTaskSource(QObject *parent)
+ZAbstractTaskSource::ZAbstractTaskSource(QObject *parent)
     : QObject{parent}
 {
 

@@ -16,7 +16,7 @@
 //===================================================
 //===================================================
 ZDataSourceManager::ZDataSourceManager(QObject *parent)
-    : ZTaskSource{parent}
+    : ZAbstractTaskSource{parent}
 {
     if(!zh_connectToDatabase())
     {
@@ -272,6 +272,17 @@ ZTask ZDataSourceManager::zp_taskForRow(int row) const
     return task;
 }
 //===================================================
+QAbstractItemModel* ZDataSourceManager::zp_statisticsModel() const
+{
+    return zv_taskModel;
+}
+//===================================================
+void ZDataSourceManager::zp_loadTaskStatistics(QMap<QString, WordStatistics>& taskStatistics)
+{
+    qDebug() << "STATISTICS LOADED";
+}
+//===================================================
+
 
 
 

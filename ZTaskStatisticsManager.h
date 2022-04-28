@@ -3,17 +3,13 @@
 #define ZTASKSTATISTICSMANAGER_H
 //===================================================
 #include "ZTrainingManager.h"
+#include "ZAbstractStatisticsSource.h"
+#include "ZTrainingManager.h"
 
 #include <QObject>
 #include <QMap>
 //===================================================
-struct WordStatistics
-{
-    WordStatistics() : typingCount(0), errorCount(0), durationMsec(0) {};
-    int typingCount;
-    int errorCount;
-    qint64 durationMsec;
-};
+
 //===================================================
 class ZTaskStatisticsManager : public QObject
 {
@@ -21,7 +17,8 @@ class ZTaskStatisticsManager : public QObject
 public:
     explicit ZTaskStatisticsManager(QObject *parent = nullptr);
 
-    void zp_connectToTrainingManager(ZTrainingManager* manager);
+    void zp_setTrainingManager(ZTrainingManager* manager);
+    void zp_setStatisticsSource(ZAbstractStatisticsSource* statisticsSource);
     QMap<QString, WordStatistics>zp_statistics() const;
 
 public slots:
@@ -31,16 +28,18 @@ public slots:
                               ZTrainingManager::TASK_STATE current);
 signals:
 
+    void zg_taskStatisticsReadiness(bool ready);
 
 private:
 
     // VARS
     ZTrainingManager* zv_trainingManager;
+    ZAbstractStatisticsSource* zv_statisticsSource;
+
     QString zv_currentWord;
     qint64 zv_wordStartTimeMark;
     qint64 zv_taskStartTimeMark;
     qint64 zv_pauseStartTimeMark;
-
 
     int zv_errorCount;
 

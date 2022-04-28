@@ -91,3 +91,10 @@ void ZStatisticsWidget::zh_createConnections()
 
 }
 //===================================================
+void ZStatisticsWidget::zp_setStatisticsModel(QAbstractItemModel* model)
+{
+
+}
+//===================================================
+
+

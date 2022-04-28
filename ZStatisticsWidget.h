@@ -4,6 +4,7 @@
 //===================================================
 #include <QWidget>
 //===================================================
+class QAbstractItemModel;
 class QPushButton;
 class QTableView;
 //===================================================
@@ -12,6 +13,8 @@ class ZStatisticsWidget : public QWidget
     Q_OBJECT
 public:
     explicit ZStatisticsWidget(QWidget *parent = nullptr);
+
+    void zp_setStatisticsModel(QAbstractItemModel* model);
 
 signals:
 

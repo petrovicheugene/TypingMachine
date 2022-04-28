@@ -162,6 +162,7 @@ void ZTrainingManager::zh_toggleTaskPause()
 //===================================================
 void ZTrainingManager::zp_stopTask()
 {
+    qDebug() << "FROM TRAINING MNG: TASK STOPPED" ;
     qApp->removeEventFilter(this);
     zh_setTaskState(TS_INACTIVE);
     zv_taskDurationTimer->stop();
@@ -169,6 +170,7 @@ void ZTrainingManager::zp_stopTask()
 //===================================================
 void ZTrainingManager::zp_finishCompletedTask()
 {
+    qDebug() << "FROM TRAINING MNG: TASK COMPLETED" ;
     qApp->removeEventFilter(this);
     zh_setTaskState(TS_COMPLETED);
     zv_taskDurationTimer->stop();

@@ -74,6 +74,8 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 SOURCES += \
     MainWindow.cpp \
     ZAbstractLineController.cpp \
+    ZAbstractStatisticsSource.cpp \
+    ZAbstractTaskSource.cpp \
     ZClickableLabel.cpp \
     ZColorButton.cpp \
     ZDataSourceManager.cpp \
@@ -86,7 +88,6 @@ SOURCES += \
     ZTask.cpp \
     ZTaskContentWidget.cpp \
     ZTaskListWidget.cpp \
-    ZTaskSource.cpp \
     ZTaskStatisticsManager.cpp \
     ZTaskWidget.cpp \
     ZTrainingManager.cpp \
@@ -100,6 +101,8 @@ SOURCES += \
 
 HEADERS += \
     ZAbstractLineController.h \
+    ZAbstractStatisticsSource.h \
+    ZAbstractTaskSource.h \
     ZClickableLabel.h \
     ZColorButton.h \
     ZDataSourceManager.h \
@@ -111,7 +114,6 @@ HEADERS += \
     ZStatisticsWidget.h \
     ZSuccessivelyLineController.h \
     ZTask.h \
-    ZTaskSource.h \
     ZTaskStatisticsManager.h \
     ZTrainingManager.h \
     ZTranslatorManager.h \
@@ -122,6 +124,7 @@ HEADERS += \
     ZTrainingWidget.h \
     ZTypingSpeedLineController.h \
     ZUserSelectionDialog.h \
+    ZWordStatistics.h \
     ZWorkController.h
 
 # Default rules for deployment.

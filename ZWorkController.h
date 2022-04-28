@@ -3,8 +3,8 @@
 #define ZWORKCONTROLLER_H
 //===================================================
 #include <QObject>
-#include "ZTaskSource.h"
-#include "ZTask.h"
+#include "ZAbstractTaskSource.h"
+//#include "ZTask.h"
 //===================================================
 class ZWorkController : public QObject
 {
@@ -12,14 +12,14 @@ class ZWorkController : public QObject
 public:
     explicit ZWorkController(QObject *parent = nullptr);
 
-    void zp_setTaskSource(ZTaskSource* taskSource);
+    void zp_setTaskSource(ZAbstractTaskSource *taskSource);
     // void zp_connectToTaskSource(ZTaskSource* taskSource);
 
 
 public slots:
 
     void zp_initTaskStart(int row);
-    void zp_initTaskFinish();
+    void zp_initTaskFinish(bool statisticsReadiness);
     void zp_initStatisticsDisplayFinish();
 
 signals:
@@ -31,7 +31,7 @@ signals:
 private:
 
     // VARS
-    ZTaskSource* zv_taskSource;
+    ZAbstractTaskSource* zv_taskSource;
     // FUNCS
 
 };

@@ -198,7 +198,8 @@ void ZTrainingWidget::zp_connectToTrainingManager(ZTrainingManager* manager)
             this, &ZTrainingWidget::zp_updateLine);
     connect(zv_trainingManager, &ZTrainingManager::zg_durationChanged,
             this, &ZTrainingWidget::zp_updateDuration);
-
+    connect(this, &ZTrainingWidget::zg_requestTaskFinish,
+            zv_trainingManager, &ZTrainingManager::zp_stopTask);
     connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
             this, &ZTrainingWidget::zp_onTaskStateChange);
 }

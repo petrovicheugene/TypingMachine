@@ -1,20 +1,22 @@
 //===================================================
-#ifndef ZTASKSOURCE_H
-#define ZTASKSOURCE_H
+#ifndef ZABSTRACTTASKSOURCE_H
+#define ZABSTRACTTASKSOURCE_H
 //===================================================
 #include <QObject>
 #include "ZTask.h"
 //===================================================
-class ZTaskSource : public QObject
+class QAbstractItemModel;
+//===================================================
+class ZAbstractTaskSource : public QObject
 {
     Q_OBJECT
 public:
-    explicit ZTaskSource(QObject *parent = nullptr);
+    explicit ZAbstractTaskSource(QObject *parent = nullptr);
 
+    virtual QAbstractItemModel* zp_taskModel() const = 0;
     virtual ZTask zp_taskForRow(int row) const= 0;
 
-signals:
 
 };
 //===================================================
-#endif // ZTASKSOURCE_H
+#endif // ZABSTRACTTASKSOURCE_H

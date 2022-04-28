@@ -9,7 +9,7 @@ ZWorkController::ZWorkController(QObject *parent)
     zv_taskSource = nullptr;
 }
 //===================================================
-void ZWorkController::zp_setTaskSource(ZTaskSource* taskSource)
+void ZWorkController::zp_setTaskSource(ZAbstractTaskSource* taskSource)
 {
     zv_taskSource = taskSource;
 }
@@ -26,11 +26,18 @@ void ZWorkController::zp_initTaskStart(int row)
     emit zg_requestTaskStart(task);
 }
 //===================================================
-void ZWorkController::zp_initTaskFinish()
+void ZWorkController::zp_initTaskFinish(bool statisticsReadiness)
 {
-    emit zg_requestTaskFinish();
-    emit zg_setStackedWidgetIndex(2);
-}
+    //emit zg_requestTaskFinish();
+    if(statisticsReadiness)
+    {
+        emit zg_setStackedWidgetIndex(2);
+    }
+    else
+    {
+        emit zg_setStackedWidgetIndex(0);
+    }
+ }
 //===================================================
 void ZWorkController::zp_initStatisticsDisplayFinish()
 {

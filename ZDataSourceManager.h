@@ -2,21 +2,24 @@
 #ifndef ZDATASOURCEMANAGER_H
 #define ZDATASOURCEMANAGER_H
 //===================================================
-#include "ZTaskSource.h"
+#include "ZAbstractTaskSource.h"
+#include "ZAbstractStatisticsSource.h"
 //===================================================
 class QAbstractItemModel;
 class QSqlTableModel;
 //===================================================
-class ZDataSourceManager : public ZTaskSource
+class ZDataSourceManager : public ZAbstractTaskSource, public ZAbstractStatisticsSource
 {
     Q_OBJECT
 public:
     explicit ZDataSourceManager(QObject *parent = nullptr);
     ~ZDataSourceManager();
 
-    QAbstractItemModel* zp_taskModel() const;
-
+    QAbstractItemModel* zp_taskModel() const override;
     ZTask zp_taskForRow(int row) const override;
+
+    QAbstractItemModel* zp_statisticsModel() const override;
+    void zp_loadTaskStatistics(QMap<QString, WordStatistics>& taskStatistics) override;
 
 public slots:
 
@@ -40,7 +43,6 @@ private:
     void zh_reviseDefaultUser();
 
     int zh_findNextTaskNum() const;
-
 
 };
  //===================================================

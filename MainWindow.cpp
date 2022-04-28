@@ -79,6 +79,9 @@ void MainWindow::zh_createComponents()
     zv_dataSourceManager = new ZDataSourceManager(this);
     zv_taskWidget->zp_setTaskModel(zv_dataSourceManager->zp_taskModel());
 
+    // statistics model
+    zv_statisticsWidget->zp_setStatisticsModel(zv_dataSourceManager->zp_statisticsModel());
+
     // training manager
     zv_trainingManager = new ZTrainingManager(this);
     zv_trainingWidget->zp_connectToTrainingManager(zv_trainingManager);
@@ -88,7 +91,8 @@ void MainWindow::zh_createComponents()
 
     // task Statistics manager
     zv_taskStatisticsManager = new ZTaskStatisticsManager(this);
-    zv_taskStatisticsManager->zp_connectToTrainingManager(zv_trainingManager);
+    zv_taskStatisticsManager->zp_setTrainingManager(zv_trainingManager);
+    zv_taskStatisticsManager->zp_setStatisticsSource(zv_dataSourceManager);
 }
 //===================================================
 void MainWindow::zh_createConnections()
@@ -101,8 +105,9 @@ void MainWindow::zh_createConnections()
     // work controller connections
     connect(zv_taskWidget, &ZTaskWidget::zg_requestTaskRun,
             zv_workController, &ZWorkController::zp_initTaskStart);
-    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskFinish,
+    connect(zv_taskStatisticsManager, &ZTaskStatisticsManager::zg_taskStatisticsReadiness,
             zv_workController, &ZWorkController::zp_initTaskFinish);
+
     connect(zv_statisticsWidget, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish,
             zv_workController, &ZWorkController::zp_initStatisticsDisplayFinish);
 
@@ -117,7 +122,6 @@ void MainWindow::zh_createConnections()
             zv_trainingManager, &ZTrainingManager::zp_restartTask);
     connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskPauseToggle,
             zv_trainingManager, &ZTrainingManager::zp_setTaskPaused);
-
 
     connect(zv_settingsAction, &QAction::triggered,
             this, &MainWindow::zh_runSettings);
