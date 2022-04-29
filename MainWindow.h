@@ -10,7 +10,7 @@ class QPushButton;
 
 class ZDataSourceManager;
 class ZStatisticsWidget;
-class ZTaskStatisticsManager;
+class ZSessionStatisticsManager;
 class ZTaskWidget;
 class ZTrainingManager;
 class ZTrainingWidget;
@@ -32,17 +32,16 @@ private:
 
     QAction* zv_settingsAction;
 
-    // QPushButton* zv_userButton;
-    ZWorkController* zv_workController;
     QStackedWidget* zv_stackedWidget;
+
+    ZWorkController* zv_workController;
     ZTrainingWidget* zv_trainingWidget;
     ZTaskWidget* zv_taskWidget;
     ZStatisticsWidget* zv_statisticsWidget;
 
     ZTrainingManager* zv_trainingManager;
-    ZTaskStatisticsManager* zv_taskStatisticsManager;
+    ZSessionStatisticsManager* zv_taskStatisticsManager;
     ZDataSourceManager* zv_dataSourceManager;
-
 
     // FUNCS
     void zh_createComponents();

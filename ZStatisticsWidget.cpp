@@ -3,12 +3,14 @@
 
 #include <QHBoxLayout>
 #include <QFormLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QTableView>
 #include <QVBoxLayout>
 
+#include <QStandardItemModel>
 //===================================================
 ZStatisticsWidget::ZStatisticsWidget(QWidget *parent)
     : QWidget{parent}
@@ -62,9 +64,9 @@ QWidget* ZStatisticsWidget::zh_createInfoWidget()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     w->setLayout(mainLayout);
 
-    zv_statsTableView = new QTableView;
-    zv_statsTableView->setMinimumHeight(zv_statsTableView->sizeHint().height());
-    mainLayout->addWidget(zv_statsTableView);
+    zv_tableView = new QTableView;
+    zv_tableView->setMinimumHeight(zv_tableView->sizeHint().height());
+    mainLayout->addWidget(zv_tableView);
 
     QFormLayout* fLayout = new QFormLayout;
 
@@ -87,14 +89,19 @@ QWidget* ZStatisticsWidget::zh_createInfoWidget()
 void ZStatisticsWidget::zh_createConnections()
 {
     connect(zv_finishButton, &QPushButton::clicked,
-            this, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish);
-
+            this, &ZStatisticsWidget::zh_onFinish);
 }
 //===================================================
 void ZStatisticsWidget::zp_setStatisticsModel(QAbstractItemModel* model)
 {
-
+    zv_tableView->setModel(model);
 }
 //===================================================
+void ZStatisticsWidget::zh_onFinish()
+{
+    emit zg_requestStatisticsDisplayFinish();
+}
+//===================================================
+
 
 

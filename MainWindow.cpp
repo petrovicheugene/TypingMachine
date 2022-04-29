@@ -12,7 +12,7 @@
 #include "ZDataSourceManager.h"
 #include "ZSettingsDialog.h"
 #include "ZStatisticsWidget.h"
-#include "ZTaskStatisticsManager.h"
+#include "ZSessionStatisticsManager.h"
 #include "ZTaskWidget.h"
 #include "ZTrainingManager.h"
 #include "ZTrainingWidget.h"
@@ -90,7 +90,7 @@ void MainWindow::zh_createComponents()
     zv_workController->zp_setTaskSource(zv_dataSourceManager);
 
     // task Statistics manager
-    zv_taskStatisticsManager = new ZTaskStatisticsManager(this);
+    zv_taskStatisticsManager = new ZSessionStatisticsManager(this);
     zv_taskStatisticsManager->zp_setTrainingManager(zv_trainingManager);
     zv_taskStatisticsManager->zp_setStatisticsSource(zv_dataSourceManager);
 }
@@ -105,7 +105,7 @@ void MainWindow::zh_createConnections()
     // work controller connections
     connect(zv_taskWidget, &ZTaskWidget::zg_requestTaskRun,
             zv_workController, &ZWorkController::zp_initTaskStart);
-    connect(zv_taskStatisticsManager, &ZTaskStatisticsManager::zg_taskStatisticsReadiness,
+    connect(zv_taskStatisticsManager, &ZSessionStatisticsManager::zg_taskStatisticsReadiness,
             zv_workController, &ZWorkController::zp_initTaskFinish);
 
     connect(zv_statisticsWidget, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish,

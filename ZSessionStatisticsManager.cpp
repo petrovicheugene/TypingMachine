@@ -1,39 +1,39 @@
 //===================================================
-#include "ZTaskStatisticsManager.h"
+#include "ZSessionStatisticsManager.h"
 
 #include <QDateTime>
 #include <QDebug>
 #include <QRegularExpression>
 
 //===================================================
-ZTaskStatisticsManager::ZTaskStatisticsManager(QObject *parent)
+ZSessionStatisticsManager::ZSessionStatisticsManager(QObject *parent)
     : QObject{parent}
 {
     zv_trainingManager = nullptr;
     zv_statisticsSource = nullptr;
 }
 //===================================================
-void ZTaskStatisticsManager::zp_setTrainingManager(ZTrainingManager* manager)
+void ZSessionStatisticsManager::zp_setTrainingManager(ZTrainingManager* manager)
 {
     zv_trainingManager = manager;
     connect(zv_trainingManager, &ZTrainingManager::zg_symbolPressed,
-            this, &ZTaskStatisticsManager::zp_updateStatistics);
+            this, &ZSessionStatisticsManager::zp_updateStatistics);
     connect(zv_trainingManager, &ZTrainingManager::zg_taskStateChanged,
-            this, &ZTaskStatisticsManager::zp_onTaskStateChange);
+            this, &ZSessionStatisticsManager::zp_onTaskStateChange);
 
 }
 //===================================================
-void ZTaskStatisticsManager::zp_setStatisticsSource(ZAbstractStatisticsSource* statisticsSource)
+void ZSessionStatisticsManager::zp_setStatisticsSource(ZAbstractStatisticsSource* statisticsSource)
 {
     zv_statisticsSource = statisticsSource;
 }
 //===================================================
-QMap<QString, WordStatistics> ZTaskStatisticsManager::zp_statistics() const
+QMap<QString, WordStatistics> ZSessionStatisticsManager::zp_statistics() const
 {
     return zv_statistics;
 }
 //===================================================
-void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
+void ZSessionStatisticsManager::zp_updateStatistics(QString pressedSymbol)
 {
     if(zv_trainingManager->zp_isWrong())
     {
@@ -63,14 +63,14 @@ void ZTaskStatisticsManager::zp_updateStatistics(QString pressedSymbol)
     }
 }
 //===================================================
-void ZTaskStatisticsManager::zh_resetCurrentWordStatistics()
+void ZSessionStatisticsManager::zh_resetCurrentWordStatistics()
 {
     zv_wordStartTimeMark = QDateTime::currentMSecsSinceEpoch();
     zv_errorCount = 0;
     zv_currentWord = QString();
 }
 //===================================================
-void ZTaskStatisticsManager::zh_registerCurrentWordStatistics()
+void ZSessionStatisticsManager::zh_registerCurrentWordStatistics()
 {
     if(zv_currentWord.isEmpty())
     {
@@ -90,7 +90,7 @@ void ZTaskStatisticsManager::zh_registerCurrentWordStatistics()
 
 }
 //===================================================
-void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
+void ZSessionStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE previous,
                                                   ZTrainingManager::TASK_STATE current)
 {
     if(current == ZTrainingManager::TS_PAUSED)
@@ -113,7 +113,7 @@ void ZTaskStatisticsManager::zp_onTaskStateChange(ZTrainingManager::TASK_STATE p
         else
         {
             zh_resetCurrentWordStatistics();
-            zv_statistics.clear();
+            // zv_statistics.clear();
         }
     }
     else if(current == ZTrainingManager::TS_COMPLETED)

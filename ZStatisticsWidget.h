@@ -20,11 +20,15 @@ signals:
 
     void zg_requestStatisticsDisplayFinish();
 
+private slots:
+
+    void zh_onFinish();
+
 private:
 
     // VARS
     QPushButton* zv_finishButton;
-    QTableView* zv_statsTableView;
+    QTableView* zv_tableView;
 
     // FUNCS
     void zh_createComponents();

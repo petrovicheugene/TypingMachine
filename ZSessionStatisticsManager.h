@@ -1,6 +1,6 @@
 //===================================================
-#ifndef ZTASKSTATISTICSMANAGER_H
-#define ZTASKSTATISTICSMANAGER_H
+#ifndef ZSESSIONSTATISTICSMANAGER_H
+#define ZSESSIONSTATISTICSMANAGER_H
 //===================================================
 #include "ZTrainingManager.h"
 #include "ZAbstractStatisticsSource.h"
@@ -11,11 +11,11 @@
 //===================================================
 
 //===================================================
-class ZTaskStatisticsManager : public QObject
+class ZSessionStatisticsManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ZTaskStatisticsManager(QObject *parent = nullptr);
+    explicit ZSessionStatisticsManager(QObject *parent = nullptr);
 
     void zp_setTrainingManager(ZTrainingManager* manager);
     void zp_setStatisticsSource(ZAbstractStatisticsSource* statisticsSource);
@@ -51,4 +51,4 @@ private:
 
 };
 //===================================================
-#endif // ZTASKSTATISTICSMANAGER_H
+#endif // ZSESSIONSTATISTICSMANAGER_H

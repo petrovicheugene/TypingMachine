@@ -7,6 +7,8 @@
 //===================================================
 class QAbstractItemModel;
 class QSqlTableModel;
+
+class QStandardItemModel;
 //===================================================
 class ZDataSourceManager : public ZAbstractTaskSource, public ZAbstractStatisticsSource
 {
@@ -32,8 +34,10 @@ private:
 
     // VARS
     const QString zv_default_user_name = "default_user";
-    QSqlTableModel* zv_taskModel;
     const QString zv_databaseName = "typing_training.sqlite";
+    QSqlTableModel* zv_taskModel;
+
+    QStandardItemModel* zv_statisticsModel;
 
     // FUNCS
     bool zh_connectToDatabase();

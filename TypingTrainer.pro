@@ -82,13 +82,13 @@ SOURCES += \
     ZLineControllerCreator.cpp \
     ZNewUserWidget.cpp \
     ZRandomLineController.cpp \
+    ZSessionStatisticsManager.cpp \
     ZSettingsDialog.cpp \
     ZStatisticsWidget.cpp \
     ZSuccessivelyLineController.cpp \
     ZTask.cpp \
     ZTaskContentWidget.cpp \
     ZTaskListWidget.cpp \
-    ZTaskStatisticsManager.cpp \
     ZTaskWidget.cpp \
     ZTrainingManager.cpp \
     ZTrainingWidget.cpp \
@@ -109,12 +109,12 @@ HEADERS += \
     ZLineControllerCreator.h \
     ZNewUserWidget.h \
     ZRandomLineController.h \
+    ZSessionStatisticsManager.h \
     ZSettingsDialog.h \
     ZSqlTableStatements.h \
     ZStatisticsWidget.h \
     ZSuccessivelyLineController.h \
     ZTask.h \
-    ZTaskStatisticsManager.h \
     ZTrainingManager.h \
     ZTranslatorManager.h \
     MainWindow.h \

@@ -13,6 +13,9 @@
 #include <QSqlRecord>
 #include <QSqlTableModel>
 
+
+#include <QStandardItemModel>
+
 //===================================================
 //===================================================
 ZDataSourceManager::ZDataSourceManager(QObject *parent)
@@ -77,6 +80,8 @@ void ZDataSourceManager::zh_createComponents()
     zv_taskModel->setTable("tasks");
     zv_taskModel->setHeaderData(1, Qt::Horizontal,QVariant(tr("Task")));
     zv_taskModel->select();
+
+    zv_statisticsModel = new QStandardItemModel;
 
 }
 //===================================================
@@ -274,11 +279,19 @@ ZTask ZDataSourceManager::zp_taskForRow(int row) const
 //===================================================
 QAbstractItemModel* ZDataSourceManager::zp_statisticsModel() const
 {
-    return zv_taskModel;
+    return zv_statisticsModel;
 }
 //===================================================
 void ZDataSourceManager::zp_loadTaskStatistics(QMap<QString, WordStatistics>& taskStatistics)
 {
+    zv_statisticsModel->clear();
+
+    foreach(QString word, taskStatistics.keys())
+    {
+        QStandardItem* item = new QStandardItem(word);
+        zv_statisticsModel->appendRow(item);
+    }
+
     qDebug() << "STATISTICS LOADED";
 }
 //===================================================
