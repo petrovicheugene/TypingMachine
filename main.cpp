@@ -2,7 +2,7 @@
 #include "MainWindow.h"
 #include <QApplication>
 
-#include "ZTranslatorManager.h"
+#include "X_TranslatorManager.h"
 
 //===================================================
 
@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
     qApp->setProperty("appIcon", QString(APP_ICON));
 #endif
 
-    ZTranslatorManager languageManager;
-    languageManager.zp_installTranslatorsToApplication();
+    X_TranslatorManager languageManager;
+    languageManager.xp_installTranslatorsToApplication();
 
     MainWindow w;
     w.show();

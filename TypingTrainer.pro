@@ -73,59 +73,59 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
 SOURCES += \
     MainWindow.cpp \
-    ZAbstractLineController.cpp \
-    ZAbstractStatisticsSource.cpp \
-    ZAbstractTaskSource.cpp \
-    ZClickableLabel.cpp \
-    ZColorButton.cpp \
-    ZDataSourceManager.cpp \
-    ZLineControllerCreator.cpp \
-    ZNewUserWidget.cpp \
-    ZRandomLineController.cpp \
-    ZSessionStatisticsManager.cpp \
-    ZSettingsDialog.cpp \
-    ZStatisticsWidget.cpp \
-    ZSuccessivelyLineController.cpp \
-    ZTask.cpp \
-    ZTaskContentWidget.cpp \
-    ZTaskListWidget.cpp \
-    ZTaskWidget.cpp \
-    ZTrainingManager.cpp \
-    ZTrainingWidget.cpp \
-    ZTranslatorManager.cpp \
-    ZTypingSpeedLineController.cpp \
-    ZUserSelectionDialog.cpp \
-    ZWorkController.cpp \
-        main.cpp
+    X_AbstractLineController.cpp \
+    X_AbstractStatisticsSource.cpp \
+    X_AbstractTaskSource.cpp \
+    X_ClickableLabel.cpp \
+    X_ColorButton.cpp \
+    X_DataSourceManager.cpp \
+    X_LineControllerCreator.cpp \
+    X_NewUserWidget.cpp \
+    X_RandomLineController.cpp \
+    X_SessionStatisticsManager.cpp \
+    X_SettingsDialog.cpp \
+    X_StatisticsWidget.cpp \
+    X_SuccessivelyLineController.cpp \
+    X_Task.cpp \
+    X_TaskContentWidget.cpp \
+    X_TaskListWidget.cpp \
+    X_TaskWidget.cpp \
+    X_TrainingManager.cpp \
+    X_TrainingWidget.cpp \
+    X_TranslatorManager.cpp \
+    X_TypingSpeedLineController.cpp \
+    X_UserSelectionDialog.cpp \
+    X_WorkController.cpp \
+        main.cpp \
 
 
 HEADERS += \
-    ZAbstractLineController.h \
-    ZAbstractStatisticsSource.h \
-    ZAbstractTaskSource.h \
-    ZClickableLabel.h \
-    ZColorButton.h \
-    ZDataSourceManager.h \
-    ZLineControllerCreator.h \
-    ZNewUserWidget.h \
-    ZRandomLineController.h \
-    ZSessionStatisticsManager.h \
-    ZSettingsDialog.h \
-    ZSqlTableStatements.h \
-    ZStatisticsWidget.h \
-    ZSuccessivelyLineController.h \
-    ZTask.h \
-    ZTrainingManager.h \
-    ZTranslatorManager.h \
+    X_AbstractLineController.h \
+    X_AbstractStatisticsSource.h \
+    X_AbstractTaskSource.h \
+    X_ClickableLabel.h \
+    X_ColorButton.h \
+    X_DataSourceManager.h \
+    X_LineControllerCreator.h \
+    X_NewUserWidget.h \
+    X_RandomLineController.h \
+    X_SessionStatisticsManager.h \
+    X_SettingsDialog.h \
+    X_SqlTableStatements.h \
+    X_StatisticsWidget.h \
+    X_SuccessivelyLineController.h \
+    X_Task.h \
+    X_TaskContentWidget.h \
+    X_TaskListWidget.h \
+    X_TaskWidget.h \
+    X_TrainingManager.h \
+    X_TrainingWidget.h \
+    X_TranslatorManager.h \
+    X_TypingSpeedLineController.h \
+    X_UserSelectionDialog.h \
+    X_WordStatistics.h \
+    X_WorkController.h \
     MainWindow.h \
-    ZTaskContentWidget.h \
-    ZTaskListWidget.h \
-    ZTaskWidget.h \
-    ZTrainingWidget.h \
-    ZTypingSpeedLineController.h \
-    ZUserSelectionDialog.h \
-    ZWordStatistics.h \
-    ZWorkController.h
 
 # Default rules for deployment.
 #qnx: target.path = /tmp/$${TARGET}/bin

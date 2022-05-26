@@ -9,14 +9,14 @@
 #include <QSettings>
 #include <QStyleFactory>
 
-#include "ZDataSourceManager.h"
-#include "ZSettingsDialog.h"
-#include "ZStatisticsWidget.h"
-#include "ZSessionStatisticsManager.h"
-#include "ZTaskWidget.h"
-#include "ZTrainingManager.h"
-#include "ZTrainingWidget.h"
-#include "ZWorkController.h"
+#include "X_DataSourceManager.h"
+#include "X_SettingsDialog.h"
+#include "X_StatisticsWidget.h"
+#include "X_SessionStatisticsManager.h"
+#include "X_TaskWidget.h"
+#include "X_TrainingManager.h"
+#include "X_TrainingWidget.h"
+#include "X_WorkController.h"
 
 //===================================================
 MainWindow::MainWindow(QWidget *parent)
@@ -25,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle(qApp->applicationDisplayName());
 
-    zh_createComponents();
-    zh_createConnections();
+    xh_createComponents();
+    xh_createConnections();
 
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette p = QPalette(Qt::darkGray);
@@ -37,16 +37,16 @@ MainWindow::MainWindow(QWidget *parent)
     p.setColor(QPalette::WindowText, QColor(255,255,255));
     qApp->setPalette(p);
 
-    zh_restoreSettings();
+    xh_restoreSettings();
 }
 //===================================================
 MainWindow::~MainWindow()
 {
     // disconnect from database
-    zh_saveSettings();
+    xh_saveSettings();
 }
 //===================================================
-void MainWindow::zh_createComponents()
+void MainWindow::xh_createComponents()
 {
     // Menu
 //    QMenu* mainMenu = new QMenu();
@@ -54,101 +54,101 @@ void MainWindow::zh_createComponents()
 //    mainMenu->setIcon(QIcon(":images/menu-512.png"));
 //    menuBar()->addMenu(mainMenu);
 
-    zv_settingsAction = new QAction;
-    //zv_settingsAction->setToolTip(tr("Settings"));
-    zv_settingsAction->setIcon(QIcon(":images/settings-01.png"));
-    menuBar()->addAction(zv_settingsAction);
+    xv_settingsAction = new QAction;
+    //xv_settingsAction->setToolTip(tr("Settings"));
+    xv_settingsAction->setIcon(QIcon(":images/settings-01.png"));
+    menuBar()->addAction(xv_settingsAction);
 
-//    zv_userButton = new QPushButton;
-//    menuBar()->setCornerWidget(zv_userButton);
+//    xv_userButton = new QPushButton;
+//    menuBar()->setCornerWidget(xv_userButton);
 
     // Central widget
-    zv_stackedWidget = new QStackedWidget;
-    setCentralWidget(zv_stackedWidget);
+    xv_stackedWidget = new QStackedWidget;
+    setCentralWidget(xv_stackedWidget);
 
     // create widgets and add  to stacked widget
-    zv_taskWidget = new ZTaskWidget;
-    zv_trainingWidget = new ZTrainingWidget;
-    zv_statisticsWidget = new ZStatisticsWidget;
+    xv_taskWidget = new X_TaskWidget;
+    xv_trainingWidget = new X_TrainingWidget;
+    xv_statisticsWidget = new X_StatisticsWidget;
 
-    zv_stackedWidget->addWidget(zv_taskWidget);
-    zv_stackedWidget->addWidget(zv_trainingWidget);
-    zv_stackedWidget->addWidget(zv_statisticsWidget);
+    xv_stackedWidget->addWidget(xv_taskWidget);
+    xv_stackedWidget->addWidget(xv_trainingWidget);
+    xv_stackedWidget->addWidget(xv_statisticsWidget);
 
     // task model
-    zv_dataSourceManager = new ZDataSourceManager(this);
-    zv_taskWidget->zp_setTaskModel(zv_dataSourceManager->zp_taskModel());
+    xv_dataSourceManager = new X_DataSourceManager(this);
+    xv_taskWidget->xp_setTaskModel(xv_dataSourceManager->xp_taskModel());
 
     // statistics model
-    zv_statisticsWidget->zp_setStatisticsModel(zv_dataSourceManager->zp_statisticsModel());
+    xv_statisticsWidget->xp_setStatisticsModel(xv_dataSourceManager->xp_statisticsModel());
 
     // training manager
-    zv_trainingManager = new ZTrainingManager(this);
-    zv_trainingWidget->zp_connectToTrainingManager(zv_trainingManager);
+    xv_trainingManager = new X_TrainingManager(this);
+    xv_trainingWidget->xp_connectToTrainingManager(xv_trainingManager);
 
-    zv_workController = new ZWorkController(this);
-    zv_workController->zp_setTaskSource(zv_dataSourceManager);
+    xv_workController = new X_WorkController(this);
+    xv_workController->xp_setTaskSource(xv_dataSourceManager);
 
     // task Statistics manager
-    zv_taskStatisticsManager = new ZSessionStatisticsManager(this);
-    zv_taskStatisticsManager->zp_setTrainingManager(zv_trainingManager);
-    zv_taskStatisticsManager->zp_setStatisticsSource(zv_dataSourceManager);
+    xv_taskStatisticsManager = new X_SessionStatisticsManager(this);
+    xv_taskStatisticsManager->xp_setTrainingManager(xv_trainingManager);
+    xv_taskStatisticsManager->xp_setStatisticsSource(xv_dataSourceManager);
 }
 //===================================================
-void MainWindow::zh_createConnections()
+void MainWindow::xh_createConnections()
 {
-    connect(zv_taskWidget, &ZTaskWidget::zg_requestNewTaskCreation,
-            zv_dataSourceManager, &ZDataSourceManager::zp_createNewTask);
-    connect(zv_taskWidget, &ZTaskWidget::zg_requestTasksRemoving,
-            zv_dataSourceManager, &ZDataSourceManager::zp_deleteTasks);
+    connect(xv_taskWidget, &X_TaskWidget::xg_requestNewTaskCreation,
+            xv_dataSourceManager, &X_DataSourceManager::xp_createNewTask);
+    connect(xv_taskWidget, &X_TaskWidget::xg_requestTasksRemoving,
+            xv_dataSourceManager, &X_DataSourceManager::xp_deleteTasks);
 
     // work controller connections
-    connect(zv_taskWidget, &ZTaskWidget::zg_requestTaskRun,
-            zv_workController, &ZWorkController::zp_initTaskStart);
-    connect(zv_taskStatisticsManager, &ZSessionStatisticsManager::zg_taskStatisticsReadiness,
-            zv_workController, &ZWorkController::zp_initTaskFinish);
+    connect(xv_taskWidget, &X_TaskWidget::xg_requestTaskRun,
+            xv_workController, &X_WorkController::xp_initTaskStart);
+    connect(xv_taskStatisticsManager, &X_SessionStatisticsManager::xg_taskStatisticsReadiness,
+            xv_workController, &X_WorkController::xp_initTaskFinish);
 
-    connect(zv_statisticsWidget, &ZStatisticsWidget::zg_requestStatisticsDisplayFinish,
-            zv_workController, &ZWorkController::zp_initStatisticsDisplayFinish);
+    connect(xv_statisticsWidget, &X_StatisticsWidget::xg_requestStatisticsDisplayFinish,
+            xv_workController, &X_WorkController::xp_initStatisticsDisplayFinish);
 
-    connect(zv_workController, &ZWorkController::zg_setStackedWidgetIndex,
-            zv_stackedWidget, &QStackedWidget::setCurrentIndex);
+    connect(xv_workController, &X_WorkController::xg_setStackedWidgetIndex,
+            xv_stackedWidget, &QStackedWidget::setCurrentIndex);
 
-    connect(zv_workController, &ZWorkController::zg_requestTaskStart,
-            zv_trainingManager, &ZTrainingManager::zp_initTaskStart);
-    connect(zv_workController, &ZWorkController::zg_requestTaskFinish,
-            zv_trainingManager, &ZTrainingManager::zp_stopTask);
-    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskRestart,
-            zv_trainingManager, &ZTrainingManager::zp_restartTask);
-    connect(zv_trainingWidget, &ZTrainingWidget::zg_requestTaskPauseToggle,
-            zv_trainingManager, &ZTrainingManager::zp_setTaskPaused);
+    connect(xv_workController, &X_WorkController::xg_requestTaskStart,
+            xv_trainingManager, &X_TrainingManager::xp_initTaskStart);
+    connect(xv_workController, &X_WorkController::xg_requestTaskFinish,
+            xv_trainingManager, &X_TrainingManager::xp_stopTask);
+    connect(xv_trainingWidget, &X_TrainingWidget::xg_requestTaskRestart,
+            xv_trainingManager, &X_TrainingManager::xp_restartTask);
+    connect(xv_trainingWidget, &X_TrainingWidget::xg_requestTaskPauseToggle,
+            xv_trainingManager, &X_TrainingManager::xp_setTaskPaused);
 
-    connect(zv_settingsAction, &QAction::triggered,
-            this, &MainWindow::zh_runSettings);
+    connect(xv_settingsAction, &QAction::triggered,
+            this, &MainWindow::xh_runSettings);
 
 }
 //===================================================
-void MainWindow::zh_saveSettings()
+void MainWindow::xh_saveSettings()
 {
     QSettings settings;
     settings.setValue("AppGeometry", saveGeometry());
 }
 //===================================================
-void MainWindow::zh_restoreSettings()
+void MainWindow::xh_restoreSettings()
 {
     QSettings settings;
     restoreGeometry(settings.value("AppGeometry").toByteArray());
 }
 //===================================================
-void MainWindow::zh_runSettings()
+void MainWindow::xh_runSettings()
 {
-    ZSettingsDialog dialog;
-    dialog.zp_setTrainingManager(zv_trainingManager);
-    dialog.zp_setTrainingWidget(zv_trainingWidget);
+    X_SettingsDialog dialog;
+    dialog.xp_setTrainingManager(xv_trainingManager);
+    dialog.xp_setTrainingWidget(xv_trainingWidget);
 
-    zv_trainingManager->zp_setTaskPaused(true);
+    xv_trainingManager->xp_setTaskPaused(true);
     dialog.exec();
-    zv_trainingManager->zp_setTaskPaused(false);
+    xv_trainingManager->xp_setTaskPaused(false);
 }
 //===================================================
 

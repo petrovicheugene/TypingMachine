@@ -8,13 +8,13 @@
 class QAction;
 class QPushButton;
 
-class ZDataSourceManager;
-class ZStatisticsWidget;
-class ZSessionStatisticsManager;
-class ZTaskWidget;
-class ZTrainingManager;
-class ZTrainingWidget;
-class ZWorkController;
+class X_DataSourceManager;
+class X_StatisticsWidget;
+class X_SessionStatisticsManager;
+class X_TaskWidget;
+class X_TrainingManager;
+class X_TrainingWidget;
+class X_WorkController;
 
 //===================================================
 class MainWindow : public QMainWindow
@@ -30,27 +30,27 @@ private slots:
 private:
     // VARS
 
-    QAction* zv_settingsAction;
+    QAction* xv_settingsAction;
 
-    QStackedWidget* zv_stackedWidget;
+    QStackedWidget* xv_stackedWidget;
 
-    ZWorkController* zv_workController;
-    ZTrainingWidget* zv_trainingWidget;
-    ZTaskWidget* zv_taskWidget;
-    ZStatisticsWidget* zv_statisticsWidget;
+    X_WorkController* xv_workController;
+    X_TrainingWidget* xv_trainingWidget;
+    X_TaskWidget* xv_taskWidget;
+    X_StatisticsWidget* xv_statisticsWidget;
 
-    ZTrainingManager* zv_trainingManager;
-    ZSessionStatisticsManager* zv_taskStatisticsManager;
-    ZDataSourceManager* zv_dataSourceManager;
+    X_TrainingManager* xv_trainingManager;
+    X_SessionStatisticsManager* xv_taskStatisticsManager;
+    X_DataSourceManager* xv_dataSourceManager;
 
     // FUNCS
-    void zh_createComponents();
-    void zh_createConnections();
+    void xh_createComponents();
+    void xh_createConnections();
 
-    void zh_saveSettings();
-    void zh_restoreSettings();
+    void xh_saveSettings();
+    void xh_restoreSettings();
 
-    void zh_runSettings();
+    void xh_runSettings();
 
 };
 //===================================================
