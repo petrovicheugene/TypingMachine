@@ -34,7 +34,7 @@ private:
 
     // VARS
     const QString xv_default_user_name = "default_user";
-    const QString xv_databaseName = "typing_training.sqlite";
+    const QString xv_databaseName = "typing_machine.sqlite";
     QSqlTableModel* xv_taskModel;
 
     QStandardItemModel* xv_statisticsModel;

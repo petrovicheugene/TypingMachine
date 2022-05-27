@@ -133,7 +133,7 @@ HEADERS += \
 #!isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    typing_trainer.sql
+    typing_machine.sql
 
 RESOURCES += \
     resources.qrc
