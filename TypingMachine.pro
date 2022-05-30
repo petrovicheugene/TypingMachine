@@ -9,7 +9,7 @@ QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TypingTrainer
+TARGET = TypingMachine
 
 #PRO VARS
 RC_ICONS = ""
@@ -20,10 +20,10 @@ VER_MIN=0
 VER_PAT=0
 VER_BUILD=b
 
-PRODUCT_DISPLAY_NAME="Typing Trainer"
-PRODUCT_FILE_BASE_NAME="typingtrainer"
-QMAKE_TARGET_PRODUCT="TypingTrainer"
-QMAKE_TARGET_DESCRIPTION="Typing trainer"
+PRODUCT_DISPLAY_NAME="Typing Machine"
+PRODUCT_FILE_BASE_NAME="typingmachine"
+QMAKE_TARGET_PRODUCT="TypingMachine"
+QMAKE_TARGET_DESCRIPTION="Typing machine"
 QMAKE_TARGET_COMPANY="MySoft"
 QMAKE_TARGET_COPYRIGHT="Copyright © $${QMAKE_TARGET_COMPANY} Ltd. 2022.  All rights reserved."
 COMPANY_URL=www.typingtrainer.com
