@@ -9,7 +9,7 @@ class X_AbstractLineController;
 class X_LineControllerCreator
 {
 public:
-    static X_AbstractLineController* xp_createLineController(ZTask& task);
+    static X_AbstractLineController* xp_createLineController(X_Task& task);
 
 
 };

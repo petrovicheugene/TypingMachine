@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QRegularExpression>
 //===================================================
-X_AbstractLineController::X_AbstractLineController(ZTask& task, QObject *parent)
+X_AbstractLineController::X_AbstractLineController(X_Task& task, QObject *parent)
     : QObject{parent}
 {
     QString taskContent = std::get<1>(task).c_str();

@@ -5,7 +5,7 @@
 #include "X_TypingSpeedLineController.h"
 
 //===================================================
-X_AbstractLineController* X_LineControllerCreator::xp_createLineController(ZTask& task)
+X_AbstractLineController* X_LineControllerCreator::xp_createLineController(X_Task& task)
 {
     OUTPUT_ORDER outputOrder = std::get<3>(task);
 

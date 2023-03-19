@@ -14,7 +14,7 @@ public:
     explicit X_AbstractTaskSource(QObject *parent = nullptr);
 
     virtual QAbstractItemModel* xp_taskModel() const = 0;
-    virtual ZTask xp_taskForRow(int row) const= 0;
+    virtual X_Task xp_taskForRow(int row) const= 0;
 
 
 };

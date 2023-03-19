@@ -1,6 +1,5 @@
 //===================================================
 #include "X_DataSourceManager.h"
-#include "X_SqlTableStatements.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -257,16 +256,16 @@ void X_DataSourceManager::xp_deleteTasks(QVector<int> rows)
     xv_taskModel->select();
 }
 //===================================================
-ZTask X_DataSourceManager::xp_taskForRow(int row) const
+X_Task X_DataSourceManager::xp_taskForRow(int row) const
 {
     QSqlRecord record = xv_taskModel->record(row);
 
     if(record.isEmpty())
     {
-        return ZTask();
+        return X_Task();
     }
-
-    ZTask task;
+    
+    X_Task task;
     std::get<0>(task) = record.value(1).toString().toStdString();
     std::get<1>(task) = record.value(2).toString().toStdString();
     std::get<2>(task) = splitByStringMap.key(record.value(3).toString());

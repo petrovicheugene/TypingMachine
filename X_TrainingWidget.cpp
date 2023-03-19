@@ -2,7 +2,6 @@
 #include "X_TrainingWidget.h"
 
 #include "X_ClickableLabel.h"
-#include "X_TaskContentWidget.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -13,8 +12,6 @@
 #include <QSlider>
 #include <QTime>
 #include <QVBoxLayout>
-//===================================================
-//Q_DECLARE_METATYPE(SettingsMap);
 //===================================================
 X_TrainingWidget::X_TrainingWidget(QWidget *parent)
     : QWidget{parent}
@@ -28,8 +25,7 @@ X_TrainingWidget::X_TrainingWidget(QWidget *parent)
     xv_symbolUnderlinedFlag = true;
 
     xv_infoColor = QColor(Qt::gray);
-    xv_taskDurationDisplayFlag = true;
-
+    // xv_taskDurationDisplayFlag = true;
 
     xh_createComponents();
     xh_createConnections();
@@ -49,13 +45,26 @@ void X_TrainingWidget::xh_createComponents()
     mainLayout->addStretch();
     xv_lineLabel = new QLabel;
     xv_lineLabel->setWordWrap(true);
-    xv_lineLabel->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(xv_lineLabel);
-    mainLayout->addStretch();
+    xv_lineLabel->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(xv_lineLabel, 99999999);
+    //mainLayout->addStretch(99999999);
+
+    QHBoxLayout* infoLayout = new QHBoxLayout;
+    mainLayout->addLayout( infoLayout);
+
+    xv_alignWidget = new QWidget(this);
+    infoLayout->addWidget(xv_alignWidget);
+
+    // info label
+    xv_infoMessageLabel = new QLabel(this);
+    xv_infoMessageLabel->setWordWrap(true);
+    xv_infoMessageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    infoLayout->addWidget(xv_infoMessageLabel, 999999);
 
     xv_taskDurationLabel = new QLabel;
-    xv_taskDurationLabel->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-    mainLayout->addWidget(xv_taskDurationLabel);
+    xv_taskDurationLabel->setAlignment(Qt::AlignBottom | Qt::AlignRight);
+    xv_taskDurationLabel->installEventFilter(this);
+    infoLayout->addWidget(xv_taskDurationLabel);
 
     // basement
     QHBoxLayout* basementLayout = new QHBoxLayout;
@@ -79,11 +88,11 @@ void X_TrainingWidget::xh_createComponents()
     xv_restartButton->setToolTip(tr("Restart task"));
     basementLayout->addWidget(xv_restartButton);
 
-    xv_pauseButton = new QPushButton;
-    xv_pauseButton->setCheckable(true);
-    xv_pauseButton->setIcon(QIcon(":/images/pause-6.png"));
-    xv_pauseButton->setToolTip(tr("Pause task"));
-    basementLayout->addWidget(xv_pauseButton);
+    xv_startPauseButton = new QPushButton;
+    xv_startPauseButton->setCheckable(true);
+    xv_startPauseButton->setIcon(QIcon(":/images/pause-6.png"));
+    xv_startPauseButton->setToolTip(tr("Pause task"));
+    basementLayout->addWidget(xv_startPauseButton);
 
     xv_finishButton = new QPushButton;
     xv_finishButton->setIcon(QIcon(":/images/stop-10.png"));
@@ -96,7 +105,7 @@ void X_TrainingWidget::xh_createConnections()
 {
     connect(xv_finishButton, &QPushButton::clicked,
             this, &X_TrainingWidget::xg_requestTaskFinish);
-    connect(xv_pauseButton, &QPushButton::toggled,
+    connect(xv_startPauseButton, &QPushButton::toggled,
             this, &X_TrainingWidget::xp_onTaskPauseToggle);
     connect(xv_restartButton, &QPushButton::clicked,
             this, &X_TrainingWidget::xg_requestTaskRestart);
@@ -108,6 +117,16 @@ void X_TrainingWidget::xh_createConnections()
     connect(xv_plusLabel, &X_ClickableLabel::clicked,
             this, &X_TrainingWidget::xh_changeFontSizeSliderValue);
 
+}
+//===================================================
+bool X_TrainingWidget::eventFilter(QObject* object, QEvent* event)
+{
+    if(object == xv_taskDurationLabel && event->type() == QEvent::Resize)
+    {
+        xv_alignWidget->setMinimumWidth(xv_taskDurationLabel->width());
+    }
+
+    return false;
 }
 //===================================================
 void X_TrainingWidget::xh_restoreSettings()
@@ -166,7 +185,8 @@ void X_TrainingWidget::xh_restoreSettings()
     vData = settings.value("DisplayTaskDuration");
     if(vData.isValid() && vData.canConvert<bool>())
     {
-        xv_taskDurationDisplayFlag = vData.toBool();
+        xv_taskDurationLabel->setVisible( vData.toBool());
+        xv_taskDurationLabel->setProperty("DisplayTaskDuration", vData);
     }
 
     settings.endGroup();
@@ -186,8 +206,9 @@ void X_TrainingWidget::xh_saveSettings() const
 
     settings.setValue("InfoFontSize", QVariant(xp_infoFontSize()));
     settings.setValue("InfoColor", QVariant::fromValue<QColor>(xv_infoColor));
-    settings.setValue("DisplayTaskDuration", xv_taskDurationDisplayFlag);
+    settings.setValue("DisplayTaskDuration", xv_taskDurationLabel->property("DisplayTaskDuration"));
 
+    qDebug() << "IS VISIBLE" << xv_taskDurationLabel->isVisible();
     settings.endGroup();
 }
 //===================================================
@@ -198,10 +219,13 @@ void X_TrainingWidget::xp_connectToTrainingManager(X_TrainingManager* manager)
             this, &X_TrainingWidget::xp_updateLine);
     connect(xv_trainingManager, &X_TrainingManager::xg_durationChanged,
             this, &X_TrainingWidget::xp_updateDuration);
+    connect(xv_trainingManager, &X_TrainingManager::xg_infoChanged,
+            this, &X_TrainingWidget::xp_updateInfo);
+
     connect(this, &X_TrainingWidget::xg_requestTaskFinish,
             xv_trainingManager, &X_TrainingManager::xp_stopTask);
-    connect(xv_trainingManager, &X_TrainingManager::xg_taskStateChanged,
-            this, &X_TrainingWidget::xp_onTaskStateChange);
+    connect(xv_trainingManager, &X_TrainingManager::xg_taskStatusChanged,
+            this, &X_TrainingWidget::xp_onTaskStatusChange);
 }
 //===================================================
 void X_TrainingWidget::xp_setCompletedColor(QColor color)
@@ -241,11 +265,14 @@ void X_TrainingWidget::xp_setInfoColor(QColor color)
 //===================================================
 void X_TrainingWidget::xp_setTaskDurationDisplayFlag(bool displayFlag)
 {
-    xv_taskDurationDisplayFlag = displayFlag;
-    if(!xv_taskDurationDisplayFlag)
-    {
-        xv_taskDurationLabel->clear();
-    }
+    qDebug() << "DurationDisplayFlag" << displayFlag;
+    xv_taskDurationLabel->setVisible(displayFlag);
+    xv_taskDurationLabel->setProperty("DisplayTaskDuration", displayFlag);
+    //    xv_taskDurationDisplayFlag = displayFlag;
+    //    if(!xv_taskDurationDisplayFlag)
+    //    {
+    //        xv_taskDurationLabel->clear();
+    //    }
 }
 //===================================================
 QColor X_TrainingWidget::xp_completedColor() const
@@ -280,7 +307,13 @@ QColor X_TrainingWidget::xp_infoColor() const
 //===================================================
 bool X_TrainingWidget::xp_isTaskDurationDisplayed() const
 {
-    return xv_taskDurationDisplayFlag;
+    QVariant vData = xv_taskDurationLabel->property("DisplayTaskDuration");
+    if(vData.isValid() && vData.canConvert<bool>())
+    {
+        return vData.toBool();
+    }
+
+    return true;
 }
 //===================================================
 int X_TrainingWidget::xp_infoFontSize() const
@@ -309,6 +342,7 @@ void X_TrainingWidget::xp_setInfoFontSize(int size)
     QFont font = xv_taskDurationLabel->font();
     font.setPointSize(size);
     xv_taskDurationLabel->setFont(font);
+    xv_infoMessageLabel->setFont(font);
 }
 //===================================================
 void X_TrainingWidget::xp_setInfoFontSizeString(QString sizeString)
@@ -325,7 +359,7 @@ void X_TrainingWidget::xp_setInfoFontSizeString(QString sizeString)
 void X_TrainingWidget::xh_changeFontSizeSliderValue()
 {
     int delta = qApp->keyboardModifiers() & Qt::ControlModifier ?
-                xv_fontSizeSlider->singleStep() : xv_fontSizeSlider->pageStep();
+                    xv_fontSizeSlider->singleStep() : xv_fontSizeSlider->pageStep();
 
     if(sender() == xv_plusLabel)
     {
@@ -339,24 +373,24 @@ void X_TrainingWidget::xh_changeFontSizeSliderValue()
 //===================================================
 void X_TrainingWidget::xp_onTaskPauseToggle(bool checked)
 {
-    xh_pauseButtonControl(checked);
-    emit xg_requestTaskPauseToggle(checked);
+    //xh_pauseButtonControl(checked);
+    emit xg_requestTaskPauseSwitch(checked);
 }
 //===================================================
-void X_TrainingWidget::xh_pauseButtonControl(bool paused, bool enabled)
+void X_TrainingWidget::xh_startPauseButtonControl(bool paused, bool enabled)
 {
     if(paused)
     {
-        xv_pauseButton->setToolTip(tr("Resume task"));
-        xv_pauseButton->setIcon(QIcon(":/images/start-8.png"));
+        xv_startPauseButton->setToolTip(tr("Resume task"));
+        xv_startPauseButton->setIcon(QIcon(":/images/start-8.png"));
     }
     else
     {
-        xv_pauseButton->setToolTip(tr("Pause task"));
-        xv_pauseButton->setIcon(QIcon(":/images/pause-6.png"));
+        xv_startPauseButton->setToolTip(tr("Pause task"));
+        xv_startPauseButton->setIcon(QIcon(":/images/pause-6.png"));
     }
 
-    xv_pauseButton->setEnabled(enabled);
+    xv_startPauseButton->setEnabled(enabled);
 }
 //===================================================
 void X_TrainingWidget::xp_updateLine()
@@ -366,7 +400,7 @@ void X_TrainingWidget::xp_updateLine()
     QString completedLine = QString("<font color=%1>%2</font>").arg(xv_completedColor.name(),
                                                                     xv_trainingManager->xp_completedLine());
     QString currentSymbol = xv_symbolUnderlinedFlag?
-                "<u>"+xv_trainingManager->xp_currentSymbol()+"</u>" : xv_trainingManager->xp_currentSymbol();
+                                "<u>"+xv_trainingManager->xp_currentSymbol()+"</u>" : xv_trainingManager->xp_currentSymbol();
     QString currentSymbolLine = QString("<font color=%1>%2</font>").arg(symbolColor.name(),
                                                                         currentSymbol);
     QString endLine = QString("<font color=%1>%2</font>").arg(xv_incompletedColor.name(),
@@ -378,28 +412,33 @@ void X_TrainingWidget::xp_updateLine()
 //===================================================
 void X_TrainingWidget::xp_updateDuration(int duration)
 {
-    if(xv_taskDurationDisplayFlag)
-    {
-        int hours = duration / 3600;
-        int minutes = (duration - hours * 3600) / 60;
-        int seconds = duration - hours * 3600 - minutes * 60;
+    int hours = duration / 3600;
+    int minutes = (duration - hours * 3600) / 60;
+    int seconds = duration - hours * 3600 - minutes * 60;
 
-        QString durationText =  QString("<font color=%1><b>%2</b></font>").
-                arg(xv_infoColor.name(), QTime(hours, minutes, seconds).toString("hh:mm:ss"));
+    QString durationText =  QString("<font color=%1><b>%2</b></font>").
+                           arg(xv_infoColor.name(), QTime(hours, minutes, seconds).toString("hh:mm:ss"));
 
-        xv_taskDurationLabel->setText(durationText);
-
-    }
+    xv_taskDurationLabel->setText(durationText);
 }
 //===================================================
-void X_TrainingWidget::xp_onTaskStateChange(X_TrainingManager::TASK_STATE previous,
-                                           X_TrainingManager::TASK_STATE current)
+void X_TrainingWidget::xp_updateInfo(const QString& infoMsg)
 {
-    bool paused = current == X_TrainingManager::TS_PAUSED;
-    bool enabled = current != X_TrainingManager::TS_COMPLETED &&
-            current != X_TrainingManager::TS_INACTIVE;
+    QString durationText =  QString("<font color=%1><b>%2</b></font>").
+                           arg(xv_infoColor.name(), infoMsg);
 
-    xh_pauseButtonControl(paused, enabled);
+    xv_infoMessageLabel->setText(durationText);
+}
+//===================================================
+void X_TrainingWidget::xp_onTaskStatusChange(X_TrainingManager::TASK_STATUS previous,
+                                             X_TrainingManager::TASK_STATUS current)
+{
+    qDebug() << "TASK STATUS CHANGED" << current;
+    bool paused = current == X_TrainingManager::TS_PAUSED || current == X_TrainingManager::TS_READY;
+    bool enabled = current != X_TrainingManager::TS_COMPLETED &&
+                   current != X_TrainingManager::TS_INACTIVE;
+
+    xh_startPauseButtonControl(paused, enabled);
     xp_updateLine();
 }
 //===================================================

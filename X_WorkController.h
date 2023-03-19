@@ -25,7 +25,7 @@ public slots:
 signals:
 
     void xg_setStackedWidgetIndex(int index);
-    void xg_requestTaskStart(ZTask task);
+    void xg_requestTaskStart(X_Task task);
     void xg_requestTaskFinish();
 
 private:

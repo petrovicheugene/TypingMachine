@@ -1,7 +1,7 @@
 //===================================================
 #include "X_TypingSpeedLineController.h"
 //===================================================
-X_TypingSpeedLineController::X_TypingSpeedLineController(ZTask &task, QObject *parent)
+X_TypingSpeedLineController::X_TypingSpeedLineController(X_Task &task, QObject *parent)
     : X_AbstractLineController{task, parent}
 {
 

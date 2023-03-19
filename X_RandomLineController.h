@@ -8,7 +8,7 @@ class X_RandomLineController : public X_AbstractLineController
 {
     Q_OBJECT
 public:
-    explicit X_RandomLineController(ZTask& task, QObject* parent = nullptr);
+    explicit X_RandomLineController(X_Task& task, QObject* parent = nullptr);
 
     QString xp_nextLine(bool* completed = nullptr) override;
     void xp_reset() override;

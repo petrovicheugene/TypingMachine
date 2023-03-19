@@ -24,8 +24,8 @@ public:
 public slots:
 
     void xp_updateStatistics(QString pressedSymbol);
-    void xp_onTaskStateChange(X_TrainingManager::TASK_STATE previous,
-                              X_TrainingManager::TASK_STATE current);
+    void xp_onTaskStatusChange(X_TrainingManager::TASK_STATUS previous,
+                              X_TrainingManager::TASK_STATUS current);
 signals:
 
     void xg_taskStatisticsReadiness(bool ready);
@@ -37,9 +37,9 @@ private:
     X_AbstractStatisticsSource* xv_statisticsSource;
 
     QString xv_currentWord;
-    qint64 xv_wordStartTimeMark;
-    qint64 xv_taskStartTimeMark;
-    qint64 xv_pauseStartTimeMark;
+    qint64 xv_wordStartTimeMark = 0;
+    qint64 xv_taskStartTimeMark = 0;
+    qint64 xv_pauseStartTimeMark = 0;
 
     int xv_errorCount;
 

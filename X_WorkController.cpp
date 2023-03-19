@@ -20,8 +20,8 @@ void X_WorkController::xp_initTaskStart(int row)
     {
         return;
     }
-
-    ZTask task = xv_taskSource->xp_taskForRow(row);
+    
+    X_Task task = xv_taskSource->xp_taskForRow(row);
     emit xg_setStackedWidgetIndex(1);
     emit xg_requestTaskStart(task);
 }

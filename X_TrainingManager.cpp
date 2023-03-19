@@ -17,7 +17,7 @@ X_TrainingManager::X_TrainingManager(QObject *parent)
     xv_currentSymbolIndex = 0;
     xv_wrongSymbolDisplayDuration = 100;
     xv_wrongSymbolDisplayMode = WSSM_WHILE_PRESSED;
-    xv_taskState = TS_INACTIVE;
+    xv_taskStatus = TS_INACTIVE;
 
     xh_createComponents();
     xh_createConnections();
@@ -41,20 +41,30 @@ bool X_TrainingManager::eventFilter(QObject* object, QEvent* event)
             return false;
         }
 
+        // start training - space key
+        if(xv_taskStatus == TS_READY || xv_taskStatus == TS_PAUSED)
+        {
+            if(keyEvent->key() == Qt::Key_Space)
+            {
+                xh_startTask();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         // PAUSE
-        if(keyEvent->key() == Qt::Key_Pause)
+        if(keyEvent->key() == Qt::Key_Pause
+            || keyEvent->key() == Qt::Key_Escape)
         {
             xh_toggleTaskPause();
             return true;
         }
 
-        if(xv_taskState == TS_PAUSED)
-        {
-            return false;
-        }
-
         // if(xv_lineCompleted)
-        if(xv_currentSymbolIndex == xv_line.count())
+        if(xv_currentSymbolIndex == xv_line.size())
         {
             if(keyEvent->key() == xv_lineEndKey)
             {
@@ -127,36 +137,26 @@ void X_TrainingManager::xh_saveSettings() const
 
 }
 //===================================================
-void X_TrainingManager::xp_initTaskStart(ZTask task)
+void X_TrainingManager::xp_initTaskStart(X_Task task)
 {
     xh_prepareTask(task);
-    xh_startTask();
+    // xh_startTask();
 }
 //===================================================
 void X_TrainingManager::xh_startTask()
 {
-    qApp->installEventFilter(this);
-    xh_setTaskState(TS_ACTIVE);
-    xh_prepareNextLine();
-    emit xg_lineChanged();
-
-    //xv_taskStartTimeMark = QDateTime::currentMSecsSinceEpoch();
-    xv_taskDurationSec = 0;
-    emit xg_durationChanged(xv_taskDurationSec++);
-    xv_taskDurationTimer->start();
+    xh_setTaskStatus(TS_ACTIVE);
 }
 //===================================================
 void X_TrainingManager::xh_toggleTaskPause()
 {
-    if(xv_taskState == TS_PAUSED)
+    if(xv_taskStatus == TS_PAUSED)
     {
-        xh_setTaskState(TS_ACTIVE);
-        xv_taskDurationTimer->start();
+        xh_setTaskStatus(TS_ACTIVE);
     }
-    else if(xv_taskState == TS_ACTIVE)
+    else if(xv_taskStatus == TS_ACTIVE )
     {
-        xh_setTaskState(TS_PAUSED);
-        xv_taskDurationTimer->stop();
+        xh_setTaskStatus(TS_PAUSED);
     }
 }
 //===================================================
@@ -164,15 +164,14 @@ void X_TrainingManager::xp_stopTask()
 {
     qDebug() << "FROM TRAINING MNG: TASK STOPPED" ;
     qApp->removeEventFilter(this);
-    xh_setTaskState(TS_INACTIVE);
-    xv_taskDurationTimer->stop();
+    xh_setTaskStatus(TS_INACTIVE);
 }
 //===================================================
 void X_TrainingManager::xp_finishCompletedTask()
 {
     qDebug() << "FROM TRAINING MNG: TASK COMPLETED" ;
     qApp->removeEventFilter(this);
-    xh_setTaskState(TS_COMPLETED);
+    xh_setTaskStatus(TS_COMPLETED);
     xv_taskDurationTimer->stop();
 }
 //===================================================
@@ -183,23 +182,28 @@ void X_TrainingManager::xp_restartTask()
     xh_startTask();
 }
 //===================================================
-void X_TrainingManager::xp_setTaskPaused(bool paused)
+void X_TrainingManager::xp_switchTaskPaused(bool paused)
 {
-    if(xv_taskState == TS_ACTIVE && paused)
+    qDebug() << "SET TASK PAUSED";
+    if(xv_taskStatus == TS_ACTIVE )
     {
-        xh_setTaskState(TS_PAUSED);
-        xv_taskDurationTimer->stop();
+        xh_setTaskStatus(TS_PAUSED);
+        //xv_taskDurationTimer->stop();
         //xv_pauseStartTimeMark = QDateTime::currentMSecsSinceEpoch();
     }
-    else if(xv_taskState == TS_PAUSED && !paused)
+    else if(xv_taskStatus == TS_READY)
     {
-        xh_setTaskState(TS_ACTIVE);
-        xv_taskDurationTimer->start();
+        xh_setTaskStatus(TS_ACTIVE);
+    }
+    else if(xv_taskStatus == TS_PAUSED)
+    {
+        xh_setTaskStatus(TS_ACTIVE);
+        // xv_taskDurationTimer->start();
         //xv_taskStartTimeMark = xv_taskStartTimeMark + (QDateTime::currentMSecsSinceEpoch() - xv_pauseStartTimeMark);
     }
 }
 //===================================================
-void X_TrainingManager::xh_prepareTask(ZTask task)
+void X_TrainingManager::xh_prepareTask(X_Task task)
 {
     xv_taskName =  std::get<0>(task).c_str();
     xv_lineEndKey = std::get<4>(task);
@@ -211,6 +215,14 @@ void X_TrainingManager::xh_prepareTask(ZTask task)
     }
 
     xv_LineController = X_LineControllerCreator::xp_createLineController(task);
+
+    qApp->installEventFilter(this);
+
+    xh_prepareNextLine();
+    emit xg_lineChanged();
+
+    xh_setTaskStatus(TS_READY);
+
 }
 //===================================================
 QString X_TrainingManager::xp_currentLine() const
@@ -225,17 +237,18 @@ int X_TrainingManager::xp_currentSymbolIndex() const
 //===================================================
 QString X_TrainingManager::xp_completedLine() const
 {
-    if(xv_taskState == TS_COMPLETED)
+    qDebug() << "LINE COMPLETE" ;
+    if(xv_taskStatus == TS_COMPLETED)
     {
-        return tr("TASK COMPLETED");
+        return tr("Task completed");
     }
 
-    if(xv_taskState == TS_PAUSED)
+    if(xv_taskStatus == TS_PAUSED)
     {
         return QString();
     }
 
-    if(xv_currentSymbolIndex <= xv_line.count())
+    if(xv_currentSymbolIndex <= xv_line.size())
     {
         return xv_line.first(xv_currentSymbolIndex);
     }
@@ -247,7 +260,7 @@ QString X_TrainingManager::xp_completedLine() const
 //===================================================
 QString X_TrainingManager::xp_currentSymbol() const
 {
-    if(xv_taskState == TS_ACTIVE)
+    if(xv_taskStatus == TS_ACTIVE /*|| xv_taskStatus == TS_READY*/)
     {
         return xv_currentSymbol;
     }
@@ -257,14 +270,18 @@ QString X_TrainingManager::xp_currentSymbol() const
 //===================================================
 QString X_TrainingManager::xp_incompletedLine() const
 {
-    if(xv_taskState == TS_PAUSED)
+    if(xv_taskStatus == TS_PAUSED)
     {
-        return tr("TASK PAUSED");
+        return tr("Paused...");
+    }
+    else if(xv_taskStatus == TS_READY)
+    {
+        return QString();
     }
 
-    if(xv_currentSymbolIndex < xv_line.count())
+    if(xv_currentSymbolIndex < xv_line.size())
     {
-        return xv_line.last(xv_line.count() - xv_currentSymbolIndex - 1);
+        return xv_line.last(xv_line.size() - xv_currentSymbolIndex - 1);
     }
     else
     {
@@ -277,14 +294,21 @@ bool X_TrainingManager::xp_isWrong() const
     return xv_wrongSymbolFlag;
 }
 //===================================================
-X_TrainingManager::TASK_STATE X_TrainingManager::xp_taskState() const
+X_TrainingManager::TASK_STATUS X_TrainingManager::xp_currentTaskStatus() const
 {
-    return xv_taskState;
+    return xv_taskStatus;
 }
 //===================================================
 void X_TrainingManager::xh_handleKeyPress(QString symbol)
 {
     // if(xv_line.at(xv_currentSymbolIndex) != symbol)
+//    if(xv_taskState == TS_PAUSED || xv_taskState == TS_READY)
+//    {
+//        // first press key aftrer  TS_PAUSED or TS_READY
+//        xh_setTaskState(TS_ACTIVE);
+//        xv_taskDurationTimer->start();
+//    }
+
     if(xv_line.at(xv_currentSymbolIndex) != symbol)
     {
         if(!xv_wrongSymbolFlag)
@@ -315,7 +339,7 @@ void X_TrainingManager::xh_handleKeyPress(QString symbol)
 
         // update line
         ++xv_currentSymbolIndex;
-        if(xv_currentSymbolIndex == xv_line.count())
+        if(xv_currentSymbolIndex == xv_line.size())
         {
             emit xg_symbolPressed(symbol);
             // line completed
@@ -335,6 +359,13 @@ void X_TrainingManager::xh_handleKeyPress(QString symbol)
             emit xg_symbolPressed(symbol);
         }
     }
+
+//    if(xv_taskState == TS_PAUSED || xv_taskState == TS_READY)
+//    {
+//        // first press key aftrer  TS_PAUSED or TS_READY
+//        xh_setTaskState(TS_ACTIVE);
+//        xv_taskDurationTimer->start();
+//    }
 
     emit xg_lineChanged();
 }
@@ -398,11 +429,42 @@ void X_TrainingManager::xp_setWrongSymbolDisplayMode(WRONG_SYMBOL_DISPLAY_MODE m
     xv_wrongSymbolDisplayMode = mode;
 }
 //================================================
-void X_TrainingManager::xh_setTaskState(TASK_STATE taskState)
+void X_TrainingManager::xh_setTaskStatus(TASK_STATUS taskStatus)
 {
-    auto previous = xv_taskState;
-    xv_taskState = taskState;
-    emit xg_taskStateChanged(previous, xv_taskState);
+    auto previous = xv_taskStatus;
+    xv_taskStatus = taskStatus;
+
+    QString infoMsg;
+    if(taskStatus == TS_READY)
+    {
+        xv_taskDurationTimer->stop();
+        // initial show of the task duration
+        xv_taskDurationSec = 0;
+        emit xg_durationChanged(xv_taskDurationSec);
+        infoMsg = tr("Press SPACE to start");
+
+    }
+    else if(taskStatus == TS_ACTIVE)
+    {
+        xv_taskDurationTimer->start();
+        infoMsg = tr("Press ESC or PAUSE to pause");
+
+    }
+    else if(taskStatus == TS_PAUSED)
+    {
+        xv_taskDurationTimer->stop();
+        infoMsg = tr("Press SPACE to resume");
+    }
+    else
+    {
+        xv_taskDurationTimer->stop();
+    }
+
+    emit xg_taskStatusChanged(previous, xv_taskStatus);
+
+    // output info
+    emit xg_infoChanged(infoMsg);
+
 }
 //================================================
 

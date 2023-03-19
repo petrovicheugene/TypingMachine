@@ -2,7 +2,7 @@
 #include "X_RandomLineController.h"
 #include <QDebug>
 //===================================================
-X_RandomLineController::X_RandomLineController(ZTask &task, QObject *parent) :
+X_RandomLineController::X_RandomLineController(X_Task &task, QObject *parent) :
     X_AbstractLineController{task, parent}
 {
     xv_index = 0;

@@ -11,7 +11,7 @@ class X_AbstractLineController : public QObject
 {
     Q_OBJECT
 public:
-    explicit X_AbstractLineController(ZTask& task, QObject *parent = nullptr);
+    explicit X_AbstractLineController(X_Task& task, QObject *parent = nullptr);
 
     virtual QString xp_nextLine(bool* completed = nullptr)  = 0;
     virtual void xp_reset() = 0;

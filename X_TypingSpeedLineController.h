@@ -10,7 +10,7 @@ class X_TypingSpeedLineController : public X_AbstractLineController
 {
     Q_OBJECT
 public:
-    explicit X_TypingSpeedLineController(ZTask& task, QObject *parent = nullptr);
+    explicit X_TypingSpeedLineController(X_Task& task, QObject *parent = nullptr);
 
     QString xp_nextLine(bool* completed = nullptr)  override;
     void xp_reset() override;

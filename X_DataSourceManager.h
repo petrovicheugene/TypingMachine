@@ -18,7 +18,7 @@ public:
     ~X_DataSourceManager();
 
     QAbstractItemModel* xp_taskModel() const override;
-    ZTask xp_taskForRow(int row) const override;
+    X_Task xp_taskForRow(int row) const override;
 
     QAbstractItemModel* xp_statisticsModel() const override;
     void xp_loadTaskStatistics(QMap<QString, WordStatistics>& taskStatistics) override;

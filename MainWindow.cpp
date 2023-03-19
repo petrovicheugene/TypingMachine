@@ -120,8 +120,8 @@ void MainWindow::xh_createConnections()
             xv_trainingManager, &X_TrainingManager::xp_stopTask);
     connect(xv_trainingWidget, &X_TrainingWidget::xg_requestTaskRestart,
             xv_trainingManager, &X_TrainingManager::xp_restartTask);
-    connect(xv_trainingWidget, &X_TrainingWidget::xg_requestTaskPauseToggle,
-            xv_trainingManager, &X_TrainingManager::xp_setTaskPaused);
+    connect(xv_trainingWidget, &X_TrainingWidget::xg_requestTaskPauseSwitch,
+            xv_trainingManager, &X_TrainingManager::xp_switchTaskPaused);
 
     connect(xv_settingsAction, &QAction::triggered,
             this, &MainWindow::xh_runSettings);
@@ -146,9 +146,9 @@ void MainWindow::xh_runSettings()
     dialog.xp_setTrainingManager(xv_trainingManager);
     dialog.xp_setTrainingWidget(xv_trainingWidget);
 
-    xv_trainingManager->xp_setTaskPaused(true);
+    xv_trainingManager->xp_switchTaskPaused(true);
     dialog.exec();
-    xv_trainingManager->xp_setTaskPaused(false);
+    xv_trainingManager->xp_switchTaskPaused(false);
 }
 //===================================================
 

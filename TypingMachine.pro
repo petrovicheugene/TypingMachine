@@ -9,7 +9,7 @@ QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TypingMachine
+#TARGET = TypingMachine
 
 #PRO VARS
 RC_ICONS = ""
@@ -69,6 +69,14 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 #by default defined: in Debug mode QT_DEBUG, in Release mode QT_NO_DEBUG
 
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
+
+CONFIG(debug, debug|release) {
+    TARGET=$${PRODUCT_FILE_BASE_NAME}-$${VERSION}.$${BUILD_FLAG}
+#    DESTDIR=$${PWD}\..\bin\
+} else {
+    TARGET=$${PRODUCT_FILE_BASE_NAME}
+    DESTDIR=$${PWD}\..\bin\
+}
 
 
 SOURCES += \
@@ -137,3 +145,7 @@ DISTFILES += \
 
 RESOURCES += \
     resources.qrc
+
+CONFIG(release, debug|release) {
+    QMAKE_POST_LINK="C:\Qt\6.4.0\mingw_64\bin\windeployqt.exe "$${DESTDIR} $${DESTDIR}
+}

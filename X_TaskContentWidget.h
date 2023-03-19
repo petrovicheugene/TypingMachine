@@ -18,7 +18,6 @@ class QPlainTextEdit;
 class X_ClickableLabel;
 class X_TrainingManager;
 //===================================================
-//===================================================
 class X_TaskContentWidget : public QWidget
 {
     Q_OBJECT

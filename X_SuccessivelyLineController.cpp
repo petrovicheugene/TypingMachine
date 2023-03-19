@@ -1,7 +1,7 @@
 //===================================================
 #include "X_SuccessivelyLineController.h"
 //===================================================
-X_SuccessivelyLineController::X_SuccessivelyLineController(ZTask &task, QObject *parent)
+X_SuccessivelyLineController::X_SuccessivelyLineController(X_Task &task, QObject *parent)
     : X_AbstractLineController{task, parent}
 {
     xv_lineIndex = 0;

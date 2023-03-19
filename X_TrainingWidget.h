@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QColor>
 //===================================================
+class QHBoxLayout;
 class QLabel;
 class QPushButton;
 class QSlider;
@@ -37,6 +38,7 @@ public slots:
 
     void xp_updateLine();
     void xp_updateDuration(int duration);
+    void xp_updateInfo(const QString& infoMsg);
 
     void xp_setFontSize(int size);
 
@@ -51,14 +53,14 @@ public slots:
     void xp_setInfoFontSize(int size);
     void xp_setInfoFontSizeString(QString size);
 
-    void xp_onTaskStateChange(X_TrainingManager::TASK_STATE previous,
-                                               X_TrainingManager::TASK_STATE current);
+    void xp_onTaskStatusChange(X_TrainingManager::TASK_STATUS previous,
+                               X_TrainingManager::TASK_STATUS current);
 
 signals:
 
     void xg_requestTaskFinish();
     void xg_requestTaskRestart();
-    void xg_requestTaskPauseToggle(bool paused);
+    void xg_requestTaskPauseSwitch(bool paused);
 
 private slots:
 
@@ -66,20 +68,28 @@ private slots:
     void xh_changeFontSizeSliderValue();
     void xp_onTaskPauseToggle(bool checked);
 
+protected:
+
+    bool eventFilter(QObject* object, QEvent* event) override;
+
 private:
 
     // VARS
-    X_TrainingManager* xv_trainingManager;
-    QLabel* xv_lineLabel;
-    QLabel* xv_taskDurationLabel;
+    X_TrainingManager* xv_trainingManager = nullptr;
 
-    X_ClickableLabel* xv_minusLabel;
-    X_ClickableLabel* xv_plusLabel;
+    QLabel* xv_lineLabel  = nullptr;
 
-    QSlider* xv_fontSizeSlider;
-    QPushButton* xv_restartButton;
-    QPushButton* xv_pauseButton;
-    QPushButton* xv_finishButton;
+    QLabel* xv_taskDurationLabel  = nullptr;
+    QLabel* xv_infoMessageLabel  = nullptr;
+    QWidget* xv_alignWidget = nullptr;
+
+    X_ClickableLabel* xv_minusLabel  = nullptr;
+    X_ClickableLabel* xv_plusLabel  = nullptr;
+
+    QSlider* xv_fontSizeSlider = nullptr;
+    QPushButton* xv_restartButton = nullptr;
+    QPushButton* xv_startPauseButton = nullptr;
+    QPushButton* xv_finishButton = nullptr;
 
     int xv_fontSize;
     QColor xv_completedColor;
@@ -89,14 +99,14 @@ private:
     bool xv_symbolUnderlinedFlag;
 
     QColor xv_infoColor;
-    bool xv_taskDurationDisplayFlag;
+    // bool xv_taskDurationDisplayFlag;
 
     // FUNCS
     void xh_createComponents();
     void xh_createConnections();
     void xh_restoreSettings();
     void xh_saveSettings() const;
-    void xh_pauseButtonControl(bool paused, bool enabled = true);
+    void xh_startPauseButtonControl(bool paused, bool enabled = true);
 
 };
 //===================================================
